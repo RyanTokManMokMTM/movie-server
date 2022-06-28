@@ -1,0 +1,43 @@
+syntax = "v1"
+
+//info(
+//    title: "User API"
+//    desc: "apis for users"
+//    author: "type author here"
+//    email: "type email here"
+//    version: "type version here"
+//)
+
+type (
+	UserLoginRequest {
+		Email    string `json:"email" validate:"required,max=32"`
+		Password string `json:"password" validate:"required,min=8,max=32"`
+	}
+	UserLoginResponse {
+		Token   string `json:"token"`
+		Expired int64 `json:"expired"`
+	}
+
+	UserSignUpRequest {
+		UserName string `json:"name"`
+		Email    string `json:"email" validate:"email,max=32"`
+		Password string `json:"password" validate:"min=8,max=32"`
+		ConfirmPassword string `json:"confirmPassword" validate:"eqfield=Password"`
+	}
+	UserSignUpResponse {
+		ID   int64  `json:"id"`
+		Name string `json:"name"`
+		Email string `jsons:"email"`
+	}
+
+	UserInfoRequest {
+		ID int64 `path:"id"`
+	}
+
+	UserInfoResponse {
+		ID   int64  `json:"id"`
+		Name string `json:"name"`
+		Email string `jsons:"email"`
+	}
+)
+

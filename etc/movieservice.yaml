@@ -1,0 +1,17 @@
+Name: MovieService
+Host: 0.0.0.0
+Port: 8000
+
+MySQL:
+  DataSource: root:admin@tcp(127.0.0.1:3306)/movie?charset=utf8mb4&parseTime=true&loc=Asia%2FHong_Kong
+
+CacheRedis:
+  - Host: 127.0.0.1:6379
+    Type: node
+    Pass:
+
+Auth:
+  AccessSecret: 2BNVfmf0WtyX1HQmzYG5rOKLzlHBEPRX729pZ0gpxujnaikoRRCF78T8fKDNTLWy
+  AccessExpire: 86400
+
+Salt: W4tiDEeWlwxlRPYYRRMhJ63piS1ochvMymwfVdumittPoSxhkHNnZLe6m12C4v15

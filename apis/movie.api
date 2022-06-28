@@ -1,0 +1,50 @@
+syntax = "v1"
+
+//info(
+//    title: "type title here"
+//    desc: "type desc here"
+//    author: "type author here"
+//    email: "type email here"
+//    version: "type version here"
+//)
+
+// Request and reponse
+type (
+    MoviePageListByGenreRequest {
+        Id int64 `form:"id" validate:"numeric"`
+    }
+    MoviePageListByGenreResponse {
+        resp []*MovieInfo `json:"movie_genres_result"`
+    }
+//
+    MovieGenresInfoRequest{
+        Id int64 `form:"id" validate:"numeric"`
+    }
+    MovieGenresInfoResponse{
+        resp []*GenreInfo `json:"genres"`
+    }
+)
+
+type (
+    MovieInfo {
+        Adult            int64   `json:"adult"`
+        BackdropPath     string  `json:"backdrop_path"`
+        MovieID          int64    `json:"id"`
+        OriginalLanguage string  `json:"original_language"`
+        OriginalTitle    string  `json:"original_title"`
+        Overview         string  `json:"overview"`
+        Popularity       float64 `json:"popularity"`
+        PosterPath       string  `json:"poster_path"`
+        ReleaseDate      string  `json:"release_date"`
+        Title            string  `json:"title"`
+        RunTime          int64     `json:"runtime"`
+        Video            int64    `json:"video"`
+        VoteAverage      float64 `json:"vote_average"`
+        VoteCount        int64    `json:"vote_count"`
+    }
+
+    GenreInfo{
+        Id int64 `json:"id"`
+        Name string `json:"name"`
+    }
+)

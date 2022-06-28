@@ -1,0 +1,58 @@
+package movie
+
+import (
+	"context"
+	"errors"
+
+	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
+	"github.com/ryantokmanmokmtm/movie-server/internal/types"
+
+	"github.com/zeromicro/go-zero/core/logx"
+)
+
+type MoviePageListByGenreLogic struct {
+	logx.Logger
+	ctx    context.Context
+	svcCtx *svc.ServiceContext
+}
+
+func NewMoviePageListByGenreLogic(ctx context.Context, svcCtx *svc.ServiceContext) *MoviePageListByGenreLogic {
+	return &MoviePageListByGenreLogic{
+		Logger: logx.WithContext(ctx),
+		ctx:    ctx,
+		svcCtx: svcCtx,
+	}
+}
+
+func (l *MoviePageListByGenreLogic) MoviePageListByGenre(req *types.MoviePageListByGenreRequest) (resp *types.MoviePageListByGenreResponse, err error) {
+	// todo: add your logic here and delete this line
+	// return a list of movie from relation table
+	res, err := l.svcCtx.Movie.MoviePageListsByGenreID(l.ctx, req.Id, 20)
+	if err != nil {
+		return nil, errors.New(err.Error())
+	}
+
+	var movieInfos []*types.MovieInfo
+	for _, v := range res {
+		movieInfos = append(movieInfos, &types.MovieInfo{
+			Adult:            v.Adult,
+			BackdropPath:     v.BackdropPath,
+			MovieID:          v.MovieId,
+			OriginalLanguage: v.OriginalLanguage,
+			OriginalTitle:    v.OriginalTitle,
+			Overview:         v.Overview,
+			Popularity:       v.Popularity,
+			PosterPath:       v.PosterPath,
+			ReleaseDate:      v.ReleaseDate,
+			Title:            v.Title,
+			RunTime:          v.RunTime,
+			Video:            v.Video,
+			VoteAverage:      v.VoteAverage,
+			VoteCount:        v.VoteCount,
+		})
+	}
+	return &types.MoviePageListByGenreResponse{
+		Resp: movieInfos,
+	}, nil
+
+}

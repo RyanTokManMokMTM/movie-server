@@ -1,0 +1,50 @@
+syntax = "v1"
+
+//info(
+//    title: "type title here"
+//    desc: "type desc here"
+//    author: "type author here"
+//    email: "type email here"
+//    version: "type version here"
+//)
+import "./user.api"
+import "./movie.api"
+
+@server (
+	group: user
+	prefix: /api/v1
+)
+service MovieService {
+	@doc "user_login"
+	@handler UserLogin
+	post /user/login(UserLoginRequest)  returns (UserLoginResponse);
+	
+	@doc "user_register"
+	@handler  UserSignUp
+	post /user/signup(UserSignUpRequest) returns (UserSignUpResponse);
+}
+
+@server (
+	group: user
+	prefix: /api/v1
+	jwt : Auth
+)
+service MovieService{
+	@doc "user_info"
+	@handler UserInfo
+	get /user/info/:id(UserInfoRequest) returns (UserInfoResponse);
+}
+
+@server (
+	group : movie
+	prefix : /api/v1
+)
+service MovieService{
+	@doc "get movie by genre"
+	@handler MoviePageListByGenre
+	get /movies/genre/list(MoviePageListByGenreRequest) returns (MoviePageListByGenreResponse);
+	
+	@doc "get movie by genre"
+	@handler MovieGenreByMovieID
+	get /movies/genres(MovieGenresInfoRequest) returns (MovieGenresInfoResponse);
+}
