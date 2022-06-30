@@ -27,7 +27,7 @@ type (
 	UserSignUpResponse {
 		ID   int64  `json:"id"`
 		Name string `json:"name"`
-		Email string `jsons:"email"`
+		Email string `json:"email"`
 	}
 
 	UserInfoRequest {
@@ -38,6 +38,14 @@ type (
 		ID   int64  `json:"id"`
 		Name string `json:"name"`
 		Email string `jsons:"email"`
+	}
+
+	UserProfileRequest {}
+	UserProfileResponse {
+		id int64 `json:"id"`
+		name string `json:"name"`
+		email string `json:"email"`
+		avatar string `json:"avatar"`
 	}
 )
 

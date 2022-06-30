@@ -1,7 +1,11 @@
 package movie
 
 import (
+	"github.com/go-playground/locales/en"
+	ut "github.com/go-playground/universal-translator"
 	"github.com/go-playground/validator/v10"
+	en_translations "github.com/go-playground/validator/v10/translations/en"
+	"github.com/ryantokmanmokmtm/movie-server/common/errorx"
 	"github.com/ryantokmanmokmtm/movie-server/internal/logic/movie"
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
 	"github.com/ryantokmanmokmtm/movie-server/internal/types"
@@ -17,9 +21,15 @@ func MoviePageListByGenreHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
-		//simple validate
-		if err := validator.New().StructCtx(r.Context(), req); err != nil {
-			httpx.Error(w, err)
+		eng := en.New()
+		uti := ut.New(eng, eng)
+		trans, _ := uti.GetTranslator("en")
+		validate := validator.New()
+		en_translations.RegisterDefaultTranslations(validate, trans)
+
+		if err := validate.StructCtx(r.Context(), req); err != nil {
+			errs := err.(validator.ValidationErrors)
+			httpx.Error(w, errorx.NewDefaultCodeError(errs[0].Translate(trans)))
 			return
 		}
 

@@ -27,7 +27,6 @@ service MovieService {
 @server (
 	group: user
 	prefix: /api/v1
-	jwt : Auth
 )
 service MovieService{
 	@doc "user_info"
@@ -36,8 +35,20 @@ service MovieService{
 }
 
 @server (
+	group: user
+	prefix: /api/v1
+	jwt : Auth
+)
+service MovieService{
+	@doc "user_profile"
+	@handler UserProfile
+	get /user/profile(UserProfileRequest) returns (UserProfileResponse);
+}
+
+@server (
 	group : movie
 	prefix : /api/v1
+	
 )
 service MovieService{
 	@doc "get movie by genre"

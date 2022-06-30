@@ -21,7 +21,7 @@ type UserSignUpRequest struct {
 type UserSignUpResponse struct {
 	ID    int64  `json:"id"`
 	Name  string `json:"name"`
-	Email string `jsons:"email"`
+	Email string `json:"email"`
 }
 
 type UserInfoRequest struct {
@@ -32,6 +32,16 @@ type UserInfoResponse struct {
 	ID    int64  `json:"id"`
 	Name  string `json:"name"`
 	Email string `jsons:"email"`
+}
+
+type UserProfileRequest struct {
+}
+
+type UserProfileResponse struct {
+	Id     int64  `json:"id"`
+	Name   string `json:"name"`
+	Email  string `json:"email"`
+	Avatar string `json:"avatar"`
 }
 
 type MoviePageListByGenreRequest struct {

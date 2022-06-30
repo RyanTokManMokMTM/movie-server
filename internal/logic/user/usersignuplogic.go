@@ -2,8 +2,8 @@ package user
 
 import (
 	"context"
-	"errors"
 	"github.com/ryantokmanmokmtm/movie-server/common/crytox"
+	"github.com/ryantokmanmokmtm/movie-server/common/errorx"
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
 	"github.com/ryantokmanmokmtm/movie-server/internal/types"
 	"github.com/ryantokmanmokmtm/movie-server/model/user"
@@ -32,7 +32,7 @@ func (l *UserSignUpLogic) UserSignUp(req *types.UserSignUpRequest) (resp *types.
 	lowEmail := strings.ToLower(req.Email)
 	_, err = l.svcCtx.User.FindOneByEmail(l.ctx, lowEmail)
 	if err == nil {
-		return nil, errors.New("email has been registered")
+		return nil, errorx.NewDefaultCodeError("email exits")
 	}
 	if err == sqlx.ErrNotFound {
 		newUser := user.Users{
@@ -43,12 +43,12 @@ func (l *UserSignUpLogic) UserSignUp(req *types.UserSignUpRequest) (resp *types.
 
 		res, err := l.svcCtx.User.Insert(l.ctx, &newUser)
 		if err != nil {
-			return nil, errors.New(err.Error())
+			return nil, errorx.NewDefaultCodeError(err.Error())
 		}
 
 		newUser.Id, err = res.LastInsertId()
 		if err != nil {
-			return nil, errors.New(err.Error())
+			return nil, errorx.NewDefaultCodeError(err.Error())
 		}
 
 		return &types.UserSignUpResponse{
@@ -57,5 +57,5 @@ func (l *UserSignUpLogic) UserSignUp(req *types.UserSignUpRequest) (resp *types.
 			Email: lowEmail,
 		}, nil
 	}
-	return nil, errors.New(err.Error())
+	return nil, errorx.NewDefaultCodeError(err.Error())
 }

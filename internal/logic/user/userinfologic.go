@@ -2,7 +2,7 @@ package user
 
 import (
 	"context"
-	"errors"
+	"github.com/ryantokmanmokmtm/movie-server/common/errorx"
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
 	"github.com/ryantokmanmokmtm/movie-server/internal/types"
 	"github.com/zeromicro/go-zero/core/logx"
@@ -29,9 +29,9 @@ func (l *UserInfoLogic) UserInfo(req *types.UserInfoRequest) (resp *types.UserIn
 	res, err := l.svcCtx.User.FindOne(l.ctx, req.ID)
 	if err != nil {
 		if err == sqlx.ErrNotFound {
-			return nil, errors.New("user not exists")
+			return nil, errorx.NewDefaultCodeError("user not found")
 		}
-		return nil, errors.New(err.Error())
+		return nil, errorx.NewDefaultCodeError(err.Error())
 	}
 	return &types.UserInfoResponse{
 		ID:    res.Id,

@@ -13,9 +13,9 @@ import (
 	"net/http"
 )
 
-func UserSignUpHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func UserProfileHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.UserSignUpRequest
+		var req types.UserProfileRequest
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.Error(w, err)
 			return
@@ -33,8 +33,8 @@ func UserSignUpHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
-		l := user.NewUserSignUpLogic(r.Context(), svcCtx)
-		resp, err := l.UserSignUp(&req)
+		l := user.NewUserProfileLogic(r.Context(), svcCtx)
+		resp, err := l.UserProfile(&req)
 		if err != nil {
 			httpx.Error(w, err)
 		} else {

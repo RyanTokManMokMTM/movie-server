@@ -2,8 +2,8 @@ package user
 
 import (
 	"context"
-	"errors"
 	"github.com/ryantokmanmokmtm/movie-server/common/crytox"
+	"github.com/ryantokmanmokmtm/movie-server/common/errorx"
 	"github.com/ryantokmanmokmtm/movie-server/common/jwtx"
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
 	"github.com/ryantokmanmokmtm/movie-server/internal/types"
@@ -32,24 +32,24 @@ func (l *UserLoginLogic) UserLogin(req *types.UserLoginRequest) (resp *types.Use
 
 	res, err := l.svcCtx.User.FindOneByEmail(l.ctx, req.Email)
 	if err == sqlx.ErrNotFound {
-		return nil, errors.New("email not exist")
+		return nil, errorx.NewDefaultCodeError("not found")
 	} else if err != nil {
-		return nil, errors.New(err.Error())
+		return nil, errorx.NewDefaultCodeError(err.Error())
 	}
 	hashedPassword := crytox.PasswordEncrypt(req.Password, l.svcCtx.Config.Salt)
 	if string(hashedPassword) != res.Password {
-		return nil, errors.New("password incorrect")
+		return nil, errorx.NewDefaultCodeError("password incorrect")
 	}
 
 	payload := map[string]interface{}{
-		"user_id": res.Id,
+		"userID": res.Id,
 	}
 	now := time.Now().Unix()
 	exp := l.svcCtx.Config.Auth.AccessExpire
 	key := l.svcCtx.Config.Auth.AccessSecret
 	token, err := jwtx.GetToken(now, exp, key, payload)
 	if err != nil {
-		return nil, errors.New(err.Error())
+		return nil, errorx.NewDefaultCodeError(err.Error())
 	}
 
 	return &types.UserLoginResponse{
