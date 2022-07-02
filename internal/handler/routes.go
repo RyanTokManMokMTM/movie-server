@@ -4,6 +4,9 @@ package handler
 import (
 	"net/http"
 
+	UserMovieList "github.com/ryantokmanmokmtm/movie-server/internal/handler/UserMovieList"
+	health "github.com/ryantokmanmokmtm/movie-server/internal/handler/health"
+	listDetail "github.com/ryantokmanmokmtm/movie-server/internal/handler/listDetail"
 	movie "github.com/ryantokmanmokmtm/movie-server/internal/handler/movie"
 	user "github.com/ryantokmanmokmtm/movie-server/internal/handler/user"
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
@@ -12,6 +15,16 @@ import (
 )
 
 func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/ping",
+				Handler: health.HealthCheckHandler(serverCtx),
+			},
+		},
+	)
+
 	server.AddRoutes(
 		[]rest.Route{
 			{
@@ -64,6 +77,77 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: movie.MovieGenreByMovieIDHandler(serverCtx),
 			},
 		},
+		rest.WithPrefix("/api/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/list/detail/:list_id",
+				Handler: listDetail.GetListMoviesHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/api/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/list/movie/create",
+				Handler: listDetail.CreateListMovieHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPatch,
+				Path:    "/list/movie/update",
+				Handler: listDetail.UpdateListMovieHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodDelete,
+				Path:    "/list/movie/delete",
+				Handler: listDetail.DeleteListMovieHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/api/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/list/lists",
+				Handler: UserMovieList.GetAllListHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/api/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodPost,
+				Path:    "/list/create",
+				Handler: UserMovieList.CreateUserMovieListHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPatch,
+				Path:    "/list/update",
+				Handler: UserMovieList.UpdateUserMovieListHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodDelete,
+				Path:    "/list/delete",
+				Handler: UserMovieList.DeleteUserMovieListHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/list/user/lists",
+				Handler: UserMovieList.GetUserListHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 		rest.WithPrefix("/api/v1"),
 	)
 }

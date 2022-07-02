@@ -9,7 +9,28 @@ syntax = "v1"
 //)
 import "./user.api"
 import "./movie.api"
+import  "./user_movie_list.api"
+import  "./list_movie.api"
 
+type (
+	HealthCheckReq  struct{}
+	HealthCheckResp {
+		Result string `json:"result"`
+	}
+)
+
+//Health service
+
+@server (
+	group : health
+)
+service MovieService {
+	@doc "server health check"
+	@handler HealthCheck
+	get /ping(HealthCheckReq) returns (HealthCheckResp);
+}
+
+//User Service
 @server (
 	group: user
 	prefix: /api/v1
@@ -45,6 +66,7 @@ service MovieService{
 	get /user/profile(UserProfileRequest) returns (UserProfileResponse);
 }
 
+//movie service
 @server (
 	group : movie
 	prefix : /api/v1
@@ -58,4 +80,68 @@ service MovieService{
 	@doc "get movie by genre"
 	@handler MovieGenreByMovieID
 	get /movies/genres(MovieGenresInfoRequest) returns (MovieGenresInfoResponse);
+}
+
+//List Detail Service
+@server (
+	group : listDetail
+	prefix : /api/v1
+)
+service MovieService {
+	@doc "Get movies by List ID"
+	@handler GetListMovies
+	get /list/detail/:list_id(ListDetailInfoReq) returns (ListDetailInfoResp);
+}
+
+@server (
+	group : listDetail
+	prefix : /api/v1
+	jwt : Auth
+)
+service MovieService {
+	@doc "Create movie by List ID"
+	@handler CreateListMovie
+	get /list/movie/create(CreateListDetailInfoReq) returns (CreateListDetailInfoResp);
+	
+	@doc "Update movie by ListID"
+	@handler UpdateListMovie
+	patch /list/movie/update(UpdateListDetailInfoReq) returns (UpdateListDetailInfoResp);
+	
+	@doc "Delete movie in ListID"
+	@handler DeleteListMovie
+	delete /list/movie/delete(DeleteListDetailInfoReq) returns (DeleteListDetailInfoResp);
+}
+
+//List Service
+@server (
+	group : UserMovieList
+	prefix : /api/v1
+)
+service MovieService {
+	@doc "get all recent movie list"
+	@handler GetAllList
+	get /list/lists(ListsReq) returns (ListsResp);
+}
+
+@server (
+	group : UserMovieList
+	prefix : /api/v1
+	jwt: Auth
+)
+service MovieService {
+	@doc "Create user movie list"
+	@handler CreateUserMovieList
+	post /list/create(CreateNewUserListReq) returns (CreateNewUserListResp);
+	
+	@doc "Update user movie list"
+	@handler UpdateUserMovieList
+	patch /list/update(UpdateUserListReq) returns (UpdateUserListResp);
+	
+	@doc "Delete user movie list"
+	@handler DeleteUserMovieList
+	delete /list/delete(DeleteUserListReq) returns (DeleteListDetailInfoResp)
+	
+	@doc "Get List By User ID in JWT"
+	@handler GetUserList
+	get /list/user/lists(UserListReq) returns (UserListResp);
 }

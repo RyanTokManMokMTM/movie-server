@@ -1,0 +1,48 @@
+syntax = "v1"
+//
+//info(
+//    title: "type title here"
+//    desc: "type desc here"
+//    author: "type author here"
+//    email: "type email here"
+//    version: "type version here"
+//)
+type (
+    ListDetailInfoReq {
+        ListID int64 `path:"list_id"`
+    }
+    ListDetailInfoResp{
+        Resp []*ListMovieInfo `json:"resp"`
+    }
+
+    CreateListDetailInfoReq {
+        ListID int64 `json:"list_id"`
+    }
+    CreateListDetailInfoResp {
+        List ListMovieInfo `json:"list"`
+    }
+
+    UpdateListDetailInfoReq {
+        ListID int64 `json:"list_id"`
+    }
+    UpdateListDetailInfoResp {}
+
+    DeleteListDetailInfoReq {
+        ListID int64 `json:"list_id"`
+    }
+    DeleteListDetailInfoResp {}
+)
+
+type (
+    ListMovieInfo {
+        Id              int64     `json:"id"`
+        ListId          int64     `json:"list_id"`
+        MovieId         int64     `json:"movie_id"`
+        MoviePosterPath string    `json:"movie_poster_path"`
+        UserFeeling     string    `json:"user_feeling"`
+        UserRatetext    string    `json:"user_ratetext"`
+    }
+
+
+)
+

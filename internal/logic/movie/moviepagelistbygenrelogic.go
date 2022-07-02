@@ -35,20 +35,10 @@ func (l *MoviePageListByGenreLogic) MoviePageListByGenre(req *types.MoviePageLis
 	var movieInfos []*types.MovieInfo
 	for _, v := range res {
 		movieInfos = append(movieInfos, &types.MovieInfo{
-			Adult:            v.Adult,
-			BackdropPath:     v.BackdropPath,
-			MovieID:          v.MovieId,
-			OriginalLanguage: v.OriginalLanguage,
-			OriginalTitle:    v.OriginalTitle,
-			Overview:         v.Overview,
-			Popularity:       v.Popularity,
-			PosterPath:       v.PosterPath,
-			ReleaseDate:      v.ReleaseDate,
-			Title:            v.Title,
-			RunTime:          v.RunTime,
-			Video:            v.Video,
-			VoteAverage:      v.VoteAverage,
-			VoteCount:        v.VoteCount,
+			MovieID:     v.MovieId,
+			PosterPath:  v.PosterPath,
+			Title:       v.Title,
+			VoteAverage: v.VoteAverage,
 		})
 	}
 	return &types.MoviePageListByGenreResponse{

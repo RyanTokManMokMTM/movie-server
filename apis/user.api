@@ -22,7 +22,7 @@ type (
 		UserName string `json:"name"`
 		Email    string `json:"email" validate:"email,max=32"`
 		Password string `json:"password" validate:"min=8,max=32"`
-		ConfirmPassword string `json:"confirmPassword" validate:"eqfield=Password"`
+//		ConfirmPassword string `json:"confirmPassword" validate:"eqfield=Password"`
 	}
 	UserSignUpResponse {
 		ID   int64  `json:"id"`

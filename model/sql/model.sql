@@ -37,7 +37,7 @@ CREATE TABLE `movie`.`movie_infos`  (
   `movie_id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
   `original_language` varchar(255)  CHARACTER SET utf8mb4  NOT NULL,
   `original_title` varchar(255) CHARACTER SET utf8mb4 NOT NULL,
-  `overview` varchar(255)  CHARACTER SET utf8mb4 NOT NULL,
+  `overview` longtext  CHARACTER SET utf8mb4 NOT NULL,
   `popularity` double NOT NULL,
   `poster_path` varchar(255)  CHARACTER SET utf8mb4  NOT NULL,
   `release_date` varchar(255) CHARACTER SET utf8mb4  NOT NULL,
@@ -88,11 +88,11 @@ DROP TABLE IF EXISTS `movie`.`movie_characters`;
 CREATE TABLE `movie`.`movie_characters`  (
   `person_id` bigint UNSIGNED NOT NULL,
   `movie_id` bigint NOT NULL,
-  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+  `movie_character_id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
   `character` varchar(255) CHARACTER SET utf8mb4  NOT NULL,
   `credit_id` varchar(255) CHARACTER SET utf8mb4 NOT NULL,
   `order` bigint NOT NULL,
-  PRIMARY KEY (`id`) USING BTREE,
+  PRIMARY KEY (`movie_character_id`) USING BTREE,
   INDEX `fk_person_infos_movie_character`(`person_id` ASC) USING BTREE,
   CONSTRAINT `fk_person_infos_movie_character` FOREIGN KEY (`person_id`) REFERENCES `movie`.`person_infos` (`person_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4;
@@ -118,10 +118,10 @@ DROP TABLE IF EXISTS `movie`.`person_crews`;
 CREATE TABLE `movie`.`person_crews`  (
   `person_id` bigint UNSIGNED NOT NULL,
   `movie_id` bigint NOT NULL,
-  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+  `person_crew_id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
   `credit_id` varchar(255) CHARACTER SET utf8mb4  NOT NULL,
   `department` varchar(255) CHARACTER SET utf8mb4  NOT NULL,
-  PRIMARY KEY (`id`) USING BTREE,
+  PRIMARY KEY (`person_crew_id`) USING BTREE,
   INDEX `fk_person_infos_person_crew`(`person_id` ASC) USING BTREE,
   CONSTRAINT `fk_person_infos_person_crew` FOREIGN KEY (`person_id`) REFERENCES `movie`.`person_infos` (`person_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 ;
@@ -130,33 +130,33 @@ SET FOREIGN_KEY_CHECKS = 1;
 
 DROP TABLE IF EXISTS `movie`.`articles`;
 CREATE TABLE `movie`.`articles`(
-	`id` bigint unsigned NOT NULL AUTO_INCREMENT,
+	`article_id` bigint unsigned NOT NULL AUTO_INCREMENT,
     `article_title` varchar(255) NOT NULL,
     `user_id` bigint unsigned NOT NULL,
     `movie_id` bigint unsigned NOT NULL,
     `article_like_count` int NOT NULL DEFAULT 0,
 	`create_time` timestamp DEFAULT current_timestamp,
     `update_time` timestamp DEFAULT current_timestamp ON UPDATE current_timestamp,
-	PRIMARY KEY(`id`),
+	PRIMARY KEY(`article_id`),
 	FOREIGN KEY(`movie_id`) REFERENCES `movie`.`movie_infos`(`movie_id`) ON UPDATE CASCADE ON DELETE CASCADE,
 	FOREIGN KEY(`user_id`) REFERENCES `movie`.`users`(`id`) ON UPDATE CASCADE ON DELETE CASCADE
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 DROP TABLE IF EXISTS `movie`.`lists`;
 CREATE TABLE `movie`.`lists`(
-	`id` bigint unsigned NOT NULL AUTO_INCREMENT ,
+	`list_id` bigint unsigned NOT NULL AUTO_INCREMENT ,
     `list_title` varchar(255) NOT NULL,
     `user_id` bigint unsigned NOT NULL,
     `create_time` timestamp DEFAULT current_timestamp,
     `update_time` timestamp DEFAULT current_timestamp ON UPDATE current_timestamp,
 --     `list_last_update` timestamp on update current_timestamp,
-	PRIMARY KEY(`id`),
+	PRIMARY KEY(`list_id`),
     FOREIGN KEY(`user_id`) REFERENCES `movie`.`users`(`id`) ON UPDATE CASCADE ON DELETE CASCADE
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 DROP TABLE IF EXISTS `movie`.`lists_movies`;
 CREATE TABLE `movie`.`lists_movies`(
-	`id` bigint unsigned NOT NULL AUTO_INCREMENT,
+	`lists_movie_id` bigint unsigned NOT NULL AUTO_INCREMENT,
     `list_id` bigint unsigned NOT NULL,
     `movie_id` bigint unsigned NOT NULL,
     `movie_poster_path` varchar(255) DEFAULT '',
@@ -164,45 +164,45 @@ CREATE TABLE `movie`.`lists_movies`(
     `user_ratetext` varchar(255) DEFAULT '',
     `create_time` timestamp DEFAULT current_timestamp,
     `update_time` timestamp DEFAULT current_timestamp ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY(`id`),
-	FOREIGN KEY(`list_id`) REFERENCES `movie`.`lists`(`id`) ON UPDATE CASCADE ON DELETE CASCADE,
+    PRIMARY KEY(`lists_movie_id`),
+	FOREIGN KEY(`list_id`) REFERENCES `movie`.`lists`(`list_id`) ON UPDATE CASCADE ON DELETE CASCADE,
 	FOREIGN KEY(`movie_id`) REFERENCES `movie`.`movie_infos`(`movie_id`) ON UPDATE CASCADE ON DELETE CASCADE
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 DROP TABLE IF EXISTS `movie`.`like_articles`;
 CREATE TABLE `movie`.`like_articles`(
-	`id` bigint unsigned NOT NULL AUTO_INCREMENT,
+	`like_article_id` bigint unsigned NOT NULL AUTO_INCREMENT,
     `user_id` bigint unsigned NOT NULL,
     `article_id` bigint unsigned NOT NULL,
 	`update_time` timestamp DEFAULT current_timestamp ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY(`id`),
+    PRIMARY KEY(`like_article_id`),
     FOREIGN KEY(`user_id`) REFERENCES `movie`.`users`(`id`) ON UPDATE CASCADE ON DELETE CASCADE
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 DROP TABLE IF EXISTS `movie`.`like_movies`;
 CREATE TABLE `movie`.`like_movies`(
-	`id` bigint unsigned NOT NULL AUTO_INCREMENT,
+	`like_movie_id` bigint unsigned NOT NULL AUTO_INCREMENT,
     `user_id` bigint unsigned NOT NULL,
     `movie_id` bigint unsigned NOT NULL,
     `movie_ti
     tle` varchar(255) NOT NULL DEFAULT '',
     `movie_poster_path` varchar(255) DEFAULT '',
 	`update_time` timestamp DEFAULT current_timestamp ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY(`id`),
+    PRIMARY KEY(`like_movie_id`),
 	FOREIGN KEY(`user_id`) REFERENCES `movie`.`users`(`id`) ON UPDATE CASCADE ON DELETE CASCADE,
 	FOREIGN KEY(`movie_id`) REFERENCES `movie`.`movie_infos`(`movie_id`) ON UPDATE CASCADE ON DELETE CASCADE
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 DROP TABLE IF EXISTS `movie`.`comments`;
 CREATE TABLE `movie`.`comments`(
-	`id` bigint unsigned NOT NULL AUTO_INCREMENT,
+	`comment_id` bigint unsigned NOT NULL AUTO_INCREMENT,
     `comment_text` varchar(255) NOT NULL DEFAULT '',
     `user_id` bigint unsigned NOT NULL,
     `article_id` bigint unsigned NOT NULL,
     `comment_like_count` int NOT NULL DEFAULT 0,
     `create_time` timestamp DEFAULT current_timestamp,
     `update_time` timestamp DEFAULT current_timestamp ON UPDATE current_timestamp,
-	PRIMARY KEY(`id`),
+	PRIMARY KEY(`comment_id`),
 	FOREIGN KEY(`user_id`) REFERENCES `movie`.`users`(`id`) ON UPDATE CASCADE ON DELETE CASCADE,
-	FOREIGN KEY(`user_id`) REFERENCES `movie`.`articles`(`id`) ON UPDATE CASCADE ON DELETE CASCADE
+	FOREIGN KEY(`article_id`) REFERENCES `movie`.`articles`(`article_id`) ON UPDATE CASCADE ON DELETE CASCADE
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
