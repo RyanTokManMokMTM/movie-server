@@ -6,7 +6,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	en_translations "github.com/go-playground/validator/v10/translations/en"
 	"github.com/ryantokmanmokmtm/movie-server/common/errorx"
-	"github.com/ryantokmanmokmtm/movie-server/internal/logic/UserMovieList"
+	"github.com/ryantokmanmokmtm/movie-server/internal/logic/list"
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
 	"github.com/ryantokmanmokmtm/movie-server/internal/types"
 	"github.com/zeromicro/go-zero/rest/httpx"
@@ -33,7 +33,7 @@ func GetUserListHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
-		l := UserMovieList.NewGetUserListLogic(r.Context(), svcCtx)
+		l := list.NewGetUserListLogic(r.Context(), svcCtx)
 		resp, err := l.GetUserList(&req)
 		if err != nil {
 			httpx.Error(w, err)

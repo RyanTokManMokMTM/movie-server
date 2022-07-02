@@ -86,7 +86,6 @@ type ListsResp struct {
 }
 
 type UserListReq struct {
-	Id int64 `json:"id"`
 }
 
 type UserListResp struct {
@@ -94,7 +93,7 @@ type UserListResp struct {
 }
 
 type CreateNewUserListReq struct {
-	Title string `json:"title"`
+	Title string `json:"title" validate:"required"`
 }
 
 type CreateNewUserListResp struct {
@@ -104,15 +103,15 @@ type CreateNewUserListResp struct {
 }
 
 type UpdateUserListReq struct {
-	Id    int64  `json:"id"`
-	Title string `json:"Title"`
+	Id    int64  `json:"id" validate:"required"`
+	Title string `json:"title" validate:"required"`
 }
 
 type UpdateUserListResp struct {
 }
 
 type DeleteUserListReq struct {
-	Id int64 `json:"id"`
+	Id int64 `json:"id" validate:"required"`
 }
 
 type DelteUserListResp struct {
@@ -122,8 +121,7 @@ type ListInfo struct {
 	Id         int64  `json:"id"`
 	ListTitle  string `json:"list_title"`
 	UserId     int64  `json:"user_id"`
-	CreateTime int64  `json:"create_time"`
-	UpdateTime int64  `json:"update_time"`
+	UpdateTime string `json:"update_time"`
 }
 
 type UserInfo struct {

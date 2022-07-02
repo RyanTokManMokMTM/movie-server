@@ -18,14 +18,14 @@ type (
     }
 
     UserListReq{
-        Id int64 `json:"id"`
     }
+
     UserListResp{
         Lists []*ListInfo `json:"listInfo"`
     }
 
     CreateNewUserListReq{
-        Title string  `json:"title"`
+        Title string  `json:"title" validate:"required"`
     }
     CreateNewUserListResp{
         Id         int64     `json:"id"`
@@ -34,15 +34,15 @@ type (
     }
 
     UpdateUserListReq{
-        Id int64 `json:"id"`
-        Title string `json:"Title"`
+        Id int64 `json:"id" validate:"required"`
+        Title string `json:"title" validate:"required"`
     }
 
     UpdateUserListResp{
     }
 
     DeleteUserListReq{
-        Id int64 `json:"id"`
+        Id int64 `json:"id" validate:"required"`
     }
     DelteUserListResp{
     }
@@ -53,8 +53,8 @@ type (
         Id         int64     `json:"id"`
         ListTitle  string    `json:"list_title"`
         UserId     int64     `json:"user_id"`
-        CreateTime int64 `json:"create_time"`
-        UpdateTime int64 `json:"update_time"`
+//        CreateTime int64 `json:"create_time"`
+        UpdateTime string `json:"update_time"`
     }
 
     UserInfo {

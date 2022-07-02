@@ -1,4 +1,4 @@
-package UserMovieList
+package list
 
 import (
 	"github.com/go-playground/locales/en"
@@ -13,9 +13,9 @@ import (
 	"net/http"
 )
 
-func UpdateUserMovieListHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func GetUserListHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.UpdateUserListReq
+		var req types.UserListReq
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.Error(w, err)
 			return
@@ -33,8 +33,8 @@ func UpdateUserMovieListHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
-		l := list.NewUpdateUserMovieListLogic(r.Context(), svcCtx)
-		resp, err := l.UpdateUserMovieList(&req)
+		l := list.NewGetUserListLogic(r.Context(), svcCtx)
+		resp, err := l.GetUserList(&req)
 		if err != nil {
 			httpx.Error(w, err)
 		} else {

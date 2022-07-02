@@ -39,6 +39,8 @@ type (
 
 		FindAllByUserID(ctx context.Context, userID int64) ([]*Lists, error)
 		FindAllByUpdateTimeDESC(ctx context.Context) ([]*JoinedUserList, error)
+
+		FindOneByUserIDAndListId(ctx context.Context, userID, listID int64) (*Lists, error)
 	}
 
 	defaultListsModel struct {
@@ -138,6 +140,19 @@ func (m *defaultListsModel) FindAllByUpdateTimeDESC(ctx context.Context) ([]*Joi
 	switch err {
 	case nil:
 		return res, nil
+	default:
+		return nil, err
+	}
+}
+
+func (m *defaultListsModel) FindOneByUserIDAndListId(ctx context.Context, userID, listID int64) (*Lists, error) {
+	query := fmt.Sprintf("SELECT %s FROM %s WHERE list_id = ? AND user_id = ?", listsRows, m.table)
+	logx.Info(query)
+	var res Lists
+	err := m.QueryRowNoCacheCtx(ctx, &res, query, listID, userID)
+	switch err {
+	case nil:
+		return &res, nil
 	default:
 		return nil, err
 	}

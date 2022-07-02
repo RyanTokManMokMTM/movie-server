@@ -90,7 +90,7 @@ service MovieService{
 service MovieService {
 	@doc "Get movies by List ID"
 	@handler GetListMovies
-	get /list/detail/:list_id(ListDetailInfoReq) returns (ListDetailInfoResp);
+	get /list/movies/:list_id(ListDetailInfoReq) returns (ListDetailInfoResp);
 }
 
 @server (
@@ -101,15 +101,15 @@ service MovieService {
 service MovieService {
 	@doc "Create movie by List ID"
 	@handler CreateListMovie
-	get /list/movie/create(CreateListDetailInfoReq) returns (CreateListDetailInfoResp);
+	get /list/movie(CreateListDetailInfoReq) returns (CreateListDetailInfoResp);
 	
 	@doc "Update movie by ListID"
 	@handler UpdateListMovie
-	patch /list/movie/update(UpdateListDetailInfoReq) returns (UpdateListDetailInfoResp);
+	patch /list/movie(UpdateListDetailInfoReq) returns (UpdateListDetailInfoResp);
 	
 	@doc "Delete movie in ListID"
 	@handler DeleteListMovie
-	delete /list/movie/delete(DeleteListDetailInfoReq) returns (DeleteListDetailInfoResp);
+	delete /list/movie(DeleteListDetailInfoReq) returns (DeleteListDetailInfoResp);
 }
 
 //List Service
@@ -124,22 +124,22 @@ service MovieService {
 }
 
 @server (
-	group : UserMovieList
+	group : list
 	prefix : /api/v1
 	jwt: Auth
 )
 service MovieService {
 	@doc "Create user movie list"
 	@handler CreateUserMovieList
-	post /list/create(CreateNewUserListReq) returns (CreateNewUserListResp);
+	post /list(CreateNewUserListReq) returns (CreateNewUserListResp);
 	
 	@doc "Update user movie list"
 	@handler UpdateUserMovieList
-	patch /list/update(UpdateUserListReq) returns (UpdateUserListResp);
+	patch /list(UpdateUserListReq) returns (UpdateUserListResp);
 	
 	@doc "Delete user movie list"
 	@handler DeleteUserMovieList
-	delete /list/delete(DeleteUserListReq) returns (DeleteListDetailInfoResp)
+	delete /list(DeleteUserListReq) returns (DeleteListDetailInfoResp)
 	
 	@doc "Get List By User ID in JWT"
 	@handler GetUserList

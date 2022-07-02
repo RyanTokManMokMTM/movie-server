@@ -1,10 +1,10 @@
-package UserMovieList
+package list
 
 import (
 	"context"
 	"fmt"
 	"github.com/ryantokmanmokmtm/movie-server/common/errorx"
-	"github.com/ryantokmanmokmtm/movie-server/model/list"
+	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"strconv"
 
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
@@ -13,21 +13,21 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type CreateUserMovieListLogic struct {
+type DeleteUserMovieListLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
-func NewCreateUserMovieListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CreateUserMovieListLogic {
-	return &CreateUserMovieListLogic{
+func NewDeleteUserMovieListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DeleteUserMovieListLogic {
+	return &DeleteUserMovieListLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
 	}
 }
 
-func (l *CreateUserMovieListLogic) CreateUserMovieList(req *types.CreateNewUserListReq) (resp *types.CreateNewUserListResp, err error) {
+func (l *DeleteUserMovieListLogic) DeleteUserMovieList(req *types.DeleteUserListReq) (resp *types.DeleteListDetailInfoResp, err error) {
 	// todo: add your logic here and delete this line
 	userID := fmt.Sprintf("%v", l.ctx.Value("userID"))
 	id, _ := strconv.Atoi(userID)
@@ -36,24 +36,18 @@ func (l *CreateUserMovieListLogic) CreateUserMovieList(req *types.CreateNewUserL
 		return nil, errorx.NewDefaultCodeError(err.Error())
 	}
 
-	newModel := list.Lists{
-		ListTitle: req.Title,
-		UserId:    int64(id),
+	_, err = l.svcCtx.List.FindOneByUserIDAndListId(l.ctx, int64(id), req.Id)
+	if err != nil {
+		if err == sqlx.ErrNotFound {
+			return nil, errorx.NotFound
+		}
+		return nil, errorx.NewDefaultCodeError(err.Error())
 	}
-	res, err := l.svcCtx.List.Insert(l.ctx, &newModel)
 
+	err = l.svcCtx.List.Delete(l.ctx, req.Id)
 	if err != nil {
 		return nil, errorx.NewDefaultCodeError(err.Error())
 	}
 
-	newModel.ListId, err = res.LastInsertId()
-	if err != nil {
-		return nil, errorx.NewDefaultCodeError(err.Error())
-	}
-
-	return &types.CreateNewUserListResp{
-		Id:        newModel.ListId,
-		UserId:    newModel.UserId,
-		ListTitle: newModel.ListTitle,
-	}, nil
+	return &types.DeleteListDetailInfoResp{}, nil
 }

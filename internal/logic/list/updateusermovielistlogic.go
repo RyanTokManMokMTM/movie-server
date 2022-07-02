@@ -1,10 +1,11 @@
-package UserMovieList
+package list
 
 import (
 	"context"
 	"fmt"
 	"github.com/ryantokmanmokmtm/movie-server/common/errorx"
 	"github.com/ryantokmanmokmtm/movie-server/model/list"
+	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"strconv"
 
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
@@ -36,7 +37,16 @@ func (l *UpdateUserMovieListLogic) UpdateUserMovieList(req *types.UpdateUserList
 		return nil, errorx.NewDefaultCodeError(err.Error())
 	}
 
+	_, err = l.svcCtx.List.FindOneByUserIDAndListId(l.ctx, int64(id), req.Id)
+	if err != nil {
+		if err == sqlx.ErrNotFound {
+			return nil, errorx.NotFound
+		}
+		return nil, errorx.NewDefaultCodeError(err.Error())
+	}
+
 	updateModel := list.Lists{
+		UserId:    int64(id),
 		ListId:    req.Id,
 		ListTitle: req.Title,
 	}

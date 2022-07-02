@@ -1,4 +1,4 @@
-package UserMovieList
+package list
 
 import (
 	"context"
@@ -36,7 +36,7 @@ func (l *GetUserListLogic) GetUserList(req *types.UserListReq) (resp *types.User
 	}
 
 	//Return all user movie list by user_id
-	res, err := l.svcCtx.List.FindAllByUserID(l.ctx, req.Id)
+	res, err := l.svcCtx.List.FindAllByUserID(l.ctx, int64(id))
 	if err != nil {
 		return nil, errorx.NewDefaultCodeError(err.Error())
 	}
@@ -47,8 +47,7 @@ func (l *GetUserListLogic) GetUserList(req *types.UserListReq) (resp *types.User
 			Id:         v.ListId,
 			ListTitle:  v.ListTitle,
 			UserId:     v.UserId,
-			CreateTime: v.CreateTime.Unix(),
-			UpdateTime: v.UpdateTime.Unix(),
+			UpdateTime: v.UpdateTime.String(),
 		})
 	}
 

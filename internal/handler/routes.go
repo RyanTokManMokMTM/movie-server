@@ -6,6 +6,7 @@ import (
 
 	UserMovieList "github.com/ryantokmanmokmtm/movie-server/internal/handler/UserMovieList"
 	health "github.com/ryantokmanmokmtm/movie-server/internal/handler/health"
+	list "github.com/ryantokmanmokmtm/movie-server/internal/handler/list"
 	listDetail "github.com/ryantokmanmokmtm/movie-server/internal/handler/listDetail"
 	movie "github.com/ryantokmanmokmtm/movie-server/internal/handler/movie"
 	user "github.com/ryantokmanmokmtm/movie-server/internal/handler/user"
@@ -84,7 +85,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodGet,
-				Path:    "/list/detail/:list_id",
+				Path:    "/list/movies/:list_id",
 				Handler: listDetail.GetListMoviesHandler(serverCtx),
 			},
 		},
@@ -95,17 +96,17 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodGet,
-				Path:    "/list/movie/create",
+				Path:    "/list/movie",
 				Handler: listDetail.CreateListMovieHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPatch,
-				Path:    "/list/movie/update",
+				Path:    "/list/movie",
 				Handler: listDetail.UpdateListMovieHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodDelete,
-				Path:    "/list/movie/delete",
+				Path:    "/list/movie",
 				Handler: listDetail.DeleteListMovieHandler(serverCtx),
 			},
 		},
@@ -128,23 +129,23 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodPost,
-				Path:    "/list/create",
-				Handler: UserMovieList.CreateUserMovieListHandler(serverCtx),
+				Path:    "/list",
+				Handler: list.CreateUserMovieListHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPatch,
-				Path:    "/list/update",
-				Handler: UserMovieList.UpdateUserMovieListHandler(serverCtx),
+				Path:    "/list",
+				Handler: list.UpdateUserMovieListHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodDelete,
-				Path:    "/list/delete",
-				Handler: UserMovieList.DeleteUserMovieListHandler(serverCtx),
+				Path:    "/list",
+				Handler: list.DeleteUserMovieListHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodGet,
 				Path:    "/list/user/lists",
-				Handler: UserMovieList.GetUserListHandler(serverCtx),
+				Handler: list.GetUserListHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
