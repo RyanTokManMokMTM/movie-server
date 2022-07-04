@@ -44,10 +44,12 @@ type UserProfileRequest struct {
 }
 
 type UserProfileResponse struct {
-	Id     int64  `json:"id"`
-	Name   string `json:"name"`
-	Email  string `json:"email"`
-	Avatar string `json:"avatar"`
+	ID          int64             `json:"id"`
+	Name        string            `json:"name"`
+	Email       string            `json:"email"`
+	Avatar      string            `json:"avatar"`
+	Cover       string            `json:"cover"`
+	LikedMovies []*LikedMovieInfo `json:"liked_movies"`
 }
 
 type MoviePageListByGenreRequest struct {
@@ -175,4 +177,35 @@ type ListMovieInfo struct {
 	MoviePosterPath string `json:"movie_poster_path"`
 	UserFeeling     string `json:"user_feeling"`
 	UserRatetext    string `json:"user_ratetext"`
+}
+
+type CreateLikedMovieReq struct {
+	MovieID int64 `json:"movie_id"`
+}
+
+type CreateLikedMovieResp struct {
+	LikedMovieID int64 `json:"liked_movie_id"`
+	UserID       int64 `json:"user_id"`
+}
+
+type DeleteLikedMoviedReq struct {
+	MovieID int64 `json:"movie_id"`
+}
+
+type DeleteLikedMovieResp struct {
+}
+
+type UserAllLikedMoviesReq struct {
+}
+
+type UserAllLikedMoviesResp struct {
+	LikedMoviesList []*LikedMovieInfo `json:"liked_movie_list"`
+}
+
+type LikedMovieInfo struct {
+	MovieID      int64       `json:"id"`
+	MovieName    string      `json:"movie_name"`
+	Genres       []GenreInfo `json:"genres"`
+	MoviePoster  string      `json:"movie_poster"`
+	MovieVoteAvg float32     `json:"vote_average"`
 }

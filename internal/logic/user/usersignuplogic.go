@@ -39,6 +39,9 @@ func (l *UserSignUpLogic) UserSignUp(req *types.UserSignUpRequest) (resp *types.
 			Name:     req.UserName,
 			Email:    lowEmail,
 			Password: crytox.PasswordEncrypt(req.Password, l.svcCtx.Config.Salt),
+			//avatar for testing
+			Avatar: "https://upload.cc/i1/2022/07/03/MJIXkd.jpeg",
+			Cover:  "https://upload.cc/i1/2022/07/04/yQN7tU.jpeg",
 		}
 
 		res, err := l.svcCtx.User.Insert(l.ctx, &newUser)

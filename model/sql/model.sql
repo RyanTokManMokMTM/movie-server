@@ -7,6 +7,7 @@ CREATE TABLE `movie`.`users`(
     `email` varchar(255) NOT NULL DEFAULT '' COMMENT 'user email',
     `password` varchar(255) NOT NULL DEFAULT '' COMMENT 'user password',
     `avatar` varchar(255) NULL DEFAULT 'default.jpg' COMMENT 'user avatar',
+    `cover` varchar(255) NULL DEFAULT  'cover.jpg' COMMENT 'user background cover',
     `create_time` timestamp DEFAULT current_timestamp,
     `update_time` timestamp DEFAULT current_timestamp ON UPDATE current_timestamp,
     PRIMARY KEY(`id`),
@@ -179,16 +180,17 @@ CREATE TABLE `movie`.`like_articles`(
     FOREIGN KEY(`user_id`) REFERENCES `movie`.`users`(`id`) ON UPDATE CASCADE ON DELETE CASCADE
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-DROP TABLE IF EXISTS `movie`.`like_movies`;
-CREATE TABLE `movie`.`like_movies`(
-	`like_movie_id` bigint unsigned NOT NULL AUTO_INCREMENT,
+DROP TABLE IF EXISTS `movie`.`liked_movies`;
+CREATE TABLE `movie`.`liked_movies`(
+	`liked_movie_id` bigint unsigned NOT NULL AUTO_INCREMENT,
     `user_id` bigint unsigned NOT NULL,
     `movie_id` bigint unsigned NOT NULL,
-    `movie_ti
-    tle` varchar(255) NOT NULL DEFAULT '',
-    `movie_poster_path` varchar(255) DEFAULT '',
+--     `movie_title` varchar(255) NOT NULL DEFAULT '',
+--     `movie_poster_path` varchar(255) DEFAULT '',
+    `create_time` timestamp DEFAULT current_timestamp ,
 	`update_time` timestamp DEFAULT current_timestamp ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY(`like_movie_id`),
+    PRIMARY KEY(`liked_movie_id`),
+    UNIQUE KEY( `user_id`, `movie_id`),
 	FOREIGN KEY(`user_id`) REFERENCES `movie`.`users`(`id`) ON UPDATE CASCADE ON DELETE CASCADE,
 	FOREIGN KEY(`movie_id`) REFERENCES `movie`.`movie_infos`(`movie_id`) ON UPDATE CASCADE ON DELETE CASCADE
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

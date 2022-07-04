@@ -46,6 +46,7 @@ type (
 		Email      string    `db:"email"`    // user email
 		Password   string    `db:"password"` // user password
 		Avatar     string    `db:"avatar"`   // user avatar
+		Cover      string    `db:"cover"`    // user background cover
 		CreateTime time.Time `db:"create_time"`
 		UpdateTime time.Time `db:"update_time"`
 	}
@@ -114,8 +115,8 @@ func (m *defaultUsersModel) Insert(ctx context.Context, data *Users) (sql.Result
 	movieUsersEmailKey := fmt.Sprintf("%s%v", cacheMovieUsersEmailPrefix, data.Email)
 	movieUsersIdKey := fmt.Sprintf("%s%v", cacheMovieUsersIdPrefix, data.Id)
 	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
-		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?)", m.table, usersRowsExpectAutoSet)
-		return conn.ExecCtx(ctx, query, data.Name, data.Email, data.Password, data.Avatar)
+		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?)", m.table, usersRowsExpectAutoSet)
+		return conn.ExecCtx(ctx, query, data.Name, data.Email, data.Password, data.Avatar, data.Cover)
 	}, movieUsersEmailKey, movieUsersIdKey)
 	return ret, err
 }
@@ -130,7 +131,7 @@ func (m *defaultUsersModel) Update(ctx context.Context, newData *Users) error {
 	movieUsersIdKey := fmt.Sprintf("%s%v", cacheMovieUsersIdPrefix, data.Id)
 	_, err = m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, usersRowsWithPlaceHolder)
-		return conn.ExecCtx(ctx, query, newData.Name, newData.Email, newData.Password, newData.Avatar, newData.Id)
+		return conn.ExecCtx(ctx, query, newData.Name, newData.Email, newData.Password, newData.Avatar, newData.Cover, newData.Id)
 	}, movieUsersEmailKey, movieUsersIdKey)
 	return err
 }

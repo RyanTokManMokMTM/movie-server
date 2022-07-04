@@ -11,6 +11,7 @@ import "./user.api"
 import "./movie.api"
 import  "./user_movie_list.api"
 import  "./list_movie.api"
+import "./liked_movie.api"
 
 type (
 	HealthCheckReq  struct{}
@@ -144,4 +145,29 @@ service MovieService {
 	@doc "Get List By User ID in JWT"
 	@handler GetUserList
 	get /list/user/lists(UserListReq) returns (UserListResp);
+}
+
+//Liked Movies Service
+
+@server (
+	group : likedMovie
+	prefix : /api/v1
+	jwt : Auth
+)
+service MovieService {
+	@doc "Create user liked movie"
+	@handler CreateLikedMovie
+	post /liked/movie(CreateLikedMovieReq) returns (CreateLikedMovieResp);
+	
+	@doc "Delete user liked movie"
+	@handler DeleteLikedMovie
+	delete /liked/movie(DeleteLikedMoviedReq) returns (DeleteLikedMovieResp);
+	//
+	//	@doc "Check user has liked movie"
+	//	@handler CheckUserLikedMovie
+	//	get /liked/check/movie(UserLikedMovieReq) returns (UserLikedMovieResp);
+	//
+	@doc "Get all user liked movie info as a list"
+	@handler GetUserLikedMovieList
+	get /liked/movies(UserAllLikedMoviesReq) returns (UserAllLikedMoviesResp);
 }

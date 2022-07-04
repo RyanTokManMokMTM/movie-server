@@ -42,10 +42,16 @@ type (
 
 	UserProfileRequest {}
 	UserProfileResponse {
-		id int64 `json:"id"`
-		name string `json:"name"`
-		email string `json:"email"`
-		avatar string `json:"avatar"`
+		ID int64 `json:"id"`
+		Name string `json:"name"`
+		Email string `json:"email"`
+		Avatar string `json:"avatar"`
+		Cover string `json:"cover"`
+
+		//Need  liked moive list
+		LikedMovies []*LikedMovieInfo `json:"liked_movies"`
+
+		//More....
 	}
 )
 

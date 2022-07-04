@@ -15,6 +15,16 @@ type (
         Resp []*ListMovieInfo `json:"resp"`
     }
 
+    /*
+    var listTitle : String
+    var UserName : String   //利用listTitle和UserName識別片單
+    var movieID : Int
+    var movietitle : String
+    var posterPath : String
+    var feeling : String
+    var ratetext : Int
+
+    */
     CreateListDetailInfoReq {
         ListID int64 `json:"list_id"`
     }

@@ -6,6 +6,7 @@ import (
 
 	UserMovieList "github.com/ryantokmanmokmtm/movie-server/internal/handler/UserMovieList"
 	health "github.com/ryantokmanmokmtm/movie-server/internal/handler/health"
+	likedMovie "github.com/ryantokmanmokmtm/movie-server/internal/handler/likedMovie"
 	list "github.com/ryantokmanmokmtm/movie-server/internal/handler/list"
 	listDetail "github.com/ryantokmanmokmtm/movie-server/internal/handler/listDetail"
 	movie "github.com/ryantokmanmokmtm/movie-server/internal/handler/movie"
@@ -146,6 +147,28 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodGet,
 				Path:    "/list/user/lists",
 				Handler: list.GetUserListHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/api/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodPost,
+				Path:    "/liked/movie",
+				Handler: likedMovie.CreateLikedMovieHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodDelete,
+				Path:    "/liked/movie",
+				Handler: likedMovie.DeleteLikedMovieHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/liked/movies",
+				Handler: likedMovie.GetUserLikedMovieListHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
