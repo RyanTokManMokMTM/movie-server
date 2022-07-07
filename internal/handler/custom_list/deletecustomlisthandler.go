@@ -1,4 +1,4 @@
-package listDetail
+package custom_list
 
 import (
 	"github.com/go-playground/locales/en"
@@ -6,16 +6,16 @@ import (
 	"github.com/go-playground/validator/v10"
 	en_translations "github.com/go-playground/validator/v10/translations/en"
 	"github.com/ryantokmanmokmtm/movie-server/common/errorx"
-	"github.com/ryantokmanmokmtm/movie-server/internal/logic/listDetail"
+	"github.com/ryantokmanmokmtm/movie-server/internal/logic/custom_list"
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
 	"github.com/ryantokmanmokmtm/movie-server/internal/types"
 	"github.com/zeromicro/go-zero/rest/httpx"
 	"net/http"
 )
 
-func DeleteListMovieHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func DeleteCustomListHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.DeleteListDetailInfoReq
+		var req types.DeleteCustomListReq
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.Error(w, err)
 			return
@@ -33,8 +33,8 @@ func DeleteListMovieHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
-		l := listDetail.NewDeleteListMovieLogic(r.Context(), svcCtx)
-		resp, err := l.DeleteListMovie(&req)
+		l := custom_list.NewDeleteCustomListLogic(r.Context(), svcCtx)
+		resp, err := l.DeleteCustomList(&req)
 		if err != nil {
 			httpx.Error(w, err)
 		} else {

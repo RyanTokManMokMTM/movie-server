@@ -1,4 +1,4 @@
-package listDetail
+package custom_list
 
 import (
 	"context"
@@ -12,21 +12,21 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type CreateListMovieLogic struct {
+type DeleteCustomListLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
-func NewCreateListMovieLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CreateListMovieLogic {
-	return &CreateListMovieLogic{
+func NewDeleteCustomListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DeleteCustomListLogic {
+	return &DeleteCustomListLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
 	}
 }
 
-func (l *CreateListMovieLogic) CreateListMovie(req *types.CreateListDetailInfoReq) (resp *types.CreateListDetailInfoResp, err error) {
+func (l *DeleteCustomListLogic) DeleteCustomList(req *types.DeleteCustomListReq) (resp *types.DeleteCustomListResp, err error) {
 	// todo: add your logic here and delete this line
 	userID := fmt.Sprintf("%v", l.ctx.Value("userID"))
 	id, _ := strconv.Atoi(userID)
@@ -35,5 +35,15 @@ func (l *CreateListMovieLogic) CreateListMovie(req *types.CreateListDetailInfoRe
 		return nil, errorx.NewDefaultCodeError(err.Error())
 	}
 
-	return
+	_, err = l.svcCtx.List.FindOneByUserIDAndListId(l.ctx, int64(id), req.ID)
+	if err != nil {
+		return nil, errorx.NewDefaultCodeError("You are not allow to delete the list")
+	}
+
+	err = l.svcCtx.List.Delete(l.ctx, req.ID)
+	if err != nil {
+		return nil, errorx.NewDefaultCodeError(err.Error())
+	}
+
+	return &types.DeleteCustomListResp{}, nil
 }

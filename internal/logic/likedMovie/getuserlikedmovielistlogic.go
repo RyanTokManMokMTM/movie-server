@@ -3,10 +3,7 @@ package likedMovie
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"github.com/ryantokmanmokmtm/movie-server/common/errorx"
-	"strconv"
-
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
 	"github.com/ryantokmanmokmtm/movie-server/internal/types"
 
@@ -27,16 +24,10 @@ func NewGetUserLikedMovieListLogic(ctx context.Context, svcCtx *svc.ServiceConte
 	}
 }
 
-func (l *GetUserLikedMovieListLogic) GetUserLikedMovieList(req *types.UserAllLikedMoviesReq) (resp *types.UserAllLikedMoviesResp, err error) {
+func (l *GetUserLikedMovieListLogic) GetUserLikedMovieList(req *types.AllUserLikedMoviesReq) (resp *types.AllUserAllLikedMoviesResp, err error) {
 	// todo: add your logic here and delete this line
-	userID := fmt.Sprintf("%v", l.ctx.Value("userID"))
-	id, _ := strconv.Atoi(userID)
-	_, err = l.svcCtx.User.FindOne(l.ctx, int64(id))
-	if err != nil {
-		return nil, errorx.NewDefaultCodeError(err.Error())
-	}
 
-	res, err := l.svcCtx.LikedMovie.FindAllByUserIDWithMovieInfo(l.ctx, int64(id))
+	res, err := l.svcCtx.LikedMovie.FindAllByUserIDWithMovieInfo(l.ctx, req.ID)
 
 	if err != nil {
 		return nil, errorx.NewDefaultCodeError(err.Error())
@@ -55,7 +46,7 @@ func (l *GetUserLikedMovieListLogic) GetUserLikedMovieList(req *types.UserAllLik
 		})
 	}
 
-	return &types.UserAllLikedMoviesResp{
+	return &types.AllUserAllLikedMoviesResp{
 		LikedMoviesList: movieInfo,
 	}, nil
 }

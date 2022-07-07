@@ -1,4 +1,4 @@
-package list
+package custom_list
 
 import (
 	"context"
@@ -12,21 +12,21 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type GetUserListLogic struct {
+type UpdateCustomListLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
-func NewGetUserListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetUserListLogic {
-	return &GetUserListLogic{
+func NewUpdateCustomListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UpdateCustomListLogic {
+	return &UpdateCustomListLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
 	}
 }
 
-func (l *GetUserListLogic) GetUserList(req *types.UserListReq) (resp *types.UserListResp, err error) {
+func (l *UpdateCustomListLogic) UpdateCustomList(req *types.UpdateCustomListReq) (resp *types.UpdateCustomListResp, err error) {
 	// todo: add your logic here and delete this line
 	userID := fmt.Sprintf("%v", l.ctx.Value("userID"))
 	id, _ := strconv.Atoi(userID)
@@ -35,23 +35,17 @@ func (l *GetUserListLogic) GetUserList(req *types.UserListReq) (resp *types.User
 		return nil, errorx.NewDefaultCodeError(err.Error())
 	}
 
-	//Return all user movie list by user_id
-	res, err := l.svcCtx.List.FindAllByUserID(l.ctx, int64(id))
+	res, err := l.svcCtx.List.FindOne(l.ctx, req.ID)
 	if err != nil {
 		return nil, errorx.NewDefaultCodeError(err.Error())
 	}
 
-	var ListInfos []*types.ListInfo
-	for _, v := range res {
-		ListInfos = append(ListInfos, &types.ListInfo{
-			Id:         v.ListId,
-			ListTitle:  v.ListTitle,
-			UserId:     v.UserId,
-			UpdateTime: v.UpdateTime.String(),
-		})
-	}
+	//title is a required field
+	res.ListTitle = req.Title
 
-	return &types.UserListResp{
-		Lists: ListInfos,
-	}, nil
+	err = l.svcCtx.List.Update(l.ctx, res)
+	if err != nil {
+		return nil, errorx.NewDefaultCodeError(err.Error())
+	}
+	return &types.UpdateCustomListResp{}, nil
 }

@@ -1,4 +1,4 @@
-package listDetail
+package custom_list
 
 import (
 	"github.com/go-playground/locales/en"
@@ -6,16 +6,16 @@ import (
 	"github.com/go-playground/validator/v10"
 	en_translations "github.com/go-playground/validator/v10/translations/en"
 	"github.com/ryantokmanmokmtm/movie-server/common/errorx"
-	"github.com/ryantokmanmokmtm/movie-server/internal/logic/listDetail"
+	"github.com/ryantokmanmokmtm/movie-server/internal/logic/custom_list"
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
 	"github.com/ryantokmanmokmtm/movie-server/internal/types"
 	"github.com/zeromicro/go-zero/rest/httpx"
 	"net/http"
 )
 
-func UpdateListMovieHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func CreateCustomListHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.UpdateListDetailInfoReq
+		var req types.CreateCustomListReq
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.Error(w, err)
 			return
@@ -33,8 +33,8 @@ func UpdateListMovieHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
-		l := listDetail.NewUpdateListMovieLogic(r.Context(), svcCtx)
-		resp, err := l.UpdateListMovie(&req)
+		l := custom_list.NewCreateCustomListLogic(r.Context(), svcCtx)
+		resp, err := l.CreateCustomList(&req)
 		if err != nil {
 			httpx.Error(w, err)
 		} else {

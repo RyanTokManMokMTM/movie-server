@@ -1,0 +1,90 @@
+syntax = "v1"
+//
+//info(
+//    title: "type title here"
+//    desc: "type desc here"
+//    author: "type author here"
+//    email: "type email here"
+//    version: "type version here"
+//)
+
+
+type (
+    CreateCustomListReq {
+        Title string `json:"title"`
+    }
+    CreateCustomListResp {
+        ID int64 `json:"id"`
+        Title string `json:"title"`
+        UpdateOn int64 `json:"update_on"`
+    }
+
+    UpdateCustomListReq {
+        ID int64 `json:"id"`
+        Title string `json:"title"`
+    }
+    UpdateCustomListResp {}
+
+    DeleteCustomListReq {
+        ID int64 `json:"id"`
+    }
+    DeleteCustomListResp {}
+
+    AllCustomListReq {
+        ID int64 `path:"user_id"`
+    }
+    AllCustomListResp {
+        Lists []ListInfo `json:"lists"`
+    }
+
+    UserListReq {
+        ID int64 `path:"list_id"`
+    }
+    UserListResp {
+        List ListInfo `json:"list"`
+    }
+)
+
+type (
+    ListInfo {
+        ID int64 `json:"id"`
+        Title string `json:"title"`
+        UpdateOn int64 `json:"update_on"`
+    }
+)
+
+
+
+@server (
+    group : custom_list
+    prefix : /api/v1
+)
+service MovieService {
+    @doc "Get All User List by user ID"
+    @handler GetAllUserList
+    get /lists/:user_id(AllCustomListReq) returns (AllCustomListResp);
+
+    @doc "Get a custom list by list id"
+    @handler GetListByID
+    get /list/:list_id(UserListReq) returns (UserListResp);
+
+}
+
+@server (
+    group : custom_list
+    prefix : /api/v1
+    jwt : Auth
+)
+service MovieService {
+    @doc "Create a new custom list"
+    @handler CreateCustomList
+    post /lists(CreateCustomListReq) returns (CreateCustomListResp);
+
+    @doc "Update a custom list"
+    @handler UpdateCustomList
+    patch /lists(UpdateCustomListReq) returns (UpdateCustomListResp);
+
+    @doc "Delete a custom list"
+    @handler DeleteCustomList
+    delete /lists(DeleteCustomListReq) returns (DeleteCustomListResp);
+}

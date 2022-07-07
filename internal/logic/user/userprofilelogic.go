@@ -2,7 +2,6 @@ package user
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"github.com/ryantokmanmokmtm/movie-server/common/errorx"
 	"strconv"
@@ -37,30 +36,30 @@ func (l *UserProfileLogic) UserProfile(req *types.UserProfileRequest) (resp *typ
 		return nil, errorx.NewDefaultCodeError(err.Error())
 	}
 
-	list, err := l.svcCtx.LikedMovie.FindAllByUserIDWithMovieInfo(l.ctx, int64(id))
-	if err != nil {
-		return nil, errorx.NewDefaultCodeError(err.Error())
-	}
+	//list, err := l.svcCtx.LikedMovie.FindAllByUserIDWithMovieInfo(l.ctx, int64(id))
+	//if err != nil {
+	//	return nil, errorx.NewDefaultCodeError(err.Error())
+	//}
 
-	var likedMovieList []*types.LikedMovieInfo
-	for _, v := range list {
-		var genres []types.GenreInfo
-		json.Unmarshal(v.Genres, &genres)
-		likedMovieList = append(likedMovieList, &types.LikedMovieInfo{
-			Genres:       genres,
-			MovieID:      v.MovieId,
-			MovieName:    v.MovieTitle,
-			MoviePoster:  v.MoviePoster,
-			MovieVoteAvg: v.MovieVoteAvg,
-		})
-	}
+	//var likedMovieList []*types.LikedMovieInfo
+	//for _, v := range list {
+	//	var genres []types.GenreInfo
+	//	json.Unmarshal(v.Genres, &genres)
+	//	likedMovieList = append(likedMovieList, &types.LikedMovieInfo{
+	//		Genres:       genres,
+	//		MovieID:      v.MovieId,
+	//		MovieName:    v.MovieTitle,
+	//		MoviePoster:  v.MoviePoster,
+	//		MovieVoteAvg: v.MovieVoteAvg,
+	//	})
+	//}
 
 	return &types.UserProfileResponse{
-		ID:          res.Id,
-		Name:        res.Name,
-		Email:       res.Email,
-		Avatar:      res.Avatar,
-		Cover:       res.Cover,
-		LikedMovies: likedMovieList,
+		ID:     res.Id,
+		Name:   res.Name,
+		Email:  res.Email,
+		Avatar: res.Avatar,
+		Cover:  res.Cover,
+		//LikedMovies: likedMovieList,
 	}, nil
 }

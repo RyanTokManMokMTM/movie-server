@@ -22,9 +22,11 @@ type (
     }
     DeleteLikedMovieResp {}
 
-    UserAllLikedMoviesReq {}
-    UserAllLikedMoviesResp {
-        LikedMoviesList []*LikedMovieInfo `json:"liked_movie_list"`
+    AllUserLikedMoviesReq {
+        ID int64 `path:"user_id"`
+    }
+    AllUserAllLikedMoviesResp {
+        LikedMoviesList []*LikedMovieInfo `json:"liked_movies"`
     }
 
 
@@ -50,3 +52,31 @@ type (
     }
 
 )
+
+
+@server (
+    group : likedMovie
+    prefix : /api/v1
+)
+service MovieService {
+    @doc "Get all user liked movie info as a list"
+    @handler GetUserLikedMovieList
+    get /liked/movies/:user_id(AllUserLikedMoviesReq) returns (AllUserAllLikedMoviesResp);
+
+}
+
+@server (
+    group : likedMovie
+    prefix : /api/v1
+    jwt : Auth
+)
+service MovieService {
+    @doc "Create user liked movie"
+    @handler CreateLikedMovie
+    post /liked/movie(CreateLikedMovieReq) returns (CreateLikedMovieResp);
+
+    @doc "Delete user liked movie"
+    @handler DeleteLikedMovie
+    delete /liked/movie(DeleteLikedMoviedReq) returns (DeleteLikedMovieResp);
+
+}

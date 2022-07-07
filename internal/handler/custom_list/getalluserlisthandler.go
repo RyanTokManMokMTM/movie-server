@@ -1,4 +1,4 @@
-package list
+package custom_list
 
 import (
 	"github.com/go-playground/locales/en"
@@ -6,16 +6,16 @@ import (
 	"github.com/go-playground/validator/v10"
 	en_translations "github.com/go-playground/validator/v10/translations/en"
 	"github.com/ryantokmanmokmtm/movie-server/common/errorx"
-	"github.com/ryantokmanmokmtm/movie-server/internal/logic/list"
+	"github.com/ryantokmanmokmtm/movie-server/internal/logic/custom_list"
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
 	"github.com/ryantokmanmokmtm/movie-server/internal/types"
 	"github.com/zeromicro/go-zero/rest/httpx"
 	"net/http"
 )
 
-func UpdateUserMovieListHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func GetAllUserListHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.UpdateUserListReq
+		var req types.AllCustomListReq
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.Error(w, err)
 			return
@@ -33,8 +33,8 @@ func UpdateUserMovieListHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
-		l := list.NewUpdateUserMovieListLogic(r.Context(), svcCtx)
-		resp, err := l.UpdateUserMovieList(&req)
+		l := custom_list.NewGetAllUserListLogic(r.Context(), svcCtx)
+		resp, err := l.GetAllUserList(&req)
 		if err != nil {
 			httpx.Error(w, err)
 		} else {

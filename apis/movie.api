@@ -23,6 +23,8 @@ type (
     MovieGenresInfoResponse{
         resp []*GenreInfo `json:"genres"`
     }
+
+
 )
 
 type (
@@ -38,3 +40,18 @@ type (
         Name string `json:"name"`
     }
 )
+
+@server (
+    group : movie
+    prefix : /api/v1
+
+)
+service MovieService{
+    @doc "get movie by genre"
+    @handler MoviePageListByGenre
+    get /movies/genre/list(MoviePageListByGenreRequest) returns (MoviePageListByGenreResponse);
+
+    @doc "get movie by genre"
+    @handler MovieGenreByMovieID
+    get /movies/genres(MovieGenresInfoRequest) returns (MovieGenresInfoResponse);
+}

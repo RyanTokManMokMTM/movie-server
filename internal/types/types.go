@@ -44,12 +44,11 @@ type UserProfileRequest struct {
 }
 
 type UserProfileResponse struct {
-	ID          int64             `json:"id"`
-	Name        string            `json:"name"`
-	Email       string            `json:"email"`
-	Avatar      string            `json:"avatar"`
-	Cover       string            `json:"cover"`
-	LikedMovies []*LikedMovieInfo `json:"liked_movies"`
+	ID     int64  `json:"id"`
+	Name   string `json:"name"`
+	Email  string `json:"email"`
+	Avatar string `json:"avatar"`
+	Cover  string `json:"cover"`
 }
 
 type MoviePageListByGenreRequest struct {
@@ -80,105 +79,6 @@ type GenreInfo struct {
 	Name string `json:"name"`
 }
 
-type ListsReq struct {
-}
-
-type ListsResp struct {
-	Lists []*UserListInfo `json:"resp"`
-}
-
-type UserListReq struct {
-}
-
-type UserListResp struct {
-	Lists []*ListInfo `json:"listInfo"`
-}
-
-type CreateNewUserListReq struct {
-	Title string `json:"title" validate:"required"`
-}
-
-type CreateNewUserListResp struct {
-	Id        int64  `json:"id"`
-	ListTitle string `json:"list_title"`
-	UserId    int64  `json:"user_id"`
-}
-
-type UpdateUserListReq struct {
-	Id    int64  `json:"id" validate:"required"`
-	Title string `json:"title" validate:"required"`
-}
-
-type UpdateUserListResp struct {
-}
-
-type DeleteUserListReq struct {
-	Id int64 `json:"id" validate:"required"`
-}
-
-type DelteUserListResp struct {
-}
-
-type ListInfo struct {
-	Id         int64  `json:"id"`
-	ListTitle  string `json:"list_title"`
-	UserId     int64  `json:"user_id"`
-	UpdateTime string `json:"update_time"`
-}
-
-type UserInfo struct {
-	Id     int64  `json:"id"`
-	Name   string `json:"name"`
-	Email  string `json:"email"`
-	Avatar string `json:"avatar"`
-}
-
-type UserListInfo struct {
-	Id         int64    `json:"id"`
-	ListTitle  string   `json:"list_title"`
-	UpdateTime string   `json:"update_time"`
-	Owner      UserInfo `json:"owner"`
-}
-
-type ListDetailInfoReq struct {
-	ListID int64 `path:"list_id"`
-}
-
-type ListDetailInfoResp struct {
-	Resp []*ListMovieInfo `json:"resp"`
-}
-
-type CreateListDetailInfoReq struct {
-	ListID int64 `json:"list_id"`
-}
-
-type CreateListDetailInfoResp struct {
-	List ListMovieInfo `json:"list"`
-}
-
-type UpdateListDetailInfoReq struct {
-	ListID int64 `json:"list_id"`
-}
-
-type UpdateListDetailInfoResp struct {
-}
-
-type DeleteListDetailInfoReq struct {
-	ListID int64 `json:"list_id"`
-}
-
-type DeleteListDetailInfoResp struct {
-}
-
-type ListMovieInfo struct {
-	Id              int64  `json:"id"`
-	ListId          int64  `json:"list_id"`
-	MovieId         int64  `json:"movie_id"`
-	MoviePosterPath string `json:"movie_poster_path"`
-	UserFeeling     string `json:"user_feeling"`
-	UserRatetext    string `json:"user_ratetext"`
-}
-
 type CreateLikedMovieReq struct {
 	MovieID int64 `json:"movie_id"`
 }
@@ -195,11 +95,12 @@ type DeleteLikedMoviedReq struct {
 type DeleteLikedMovieResp struct {
 }
 
-type UserAllLikedMoviesReq struct {
+type AllUserLikedMoviesReq struct {
+	ID int64 `path:"user_id"`
 }
 
-type UserAllLikedMoviesResp struct {
-	LikedMoviesList []*LikedMovieInfo `json:"liked_movie_list"`
+type AllUserAllLikedMoviesResp struct {
+	LikedMoviesList []*LikedMovieInfo `json:"liked_movies"`
 }
 
 type LikedMovieInfo struct {
@@ -208,4 +109,51 @@ type LikedMovieInfo struct {
 	Genres       []GenreInfo `json:"genres"`
 	MoviePoster  string      `json:"movie_poster"`
 	MovieVoteAvg float32     `json:"vote_average"`
+}
+
+type CreateCustomListReq struct {
+	Title string `json:"title"`
+}
+
+type CreateCustomListResp struct {
+	ID       int64  `json:"id"`
+	Title    string `json:"title"`
+	UpdateOn int64  `json:"update_on"`
+}
+
+type UpdateCustomListReq struct {
+	ID    int64  `json:"id"`
+	Title string `json:"title"`
+}
+
+type UpdateCustomListResp struct {
+}
+
+type DeleteCustomListReq struct {
+	ID int64 `json:"id"`
+}
+
+type DeleteCustomListResp struct {
+}
+
+type AllCustomListReq struct {
+	ID int64 `path:"user_id"`
+}
+
+type AllCustomListResp struct {
+	Lists []ListInfo `json:"lists"`
+}
+
+type UserListReq struct {
+	ID int64 `path:"list_id"`
+}
+
+type UserListResp struct {
+	List ListInfo `json:"list"`
+}
+
+type ListInfo struct {
+	ID       int64  `json:"id"`
+	Title    string `json:"title"`
+	UpdateOn int64  `json:"update_on"`
 }

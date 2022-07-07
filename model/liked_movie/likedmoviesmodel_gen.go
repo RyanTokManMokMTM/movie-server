@@ -173,7 +173,8 @@ func (m *defaultLikedMoviesModel) FindAllByUserIDWithMovieInfo(ctx context.Conte
 		"FROM %s "+
 		"INNER JOIN movie_infos ON movie_infos.movie_id = liked_movies.movie_id WHERE liked_movies.user_id = ? ) AS likedMovies "+
 		"ON likedMovies.movie_id = genres_movies.movie_info_movie_id "+
-		"INNER JOIN genre_infos ON genre_infos.genre_id = genres_movies.genre_info_genre_id GROUP BY likedMovies.movie_id LIMIT 10;", m.table)
+		"INNER JOIN genre_infos ON genre_infos.genre_id = genres_movies.genre_info_genre_id GROUP BY likedMovies.movie_id,likedMovies.liked_movie_id,likedMovies.poster_path,likedMovies.title,likedMovies.vote_average" +
+		" LIMIT 10;", m.table)
 
 	var res []*LikedMovieInfo
 	err := m.QueryRowsNoCacheCtx(ctx, &res, query, userID)

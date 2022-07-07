@@ -4,11 +4,9 @@ package handler
 import (
 	"net/http"
 
-	UserMovieList "github.com/ryantokmanmokmtm/movie-server/internal/handler/UserMovieList"
+	custom_list "github.com/ryantokmanmokmtm/movie-server/internal/handler/custom_list"
 	health "github.com/ryantokmanmokmtm/movie-server/internal/handler/health"
 	likedMovie "github.com/ryantokmanmokmtm/movie-server/internal/handler/likedMovie"
-	list "github.com/ryantokmanmokmtm/movie-server/internal/handler/list"
-	listDetail "github.com/ryantokmanmokmtm/movie-server/internal/handler/listDetail"
 	movie "github.com/ryantokmanmokmtm/movie-server/internal/handler/movie"
 	user "github.com/ryantokmanmokmtm/movie-server/internal/handler/user"
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
@@ -86,70 +84,10 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodGet,
-				Path:    "/list/movies/:list_id",
-				Handler: listDetail.GetListMoviesHandler(serverCtx),
+				Path:    "/liked/movies/:user_id",
+				Handler: likedMovie.GetUserLikedMovieListHandler(serverCtx),
 			},
 		},
-		rest.WithPrefix("/api/v1"),
-	)
-
-	server.AddRoutes(
-		[]rest.Route{
-			{
-				Method:  http.MethodGet,
-				Path:    "/list/movie",
-				Handler: listDetail.CreateListMovieHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPatch,
-				Path:    "/list/movie",
-				Handler: listDetail.UpdateListMovieHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodDelete,
-				Path:    "/list/movie",
-				Handler: listDetail.DeleteListMovieHandler(serverCtx),
-			},
-		},
-		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
-		rest.WithPrefix("/api/v1"),
-	)
-
-	server.AddRoutes(
-		[]rest.Route{
-			{
-				Method:  http.MethodGet,
-				Path:    "/list/lists",
-				Handler: UserMovieList.GetAllListHandler(serverCtx),
-			},
-		},
-		rest.WithPrefix("/api/v1"),
-	)
-
-	server.AddRoutes(
-		[]rest.Route{
-			{
-				Method:  http.MethodPost,
-				Path:    "/list",
-				Handler: list.CreateUserMovieListHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPatch,
-				Path:    "/list",
-				Handler: list.UpdateUserMovieListHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodDelete,
-				Path:    "/list",
-				Handler: list.DeleteUserMovieListHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/list/user/lists",
-				Handler: list.GetUserListHandler(serverCtx),
-			},
-		},
-		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 		rest.WithPrefix("/api/v1"),
 	)
 
@@ -165,10 +103,43 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/liked/movie",
 				Handler: likedMovie.DeleteLikedMovieHandler(serverCtx),
 			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/api/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
 			{
 				Method:  http.MethodGet,
-				Path:    "/liked/movies",
-				Handler: likedMovie.GetUserLikedMovieListHandler(serverCtx),
+				Path:    "/lists/:user_id",
+				Handler: custom_list.GetAllUserListHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/list/:list_id",
+				Handler: custom_list.GetListByIDHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/api/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodPost,
+				Path:    "/lists",
+				Handler: custom_list.CreateCustomListHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPatch,
+				Path:    "/lists",
+				Handler: custom_list.UpdateCustomListHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodDelete,
+				Path:    "/lists",
+				Handler: custom_list.DeleteCustomListHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),

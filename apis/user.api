@@ -47,11 +47,47 @@ type (
 		Email string `json:"email"`
 		Avatar string `json:"avatar"`
 		Cover string `json:"cover"`
-
-		//Need  liked moive list
-		LikedMovies []*LikedMovieInfo `json:"liked_movies"`
-
-		//More....
+//
+//		//Need  liked moive list
+//		LikedMovies []*LikedMovieInfo `json:"liked_movies"`
 	}
 )
+
+
+//User Service
+@server (
+	group: user
+	prefix: /api/v1
+)
+service MovieService {
+	@doc "user_login"
+	@handler UserLogin
+	post /user/login(UserLoginRequest)  returns (UserLoginResponse);
+
+	@doc "user_register"
+	@handler  UserSignUp
+	post /user/signup(UserSignUpRequest) returns (UserSignUpResponse);
+}
+
+@server (
+	group: user
+	prefix: /api/v1
+)
+service MovieService{
+	@doc "user_info"
+	@handler UserInfo
+	get /user/info/:id(UserInfoRequest) returns (UserInfoResponse);
+}
+
+@server (
+	group: user
+	prefix: /api/v1
+	jwt : Auth
+)
+service MovieService{
+	@doc "user_profile"
+	@handler UserProfile
+	get /user/profile(UserProfileRequest) returns (UserProfileResponse);
+}
+
 
