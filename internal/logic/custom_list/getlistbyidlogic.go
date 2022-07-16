@@ -2,7 +2,9 @@ package custom_list
 
 import (
 	"context"
-	"github.com/ryantokmanmokmtm/movie-server/common/errorx"
+	"fmt"
+	"github.com/pkg/errors"
+	"github.com/ryantokmanmokmtm/movie-server/common/errx"
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
 	"github.com/ryantokmanmokmtm/movie-server/internal/types"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
@@ -27,11 +29,12 @@ func NewGetListByIDLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetLi
 func (l *GetListByIDLogic) GetListByID(req *types.UserListReq) (resp *types.UserListResp, err error) {
 	// todo: add your logic here and delete this line
 	res, err := l.svcCtx.List.FindOne(l.ctx, req.ID)
-	if err != nil {
-		if err == sqlx.ErrNotFound {
-			return nil, errorx.NewDefaultCodeError("list not found")
-		}
-		return nil, errorx.NewDefaultCodeError(err.Error())
+	if err != nil && err != sqlx.ErrNotFound {
+		return nil, errors.Wrap(errx.NewErrCode(errx.DB_ERROR), fmt.Sprintf("GetListByID - List db err: %v, ListID: %v", err, req.ID))
+	}
+
+	if res == nil {
+		return nil, errors.Wrap(errx.NewErrCode(errx.LIST_NOT_EXIST), fmt.Sprintf("GetListByID - List db FIND NOT FOUND err: %v, ListID: %v", err, req.ID))
 	}
 
 	return &types.UserListResp{

@@ -1,4 +1,4 @@
-package user
+package posts
 
 import (
 	"fmt"
@@ -7,17 +7,18 @@ import (
 	"github.com/go-playground/validator/v10"
 	en_translations "github.com/go-playground/validator/v10/translations/en"
 	"github.com/pkg/errors"
-	"github.com/ryantokmanmokmtm/movie-server/common/errx"
-	"github.com/ryantokmanmokmtm/movie-server/internal/logic/user"
-	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
-	"github.com/ryantokmanmokmtm/movie-server/internal/types"
+	"github.com/ryantokmanmokmtm/movie-server/common/errx" //common error package
 	"github.com/zeromicro/go-zero/rest/httpx"
 	"net/http"
+
+	"github.com/ryantokmanmokmtm/movie-server/internal/logic/posts"
+	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
+	"github.com/ryantokmanmokmtm/movie-server/internal/types"
 )
 
-func UserSignUpHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func DeletePostHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.UserSignUpRequest
+		var req types.DeletePostReq
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.Error(w, err)
 			return
@@ -35,8 +36,8 @@ func UserSignUpHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
-		l := user.NewUserSignUpLogic(r.Context(), svcCtx)
-		resp, err := l.UserSignUp(&req)
+		l := posts.NewDeletePostLogic(r.Context(), svcCtx)
+		resp, err := l.DeletePost(&req)
 		if err != nil {
 			httpx.Error(w, err)
 		} else {

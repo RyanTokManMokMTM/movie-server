@@ -2,7 +2,9 @@ package movie
 
 import (
 	"context"
-	"errors"
+	"fmt"
+	"github.com/pkg/errors"
+	"github.com/ryantokmanmokmtm/movie-server/common/errx"
 
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
 	"github.com/ryantokmanmokmtm/movie-server/internal/types"
@@ -29,7 +31,7 @@ func (l *MoviePageListByGenreLogic) MoviePageListByGenre(req *types.MoviePageLis
 	// return a list of movie from relation table
 	res, err := l.svcCtx.Movie.MoviePageListsByGenreID(l.ctx, req.Id, 20)
 	if err != nil {
-		return nil, errors.New(err.Error())
+		return nil, errors.Wrap(errx.NewErrCode(errx.DB_ERROR), fmt.Sprintf("MoviePageListByGenre - movie db FIND err: %v, genreID: %v", err, req.Id))
 	}
 
 	var movieInfos []*types.MovieInfo

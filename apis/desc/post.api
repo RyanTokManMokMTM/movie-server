@@ -1,0 +1,97 @@
+syntax = "v1"
+
+info(
+    title: "User Post API"
+    desc: "User Post CURD"
+    author: "Jackson.tmm"
+    email: "ryantokmanmokmtm@admn.com"
+    version: "v1"
+)
+
+
+type (
+    CreatePostReq {
+        PostTitle string `json:"post_title"`
+        PostDesc string `json:"post_desc"`
+        MovieID int64 `json:"movie_id"`
+    }
+    CreatePostResp {
+        PostID int64 `json:"post_id"`
+        CreateTime int64 `json:"create_time"`
+    }
+
+    UpdatePostReq {
+        PostID int64 `json:"post_id"`
+        PostTitle string `json:"post_title"`
+        PostDesc string `json:"post_desc"`
+    }
+    UpdatePostResp {}
+
+    DeletePostReq {
+        PostID int64 `json:"post_id"`
+    }
+    DeletePostResp {}
+
+    PostsInfoReq {}
+    PostsInfoResp {
+        Infos []PostInfo `json:"post_info"`
+    }
+
+    PostInfoByUserReq {
+        UserID int64 `path:"user_id"`
+    }
+    PostInfoByUserResp {
+        Info PostInfo `json:"post_info"`
+    }
+)
+
+type (
+    PostInfo {
+        PostID int64 `json:"post_id"`
+        PostTitle string `json:"post_title"`
+        PostDesc string `json:"post_desc"`
+        PostMovie PostMovieInfo `json:"post_movie_info"`
+        PostLikeCount int64 `json:"post_like_count"`
+        PostCommentCount int64 `json:"post_comment_count"`
+    }
+
+    PostMovieInfo {
+        MovieID          int64   `json:"id"`
+        PosterPath       string  `json:"poster"`
+        Title            string  `json:"title"`
+    }
+)
+
+
+@server(
+    group : posts
+    jwt : Auth
+    prefix : api/v1
+)
+service MovieService {
+    @doc "Create Post"
+    @handler CreatePost
+    post /posts(CreatePostReq) returns (CreatePostResp);
+
+    @doc "Update Post"
+    @handler UpdatePost
+    patch /posts(UpdatePostReq) returns (UpdatePostResp);
+
+    @doc "delete post"
+    @handler DeletePost
+    delete /posts(DeletePostReq) returns (DeletePostResp);
+}
+
+@server(
+    group : posts
+    prefix : api/v1
+)
+service MovieService {
+    @doc "Get all Post"
+    @handler GetAllPost
+    get /posts(PostsInfoReq) returns (PostsInfoResp);
+
+    @doc "Get Post by UserID"
+    @handler GetPostByUserID
+    get /posts/:user_id(PostInfoByUserReq) returns (PostInfoByUserResp);
+}

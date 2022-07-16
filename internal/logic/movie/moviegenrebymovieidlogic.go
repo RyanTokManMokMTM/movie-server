@@ -2,7 +2,9 @@ package movie
 
 import (
 	"context"
-	"errors"
+	"fmt"
+	"github.com/pkg/errors"
+	"github.com/ryantokmanmokmtm/movie-server/common/errx"
 
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
 	"github.com/ryantokmanmokmtm/movie-server/internal/types"
@@ -28,7 +30,7 @@ func (l *MovieGenreByMovieIDLogic) MovieGenreByMovieID(req *types.MovieGenresInf
 	// todo: add your logic here and delete this line
 	list, err := l.svcCtx.Genre.FindMovieGenresByMovieID(l.ctx, req.Id)
 	if err != nil {
-		return nil, errors.New(err.Error())
+		return nil, errors.Wrap(errx.NewErrCode(errx.DB_ERROR), fmt.Sprintf("MovieGenreByMovieID - genre db FIND err: %v, movieID: %v", err, req.Id))
 	}
 
 	var res []*types.GenreInfo

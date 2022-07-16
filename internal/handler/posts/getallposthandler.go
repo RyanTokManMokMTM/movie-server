@@ -1,21 +1,24 @@
-package UserMovieList
+package posts
 
 import (
+	"fmt"
 	"github.com/go-playground/locales/en"
 	ut "github.com/go-playground/universal-translator"
 	"github.com/go-playground/validator/v10"
 	en_translations "github.com/go-playground/validator/v10/translations/en"
-	"github.com/ryantokmanmokmtm/movie-server/common/errorx"
-	"github.com/ryantokmanmokmtm/movie-server/internal/logic/UserMovieList"
-	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
-	"github.com/ryantokmanmokmtm/movie-server/internal/types"
+	"github.com/pkg/errors"
+	"github.com/ryantokmanmokmtm/movie-server/common/errx" //common error package
 	"github.com/zeromicro/go-zero/rest/httpx"
 	"net/http"
+
+	"github.com/ryantokmanmokmtm/movie-server/internal/logic/posts"
+	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
+	"github.com/ryantokmanmokmtm/movie-server/internal/types"
 )
 
-func GetAllListHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func GetAllPostHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.ListsReq
+		var req types.PostsInfoReq
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.Error(w, err)
 			return
@@ -29,12 +32,12 @@ func GetAllListHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 
 		if err := validate.StructCtx(r.Context(), req); err != nil {
 			errs := err.(validator.ValidationErrors)
-			httpx.Error(w, errorx.NewDefaultCodeError(errs[0].Translate(trans)))
+			httpx.Error(w, errors.Wrap(errx.NewErrCode(errx.REQ_PARAM_ERROR), fmt.Sprintf("Validated err: %v", errs[0].Translate(trans))))
 			return
 		}
 
-		l := UserMovieList.NewGetAllListLogic(r.Context(), svcCtx)
-		resp, err := l.GetAllList(&req)
+		l := posts.NewGetAllPostLogic(r.Context(), svcCtx)
+		resp, err := l.GetAllPost(&req)
 		if err != nil {
 			httpx.Error(w, err)
 		} else {

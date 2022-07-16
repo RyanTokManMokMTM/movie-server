@@ -1,13 +1,16 @@
 package {{.PkgName}}
 
 import (
+    "fmt"
 	"net/http"
 	"github.com/go-playground/locales/en"
 	ut "github.com/go-playground/universal-translator"
 	"github.com/go-playground/validator/v10"
 	en_translations "github.com/go-playground/validator/v10/translations/en"
 	"github.com/zeromicro/go-zero/rest/httpx"
-	"github.com/ryantokmanmokmtm/movie-server/common/errorx"
+	"github.com/ryantokmanmokmtm/movie-server/common/errx" //common error package
+	"github.com/pkg/errors"
+
 	{{.ImportPackages}}
 )
 
@@ -26,11 +29,11 @@ func {{.HandlerName}}(svcCtx *svc.ServiceContext) http.HandlerFunc {
         validate := validator.New()
         en_translations.RegisterDefaultTranslations(validate, trans)
 
-         if err := validate.StructCtx(r.Context(), req); err != nil {
-            errs := err.(validator.ValidationErrors)
-            httpx.Error(w,errorx.NewDefaultCodeError(errs[0].Translate(trans)))
-            return
-        }
+		if err := validate.StructCtx(r.Context(), req); err != nil {
+			errs := err.(validator.ValidationErrors)
+			httpx.Error(w, errors.Wrap(errx.NewErrCode(errx.REQ_PARAM_ERROR),fmt.Sprintf("Validated err: %v",errs[0].Translate(trans))))
+			return
+		}
 
 
 		{{end}}l := {{.LogicName}}.New{{.LogicType}}(r.Context(), svcCtx)

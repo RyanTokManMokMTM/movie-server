@@ -3,7 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/ryantokmanmokmtm/movie-server/common/errorx"
+	"github.com/pkg/errors"
+	"github.com/ryantokmanmokmtm/movie-server/common/errx"
 	"github.com/ryantokmanmokmtm/movie-server/internal/config"
 	"github.com/ryantokmanmokmtm/movie-server/internal/handler"
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
@@ -29,12 +30,12 @@ func main() {
 	handler.RegisterHandlers(server, ctx)
 
 	httpx.SetErrorHandler(func(err error) (int, interface{}) {
-		switch e := err.(type) {
-		case *errorx.CodeError:
-			return http.StatusOK, e.DataResponse()
-		default:
+		if ok := errors.As(err, errx.CommonError{}); ok {
+			return http.StatusOK, err.(*errx.CommonError).ToJSONResp()
+		} else {
 			return http.StatusInternalServerError, nil
 		}
+
 	})
 
 	fmt.Printf("Starting server at %s:%d...\n", c.Host, c.Port)

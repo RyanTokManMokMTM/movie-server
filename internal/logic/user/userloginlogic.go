@@ -2,8 +2,11 @@ package user
 
 import (
 	"context"
+	"fmt"
+	"github.com/pkg/errors"
 	"github.com/ryantokmanmokmtm/movie-server/common/crytox"
-	"github.com/ryantokmanmokmtm/movie-server/common/errorx"
+	"github.com/ryantokmanmokmtm/movie-server/common/ctxtool"
+	"github.com/ryantokmanmokmtm/movie-server/common/errx"
 	"github.com/ryantokmanmokmtm/movie-server/common/jwtx"
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
 	"github.com/ryantokmanmokmtm/movie-server/internal/types"
@@ -31,25 +34,30 @@ func (l *UserLoginLogic) UserLogin(req *types.UserLoginRequest) (resp *types.Use
 	// todo: add your logic here and delete this line
 
 	res, err := l.svcCtx.User.FindOneByEmail(l.ctx, req.Email)
-	if err == sqlx.ErrNotFound {
-		return nil, errorx.NewDefaultCodeError("not found")
-	} else if err != nil {
-		return nil, errorx.NewDefaultCodeError(err.Error())
+	if err != nil && err != sqlx.ErrNotFound {
+		return nil, errors.Wrap(errx.NewErrCode(errx.DB_ERROR), fmt.Sprintf("UserLogin - user db FindByEmail err:%v, Email:%v", err, req.Email))
 	}
+
+	if res == nil {
+		return nil, errors.Wrap(errx.NewErrCode(errx.DB_ERROR), fmt.Sprintf("UserLogin - user db FindByEmail NotFound err:%v, Email:%v", err, req.Email))
+	}
+
 	hashedPassword := crytox.PasswordEncrypt(req.Password, l.svcCtx.Config.Salt)
-	if string(hashedPassword) != res.Password {
-		return nil, errorx.NewDefaultCodeError("password incorrect")
+	if hashedPassword != res.Password {
+		return nil, errors.Wrap(errx.NewErrCode(errx.USER_PASSWORD_INCORRECT), fmt.Sprintf("UserLogin - Password err:%v, Email:%v", err, req.Email))
 	}
 
 	payload := map[string]interface{}{
-		"userID": res.Id,
+		ctxtool.CTXJWTUserID: res.Id,
 	}
+
 	now := time.Now().Unix()
 	exp := l.svcCtx.Config.Auth.AccessExpire
 	key := l.svcCtx.Config.Auth.AccessSecret
+
 	token, err := jwtx.GetToken(now, exp, key, payload)
 	if err != nil {
-		return nil, errorx.NewDefaultCodeError(err.Error())
+		return nil, errors.Wrap(errx.NewErrCode(errx.TOKEN_GENERATE_ERROR), fmt.Sprintf("UserLogin - Token Generate err:%v", err))
 	}
 
 	return &types.UserLoginResponse{

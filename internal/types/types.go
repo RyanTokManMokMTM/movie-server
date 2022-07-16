@@ -157,3 +157,60 @@ type ListInfo struct {
 	Title    string `json:"title"`
 	UpdateOn int64  `json:"update_on"`
 }
+
+type CreatePostReq struct {
+	PostTitle string `json:"post_title"`
+	PostDesc  string `json:"post_desc"`
+	MovieID   int64  `json:"movie_id"`
+}
+
+type CreatePostResp struct {
+	PostID     int64 `json:"post_id"`
+	CreateTime int64 `json:"create_time"`
+}
+
+type UpdatePostReq struct {
+	PostID    int64  `json:"post_id"`
+	PostTitle string `json:"post_title"`
+	PostDesc  string `json:"post_desc"`
+}
+
+type UpdatePostResp struct {
+}
+
+type DeletePostReq struct {
+	PostID int64 `json:"post_id"`
+}
+
+type DeletePostResp struct {
+}
+
+type PostsInfoReq struct {
+}
+
+type PostsInfoResp struct {
+	Infos []PostInfo `json:"post_info"`
+}
+
+type PostInfoByUserReq struct {
+	UserID int64 `path:"user_id"`
+}
+
+type PostInfoByUserResp struct {
+	Info PostInfo `json:"post_info"`
+}
+
+type PostInfo struct {
+	PostID           int64         `json:"post_id"`
+	PostTitle        string        `json:"post_title"`
+	PostDesc         string        `json:"post_desc"`
+	PostMovie        PostMovieInfo `json:"post_movie_info"`
+	PostLikeCount    int64         `json:"post_like_count"`
+	PostCommentCount int64         `json:"post_comment_count"`
+}
+
+type PostMovieInfo struct {
+	MovieID    int64  `json:"id"`
+	PosterPath string `json:"poster"`
+	Title      string `json:"title"`
+}

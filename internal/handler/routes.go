@@ -8,6 +8,7 @@ import (
 	health "github.com/ryantokmanmokmtm/movie-server/internal/handler/health"
 	likedMovie "github.com/ryantokmanmokmtm/movie-server/internal/handler/likedMovie"
 	movie "github.com/ryantokmanmokmtm/movie-server/internal/handler/movie"
+	posts "github.com/ryantokmanmokmtm/movie-server/internal/handler/posts"
 	user "github.com/ryantokmanmokmtm/movie-server/internal/handler/user"
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
 
@@ -143,6 +144,44 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/api/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodPost,
+				Path:    "/posts",
+				Handler: posts.CreatePostHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPatch,
+				Path:    "/posts",
+				Handler: posts.UpdatePostHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodDelete,
+				Path:    "/posts",
+				Handler: posts.DeletePostHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/api/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/posts",
+				Handler: posts.GetAllPostHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/posts/:user_id",
+				Handler: posts.GetPostByUserIDHandler(serverCtx),
+			},
+		},
 		rest.WithPrefix("/api/v1"),
 	)
 }

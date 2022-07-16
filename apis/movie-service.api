@@ -7,10 +7,11 @@ syntax = "v1"
 //    email: "type email here"
 //    version: "type version here"
 //)
-import "./user.api"
-import "./movie.api"
-import "./liked_movie.api"
-import "./custom_list.api"
+import "desc/user.api"
+import "desc/movie.api"
+import "desc/liked_movie.api"
+import "desc/custom_list.api"
+import "desc/post.api"
 
 type (
 	HealthCheckReq  struct{}

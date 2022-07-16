@@ -1,11 +1,13 @@
 package custom_list
 
 import (
+	"fmt"
 	"github.com/go-playground/locales/en"
 	ut "github.com/go-playground/universal-translator"
 	"github.com/go-playground/validator/v10"
 	en_translations "github.com/go-playground/validator/v10/translations/en"
-	"github.com/ryantokmanmokmtm/movie-server/common/errorx"
+	"github.com/pkg/errors"
+	"github.com/ryantokmanmokmtm/movie-server/common/errx"
 	"github.com/ryantokmanmokmtm/movie-server/internal/logic/custom_list"
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
 	"github.com/ryantokmanmokmtm/movie-server/internal/types"
@@ -29,10 +31,9 @@ func GetAllUserListHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 
 		if err := validate.StructCtx(r.Context(), req); err != nil {
 			errs := err.(validator.ValidationErrors)
-			httpx.Error(w, errorx.NewDefaultCodeError(errs[0].Translate(trans)))
+			httpx.Error(w, errors.Wrap(errx.NewErrCode(errx.REQ_PARAM_ERROR), fmt.Sprintf("Validated err: %v", errs[0].Translate(trans))))
 			return
 		}
-
 		l := custom_list.NewGetAllUserListLogic(r.Context(), svcCtx)
 		resp, err := l.GetAllUserList(&req)
 		if err != nil {

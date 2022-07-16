@@ -2,7 +2,9 @@ package custom_list
 
 import (
 	"context"
-	"github.com/ryantokmanmokmtm/movie-server/common/errorx"
+	"fmt"
+	"github.com/pkg/errors"
+	"github.com/ryantokmanmokmtm/movie-server/common/errx"
 
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
 	"github.com/ryantokmanmokmtm/movie-server/internal/types"
@@ -30,7 +32,7 @@ func (l *GetAllUserListLogic) GetAllUserList(req *types.AllCustomListReq) (resp 
 	logx.Info(req.ID)
 	listInfos, err := l.svcCtx.List.FindAllByUserID(l.ctx, req.ID)
 	if err != nil {
-		return nil, errorx.NewDefaultCodeError(err.Error())
+		return nil, errors.Wrap(errx.NewErrCode(errx.DB_ERROR), fmt.Sprintf("GetAllUserList - list db find by user id err: %v, userID: %v", err, req.ID))
 	}
 
 	var listResp []types.ListInfo

@@ -2,8 +2,10 @@ package user
 
 import (
 	"context"
+	"fmt"
+	"github.com/pkg/errors"
 	"github.com/ryantokmanmokmtm/movie-server/common/crytox"
-	"github.com/ryantokmanmokmtm/movie-server/common/errorx"
+	"github.com/ryantokmanmokmtm/movie-server/common/errx"
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
 	"github.com/ryantokmanmokmtm/movie-server/internal/types"
 	"github.com/ryantokmanmokmtm/movie-server/model/user"
@@ -30,28 +32,29 @@ func NewUserSignUpLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UserSi
 func (l *UserSignUpLogic) UserSignUp(req *types.UserSignUpRequest) (resp *types.UserSignUpResponse, err error) {
 	// todo: add your logic here and delete this line
 	lowEmail := strings.ToLower(req.Email)
-	_, err = l.svcCtx.User.FindOneByEmail(l.ctx, lowEmail)
-	if err == nil {
-		return nil, errorx.NewDefaultCodeError("email exits")
+	userInfo, err := l.svcCtx.User.FindOneByEmail(l.ctx, lowEmail)
+	if err != nil && err != sqlx.ErrNotFound {
+		return nil, errors.Wrap(errx.NewErrCode(errx.DB_ERROR), fmt.Sprintf("UserSignUp - user db err:%v, req:%+v", err, req))
 	}
-	if err == sqlx.ErrNotFound {
+
+	if userInfo == nil {
 		newUser := user.Users{
 			Name:     req.UserName,
 			Email:    lowEmail,
 			Password: crytox.PasswordEncrypt(req.Password, l.svcCtx.Config.Salt),
 			//avatar for testing
-			Avatar: "https://upload.cc/i1/2022/07/03/MJIXkd.jpeg",
-			Cover:  "https://upload.cc/i1/2022/07/04/yQN7tU.jpeg",
+			Avatar: "https://upload.cc/i1/2022/07/03/MJIXkd.jpeg", //TODO: Upload User avatar
+			Cover:  "https://upload.cc/i1/2022/07/04/yQN7tU.jpeg", //TODO: Upload User Cover
 		}
 
 		res, err := l.svcCtx.User.Insert(l.ctx, &newUser)
 		if err != nil {
-			return nil, errorx.NewDefaultCodeError(err.Error())
+			return nil, errors.Wrap(errx.NewErrCode(errx.DB_ERROR), fmt.Sprintf("UserSignUp - user db Insert err:%v, req:%+v", err, req))
 		}
 
 		newUser.Id, err = res.LastInsertId()
 		if err != nil {
-			return nil, errorx.NewDefaultCodeError(err.Error())
+			return nil, errors.Wrap(errx.NewErrCode(errx.DB_AFFECTED_ZERO_ERROR), fmt.Sprintf("UserSignUp - user db Insert.LastInsertID err:%v, req:%+v", err, req))
 		}
 
 		return &types.UserSignUpResponse{
@@ -60,5 +63,5 @@ func (l *UserSignUpLogic) UserSignUp(req *types.UserSignUpRequest) (resp *types.
 			Email: lowEmail,
 		}, nil
 	}
-	return nil, errorx.NewDefaultCodeError(err.Error())
+	return nil, errors.Wrap(errx.NewErrCode(errx.DB_ERROR), fmt.Sprintf("UserSignUp - user db err: %v, req:%+v", err, req))
 }

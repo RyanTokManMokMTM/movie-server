@@ -7,6 +7,7 @@ import (
 	"github.com/ryantokmanmokmtm/movie-server/model/list"
 	"github.com/ryantokmanmokmtm/movie-server/model/list_movie"
 	"github.com/ryantokmanmokmtm/movie-server/model/movie"
+	"github.com/ryantokmanmokmtm/movie-server/model/post"
 	"github.com/ryantokmanmokmtm/movie-server/model/user"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 )
@@ -19,6 +20,7 @@ type ServiceContext struct {
 	List       list.ListsModel
 	ListMovie  list_movie.ListsMoviesModel
 	LikedMovie liked_movie.LikedMoviesModel
+	PostModel  post.PostsModel
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -31,5 +33,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		List:       list.NewListsModel(conn, c.CacheRedis),
 		ListMovie:  list_movie.NewListsMoviesModel(conn, c.CacheRedis),
 		LikedMovie: liked_movie.NewLikedMoviesModel(conn, c.CacheRedis),
+		PostModel:  post.NewPostsModel(conn, c.CacheRedis),
 	}
 }

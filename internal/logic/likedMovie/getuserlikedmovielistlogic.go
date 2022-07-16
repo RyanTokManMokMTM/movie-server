@@ -3,7 +3,9 @@ package likedMovie
 import (
 	"context"
 	"encoding/json"
-	"github.com/ryantokmanmokmtm/movie-server/common/errorx"
+	"fmt"
+	"github.com/pkg/errors"
+	"github.com/ryantokmanmokmtm/movie-server/common/errx"
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
 	"github.com/ryantokmanmokmtm/movie-server/internal/types"
 
@@ -30,7 +32,7 @@ func (l *GetUserLikedMovieListLogic) GetUserLikedMovieList(req *types.AllUserLik
 	res, err := l.svcCtx.LikedMovie.FindAllByUserIDWithMovieInfo(l.ctx, req.ID)
 
 	if err != nil {
-		return nil, errorx.NewDefaultCodeError(err.Error())
+		return nil, errors.Wrap(errx.NewErrCode(errx.DB_ERROR), fmt.Sprintf("GetUserLikedMovieList - LikedMovie db FindAll err: %v, userID: %v", err, req.ID))
 	}
 
 	var movieInfo []*types.LikedMovieInfo

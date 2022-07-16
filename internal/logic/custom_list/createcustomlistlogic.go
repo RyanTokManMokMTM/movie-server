@@ -3,9 +3,11 @@ package custom_list
 import (
 	"context"
 	"fmt"
-	"github.com/ryantokmanmokmtm/movie-server/common/errorx"
+	"github.com/pkg/errors"
+	"github.com/ryantokmanmokmtm/movie-server/common/ctxtool"
+	"github.com/ryantokmanmokmtm/movie-server/common/errx"
 	"github.com/ryantokmanmokmtm/movie-server/model/list"
-	"strconv"
+	"github.com/zeromicro/go-zero/core/stores/sqlx"
 
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
 	"github.com/ryantokmanmokmtm/movie-server/internal/types"
@@ -29,27 +31,31 @@ func NewCreateCustomListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 
 func (l *CreateCustomListLogic) CreateCustomList(req *types.CreateCustomListReq) (resp *types.CreateCustomListResp, err error) {
 	// todo: add your logic here and delete this line
-	userID := fmt.Sprintf("%v", l.ctx.Value("userID"))
-	id, _ := strconv.Atoi(userID)
-	_, err = l.svcCtx.User.FindOne(l.ctx, int64(id))
-	if err != nil {
-		return nil, errorx.NewDefaultCodeError(err.Error())
+	userID := ctxtool.GetUserIDFromCTX(l.ctx)
+
+	//find user
+	user, err := l.svcCtx.User.FindOne(l.ctx, userID)
+	if err != nil && err != sqlx.ErrNotFound {
+		return nil, errors.Wrap(errx.NewErrCode(errx.DB_ERROR), fmt.Sprintf("CreateCustomList - user db err:%v, userID:%v", err, userID))
 	}
 
+	if user == nil {
+		return nil, errors.Wrap(errx.NewErrCode(errx.USER_NOT_EXIST), fmt.Sprintf("CreateCustomList - user db USER NOT FOUND err: %v, userID: %v", err, userID))
+	}
 	//Do we need to check title exits????
 
 	newList := list.Lists{
-		UserId:    int64(id),
+		UserId:    userID,
 		ListTitle: req.Title,
 	}
 	sqlRes, err := l.svcCtx.List.Insert(l.ctx, &newList)
 	if err != nil {
-		return nil, errorx.NewDefaultCodeError(err.Error())
+		return nil, errors.Wrap(errx.NewErrCode(errx.DB_ERROR), fmt.Sprintf("CreateCustomList - List db err:%v, req:%+v", err, req))
 	}
 
 	newList.ListId, err = sqlRes.LastInsertId()
 	if err != nil {
-		return nil, errorx.NewDefaultCodeError(err.Error())
+		return nil, errors.Wrap(errx.NewErrCode(errx.DB_AFFECTED_ZERO_ERROR), fmt.Sprintf("CreateCustomList - List db INSERT.LastInsertId err: %v, req: %+v", err, req))
 	}
 
 	return &types.CreateCustomListResp{
