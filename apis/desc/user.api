@@ -10,7 +10,7 @@ syntax = "v1"
 
 type (
 	UserLoginRequest {
-		Email    string `json:"email" validate:"required,max=32"`
+		Email    string `json:"email" validate:"required,max=32,email"`
 		Password string `json:"password" validate:"required,min=8,max=32"`
 	}
 	UserLoginResponse {

@@ -1,0 +1,18 @@
+syntax = "v1"
+
+info(
+    title: "follow or unfollow user service"
+    desc: "follow or unfollow user service"
+//    author: "type author here"
+//    email: "type email here"
+//    version: "type version here"
+)
+
+type (
+    UpdateFollowingStateReq {
+        State bool `json:"state"` //0 for unfollow. 1 for follow
+    }
+
+    UpdateFollowingStateResp {}
+
+)

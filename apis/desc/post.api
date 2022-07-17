@@ -16,7 +16,7 @@ type (
         MovieID int64 `json:"movie_id"`
     }
     CreatePostResp {
-        PostID int64 `json:"post_id"`
+        PostID int64 `json:"id"`
         CreateTime int64 `json:"create_time"`
     }
 
@@ -37,11 +37,11 @@ type (
         Infos []PostInfo `json:"post_info"`
     }
 
-    PostInfoByUserReq {
+    PostInfosByUserReq {
         UserID int64 `path:"user_id"`
     }
-    PostInfoByUserResp {
-        Info PostInfo `json:"post_info"`
+    PostInfosByUserResp {
+        Info []PostInfo `json:"post_info"`
     }
 )
 
@@ -53,6 +53,8 @@ type (
         PostMovie PostMovieInfo `json:"post_movie_info"`
         PostLikeCount int64 `json:"post_like_count"`
         PostCommentCount int64 `json:"post_comment_count"`
+        CreateTime int64 `json:"create_time"`
+        UpdateTime int64 `json:"edit_time"`
     }
 
     PostMovieInfo {
@@ -93,5 +95,5 @@ service MovieService {
 
     @doc "Get Post by UserID"
     @handler GetPostByUserID
-    get /posts/:user_id(PostInfoByUserReq) returns (PostInfoByUserResp);
+    get /posts/:user_id(PostInfosByUserReq) returns (PostInfosByUserResp);
 }
