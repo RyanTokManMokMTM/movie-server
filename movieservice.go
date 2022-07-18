@@ -8,11 +8,10 @@ import (
 	"github.com/ryantokmanmokmtm/movie-server/internal/config"
 	"github.com/ryantokmanmokmtm/movie-server/internal/handler"
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
-	"github.com/zeromicro/go-zero/rest/httpx"
-	"net/http"
-
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/rest"
+	"github.com/zeromicro/go-zero/rest/httpx"
+	"net/http"
 )
 
 var configFile = flag.String("f", "etc/movieservice.yaml", "the config file")
@@ -38,18 +37,13 @@ func main() {
 
 	})
 
+	//Adding Static Route
+	server.AddRoute(rest.Route{
+		Method:  http.MethodGet,
+		Path:    "/resources/:file",
+		Handler: http.StripPrefix("/resources/", http.FileServer(http.Dir("./resources"))).ServeHTTP,
+	})
+
 	fmt.Printf("Starting server at %s:%d...\n", c.Host, c.Port)
 	server.Start()
 }
-
-//
-//func validatorTrans() *ut.Translator {
-//	eng := en.New()
-//	uni := ut.New(eng, eng)
-//
-//	trans, _ := uni.GetTranslator("en")
-//	validate := validator.New()
-//
-//	en_translations.RegisterDefaultTranslations(validate, trans)
-//	return &trans
-//}

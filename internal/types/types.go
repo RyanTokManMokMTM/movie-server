@@ -9,7 +9,7 @@ type HealthCheckResp struct {
 }
 
 type UserLoginRequest struct {
-	Email    string `json:"email" validate:"required,max=32"`
+	Email    string `json:"email" validate:"required,max=32,email"`
 	Password string `json:"password" validate:"required,min=8,max=32"`
 }
 
@@ -165,7 +165,7 @@ type CreatePostReq struct {
 }
 
 type CreatePostResp struct {
-	PostID     int64 `json:"post_id"`
+	PostID     int64 `json:"id"`
 	CreateTime int64 `json:"create_time"`
 }
 
@@ -192,12 +192,12 @@ type PostsInfoResp struct {
 	Infos []PostInfo `json:"post_info"`
 }
 
-type PostInfoByUserReq struct {
+type PostInfosByUserReq struct {
 	UserID int64 `path:"user_id"`
 }
 
-type PostInfoByUserResp struct {
-	Info PostInfo `json:"post_info"`
+type PostInfosByUserResp struct {
+	Info []PostInfo `json:"post_info"`
 }
 
 type PostInfo struct {
@@ -207,6 +207,8 @@ type PostInfo struct {
 	PostMovie        PostMovieInfo `json:"post_movie_info"`
 	PostLikeCount    int64         `json:"post_like_count"`
 	PostCommentCount int64         `json:"post_comment_count"`
+	CreateTime       int64         `json:"create_time"`
+	UpdateTime       int64         `json:"edit_time"`
 }
 
 type PostMovieInfo struct {

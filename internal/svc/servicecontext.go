@@ -10,6 +10,8 @@ import (
 	"github.com/ryantokmanmokmtm/movie-server/model/post"
 	"github.com/ryantokmanmokmtm/movie-server/model/user"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
 type ServiceContext struct {
@@ -21,6 +23,8 @@ type ServiceContext struct {
 	ListMovie  list_movie.ListsMoviesModel
 	LikedMovie liked_movie.LikedMoviesModel
 	PostModel  post.PostsModel
+
+	GormEngine *gorm.DB
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -34,5 +38,18 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		ListMovie:  list_movie.NewListsMoviesModel(conn, c.CacheRedis),
 		LikedMovie: liked_movie.NewLikedMoviesModel(conn, c.CacheRedis),
 		PostModel:  post.NewPostsModel(conn, c.CacheRedis),
+		GormEngine: gormConfig(c.MySQL.DataSource),
 	}
+}
+
+func gormConfig(mysqlConfig string) *gorm.DB {
+	db, err := gorm.Open(mysql.New(mysql.Config{
+		DSN: mysqlConfig,
+	}))
+
+	if err != nil {
+		panic("GORM INIT ERROR")
+	}
+
+	return db
 }

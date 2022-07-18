@@ -23,7 +23,7 @@ func NewGetPostByUserIDLogic(ctx context.Context, svcCtx *svc.ServiceContext) *G
 	}
 }
 
-func (l *GetPostByUserIDLogic) GetPostByUserID(req *types.PostInfoByUserReq) (resp *types.PostInfoByUserResp, err error) {
+func (l *GetPostByUserIDLogic) GetPostByUserID(req *types.PostInfosByUserReq) (resp *types.PostInfosByUserResp, err error) {
 	// todo: add your logic here and delete this line
 
 	return
