@@ -2,8 +2,6 @@ package custom_list
 
 import (
 	"context"
-	"fmt"
-	"github.com/pkg/errors"
 	"github.com/ryantokmanmokmtm/movie-server/common/ctxtool"
 	"github.com/ryantokmanmokmtm/movie-server/common/errx"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
@@ -35,16 +33,23 @@ func (l *UpdateCustomListLogic) UpdateCustomList(req *types.UpdateCustomListReq)
 	//find user
 	user, err := l.svcCtx.User.FindOne(l.ctx, userID)
 	if err != nil && err != sqlx.ErrNotFound {
-		return nil, errors.Wrap(errx.NewErrCode(errx.DB_ERROR), fmt.Sprintf("UpdateCustomList - user db err:%v, userID:%v", err, userID))
+		//return nil, errors.Wrap(errx.NewErrCode(errx.DB_ERROR), fmt.Sprintf("UpdateCustomList - user db err:%v, userID:%v", err, userID))
+		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
 	if user == nil {
-		return nil, errors.Wrap(errx.NewErrCode(errx.USER_NOT_EXIST), fmt.Sprintf("UpdateCustomList - user db FINDgot NOT FOUND err: %v, userID: %v", err, userID))
+		//return nil, errors.Wrap(errx.NewErrCode(errx.USER_NOT_EXIST), fmt.Sprintf("UpdateCustomList - user db FINDgot NOT FOUND err: %v, userID: %v", err, userID))
+		return nil, errx.NewErrCode(errx.USER_NOT_EXIST)
 	}
 
 	res, err := l.svcCtx.List.FindOne(l.ctx, req.ID)
-	if err != nil {
-		return nil, errors.Wrap(errx.NewErrCode(errx.DB_ERROR), fmt.Sprintf("UpdateCustomList - list db FIND err: %v, ListID: %v", err, req.ID))
+	if err != nil && err != sqlx.ErrNotFound {
+		//return nil, errors.Wrap(errx.NewErrCode(errx.DB_ERROR), fmt.Sprintf("UpdateCustomList - list db FIND err: %v, ListID: %v", err, req.ID))
+		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
+	}
+
+	if res == nil {
+		return nil, errx.NewErrCode(errx.LIST_NOT_EXIST)
 	}
 
 	//title is a required field
@@ -52,7 +57,8 @@ func (l *UpdateCustomListLogic) UpdateCustomList(req *types.UpdateCustomListReq)
 
 	err = l.svcCtx.List.Update(l.ctx, res)
 	if err != nil {
-		return nil, errors.Wrap(errx.NewErrCode(errx.DB_ERROR), fmt.Sprintf("UpdateCustomList - list db UPDATE  err: %v, req: %+v", err, req))
+		//return nil, errors.Wrap(errx.NewErrCode(errx.DB_ERROR), fmt.Sprintf("UpdateCustomList - list db UPDATE  err: %v, req: %+v", err, req))
+		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 	return &types.UpdateCustomListResp{}, nil
 }

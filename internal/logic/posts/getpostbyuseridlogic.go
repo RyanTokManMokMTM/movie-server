@@ -37,7 +37,7 @@ func (l *GetPostByUserIDLogic) GetPostByUserID(req *types.PostInfosByUserReq) (r
 		return nil, errx.NewErrCode(errx.USER_NOT_EXIST)
 	}
 
-	res, err := l.svcCtx.PostModel.FindAllByUserID(l.ctx, req.UserID)
+	res, err := l.svcCtx.PostModel.FindUserWithInfoByCreateTime(l.ctx, req.UserID)
 	if err != nil {
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
@@ -49,7 +49,7 @@ func (l *GetPostByUserIDLogic) GetPostByUserID(req *types.PostInfosByUserReq) (r
 			PostTitle:        v.PostTitle,
 			PostDesc:         v.PostDesc,
 			PostLikeCount:    v.PostLike,
-			PostCommentCount: 0,
+			PostCommentCount: v.CommentCount,
 			CreateAt:         v.CreateTime.Unix(),
 			PostMovie: types.PostMovieInfo{
 				MovieID:    v.MovieId,

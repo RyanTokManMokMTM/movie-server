@@ -31,7 +31,7 @@ func {{.HandlerName}}(svcCtx *svc.ServiceContext) http.HandlerFunc {
 
 		if err := validate.StructCtx(r.Context(), req); err != nil {
 			errs := err.(validator.ValidationErrors)
-			httpx.Error(w, errors.Wrap(errx.NewErrCode(errx.REQ_PARAM_ERROR),fmt.Sprintf("Validated err: %v",errs[0].Translate(trans))))
+			httpx.Error(w, errx.NewCommonMessage(errx.REQ_PARAM_ERROR,errs[0].Translate(trans)))
 			return
 		}
 

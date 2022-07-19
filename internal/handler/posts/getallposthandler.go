@@ -1,12 +1,10 @@
 package posts
 
 import (
-	"fmt"
 	"github.com/go-playground/locales/en"
 	ut "github.com/go-playground/universal-translator"
 	"github.com/go-playground/validator/v10"
 	en_translations "github.com/go-playground/validator/v10/translations/en"
-	"github.com/pkg/errors"
 	"github.com/ryantokmanmokmtm/movie-server/common/errx" //common error package
 	"github.com/zeromicro/go-zero/rest/httpx"
 	"net/http"
@@ -32,7 +30,7 @@ func GetAllPostHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 
 		if err := validate.StructCtx(r.Context(), req); err != nil {
 			errs := err.(validator.ValidationErrors)
-			httpx.Error(w, errors.Wrap(errx.NewErrCode(errx.REQ_PARAM_ERROR), fmt.Sprintf("Validated err: %v", errs[0].Translate(trans))))
+			httpx.Error(w, errx.NewCommonMessage(errx.REQ_PARAM_ERROR, errs[0].Translate(trans)))
 			return
 		}
 

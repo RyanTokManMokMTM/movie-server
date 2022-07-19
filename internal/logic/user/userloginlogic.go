@@ -2,8 +2,6 @@ package user
 
 import (
 	"context"
-	"fmt"
-	"github.com/pkg/errors"
 	"github.com/ryantokmanmokmtm/movie-server/common/crytox"
 	"github.com/ryantokmanmokmtm/movie-server/common/ctxtool"
 	"github.com/ryantokmanmokmtm/movie-server/common/errx"
@@ -35,16 +33,19 @@ func (l *UserLoginLogic) UserLogin(req *types.UserLoginRequest) (resp *types.Use
 
 	res, err := l.svcCtx.User.FindOneByEmail(l.ctx, req.Email)
 	if err != nil && err != sqlx.ErrNotFound {
-		return nil, errors.Wrap(errx.NewErrCode(errx.DB_ERROR), fmt.Sprintf("UserLogin - user db FindByEmail err:%v, Email:%v", err, req.Email))
+		//return nil, errors.Wrap(errx.NewErrCode(errx.DB_ERROR), fmt.Sprintf("UserLogin - user db FindByEmail err:%v, Email:%v", err, req.Email))
+		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
 	if res == nil {
-		return nil, errors.Wrap(errx.NewErrCode(errx.DB_ERROR), fmt.Sprintf("UserLogin - user db FindByEmail NotFound err:%v, Email:%v", err, req.Email))
+		//return nil, errors.Wrap(errx.NewErrCode(errx.DB_ERROR), fmt.Sprintf("UserLogin - user db FindByEmail NotFound err:%v, Email:%v", err, req.Email))
+		return nil, errx.NewErrCode(errx.USER_NOT_EXIST)
 	}
 
 	hashedPassword := crytox.PasswordEncrypt(req.Password, l.svcCtx.Config.Salt)
 	if hashedPassword != res.Password {
-		return nil, errors.Wrap(errx.NewErrCode(errx.USER_PASSWORD_INCORRECT), fmt.Sprintf("UserLogin - Password err:%v, Email:%v", err, req.Email))
+		//return nil, errors.Wrap(errx.NewErrCode(errx.USER_PASSWORD_INCORRECT), fmt.Sprintf("UserLogin - Password err:%v, Email:%v", err, req.Email))
+		return nil, errx.NewErrCode(errx.USER_PASSWORD_INCORRECT)
 	}
 
 	payload := map[string]interface{}{
@@ -57,7 +58,8 @@ func (l *UserLoginLogic) UserLogin(req *types.UserLoginRequest) (resp *types.Use
 
 	token, err := jwtx.GetToken(now, exp, key, payload)
 	if err != nil {
-		return nil, errors.Wrap(errx.NewErrCode(errx.TOKEN_GENERATE_ERROR), fmt.Sprintf("UserLogin - Token Generate err:%v", err))
+		//return nil, errors.Wrap(errx.NewErrCode(errx.TOKEN_GENERATE_ERROR), fmt.Sprintf("UserLogin - Token Generate err:%v", err))
+		return nil, errx.NewErrCode(errx.TOKEN_GENERATE_ERROR)
 	}
 
 	return &types.UserLoginResponse{

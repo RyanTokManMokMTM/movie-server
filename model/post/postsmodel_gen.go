@@ -22,10 +22,10 @@ var (
 	postsRowsExpectAutoSet   = strings.Join(stringx.Remove(postsFieldNames, "`post_id`", "`create_time`", "`update_time`", "`create_at`", "`update_at`"), ",")
 	postsRowsWithPlaceHolder = strings.Join(stringx.Remove(postsFieldNames, "`post_id`", "`create_time`", "`update_time`", "`create_at`", "`update_at`"), "=?,") + "=?"
 
-	postsFieldNamesWithCommentCount          = builder.RawFieldNames(&PostWithCommentCount{})
-	postsRowsWithCommentCount                = strings.Join(postsFieldNamesWithCommentCount, ",")
-	postsRowsExpectAutoSetWithCommentCount   = strings.Join(stringx.Remove(postsFieldNamesWithCommentCount, "`post_id`", "`create_time`", "`update_time`", "`create_at`", "`update_at`"), ",")
-	postsRowsWithPlaceHolderWithCommentCount = strings.Join(stringx.Remove(postsFieldNamesWithCommentCount, "`post_id`", "`create_time`", "`update_time`", "`create_at`", "`update_at`"), "=?,") + "=?"
+	postsFieldNamesPostsWithInfo          = builder.RawFieldNames(&PostsWithInfo{})
+	postsRowsPostsWithInfo                = strings.Join(postsFieldNamesPostsWithInfo, ",")
+	postsRowsExpectAutoSetPostsWithInfo   = strings.Join(stringx.Remove(postsFieldNamesPostsWithInfo, "`post_id`", "`create_time`", "`update_time`", "`create_at`", "`update_at`"), ",")
+	postsRowsWithPlaceHolderPostsWithInfo = strings.Join(stringx.Remove(postsFieldNamesPostsWithInfo, "`post_id`", "`create_time`", "`update_time`", "`create_at`", "`update_at`"), "=?,") + "=?"
 
 	cacheMoviePostsPostIdPrefix = "cache:movie:posts:postId:"
 )
@@ -37,8 +37,8 @@ type (
 		Update(ctx context.Context, newData *Posts) error
 		Delete(ctx context.Context, postId int64) error
 
-		FindAllByCreateTime(ctx context.Context) ([]*Posts, error)
-		//GetPostWithCommentsCountByCreateTime(ctx context.Context) ([]*PostWithCommentCount, error)
+		FindAllWithInfoByCreateTime(ctx context.Context) ([]*PostsWithInfo, error)
+		FindUserWithInfoByCreateTime(ctx context.Context, userID int64) ([]*PostsWithInfo, error)
 	}
 
 	defaultPostsModel struct {
@@ -57,7 +57,7 @@ type (
 		UpdateTime time.Time `db:"update_time"`
 	}
 
-	PostWithCommentCount struct {
+	PostsWithInfo struct {
 		PostId     int64     `db:"post_id"`    // post id
 		PostTitle  string    `db:"post_title"` // post title
 		PostDesc   string    `db:"post_desc"`  // post desc
@@ -66,9 +66,13 @@ type (
 		PostLike   int64     `db:"post_like"`  // post like
 		CreateTime time.Time `db:"create_time"`
 		UpdateTime time.Time `db:"update_time"`
-
 		//Extra fields
-		CommentCount int64 `db:"comment_count"`
+		CommentCount int64  `db:"comment_count"`
+		UserName     string `db:"name"`
+		UserAvatar   string `db:"avatar"`
+		MovieID      int64  `db:"movie_id"`
+		MovieTitle   string `db:"title"`
+		MoviePoster  string `db:"poster_path"`
 	}
 )
 
@@ -123,9 +127,12 @@ func (m *defaultPostsModel) Update(ctx context.Context, data *Posts) error {
 	return err
 }
 
-func (m *defaultPostsModel) FindAllByCreateTime(ctx context.Context) ([]*Posts, error) {
-	query := fmt.Sprintf("SELECT %v FROM %v ORDER BY create_time DESC", postsRows, m.table)
-	var resp []*Posts
+func (m *defaultPostsModel) FindAllWithInfoByCreateTime(ctx context.Context) ([]*PostsWithInfo, error) {
+	query := fmt.Sprintf("SELECT `posts`.*,movie_infos.title,movie_infos.poster_path,users.avatar,users.name ,COUNT(comments.comment_id) as coumment_cout FROM posts  " +
+		"LEFT JOIN comments ON comments.post_id = posts.post_id " +
+		"INNER JOIN movie_infos ON `posts`.movie_id = movie_infos.movie_id " +
+		"INNER JOIN users ON users.id = `posts`.user_id  GROUP BY `posts`.post_id ORDER BY `posts`.create_time DESC")
+	var resp []*PostsWithInfo
 	err := m.QueryRowsNoCacheCtx(ctx, &resp, query)
 	switch err {
 	case nil:
@@ -135,9 +142,20 @@ func (m *defaultPostsModel) FindAllByCreateTime(ctx context.Context) ([]*Posts, 
 	}
 }
 
-//func (m *defaultPostsModel) GetPostWithCommentsCountByCreateTime(ctx context.Context) ([]*PostWithCommentCount, error) {
-//	query := fmt.Sprintf("SELECT %v FROM %v ORDER BY create_time DESC", postsRows, m.table)
-//}
+func (m *defaultPostsModel) FindUserWithInfoByCreateTime(ctx context.Context, userID int64) ([]*PostsWithInfo, error) {
+	query := fmt.Sprintf("SELECT `posts`.*,movie_infos.title,movie_infos.poster_path,users.avatar,users.name ,COUNT(comments.comment_id) as coumment_cout FROM posts  " +
+		"LEFT JOIN comments ON comments.post_id = posts.post_id " +
+		"INNER JOIN movie_infos ON `posts`.movie_id = movie_infos.movie_id " +
+		"INNER JOIN users ON users.id = `posts`.user_id  WHERE posts.user_id = ? GROUP BY `posts`.post_id ORDER BY `posts`.create_time DESC")
+	var resp []*PostsWithInfo
+	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, userID)
+	switch err {
+	case nil:
+		return resp, err
+	default:
+		return nil, err
+	}
+}
 
 func (m *defaultPostsModel) formatPrimary(primary interface{}) string {
 	return fmt.Sprintf("%s%v", cacheMoviePostsPostIdPrefix, primary)

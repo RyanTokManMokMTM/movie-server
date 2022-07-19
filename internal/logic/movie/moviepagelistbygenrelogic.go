@@ -2,12 +2,10 @@ package movie
 
 import (
 	"context"
-	"fmt"
-	"github.com/pkg/errors"
 	"github.com/ryantokmanmokmtm/movie-server/common/errx"
-
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
 	"github.com/ryantokmanmokmtm/movie-server/internal/types"
+	"github.com/zeromicro/go-zero/core/stores/sqlx"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -30,8 +28,9 @@ func (l *MoviePageListByGenreLogic) MoviePageListByGenre(req *types.MoviePageLis
 	// todo: add your logic here and delete this line
 	// return a list of movie from relation table
 	res, err := l.svcCtx.Movie.MoviePageListsByGenreID(l.ctx, req.Id, 20)
-	if err != nil {
-		return nil, errors.Wrap(errx.NewErrCode(errx.DB_ERROR), fmt.Sprintf("MoviePageListByGenre - movie db FIND err: %v, genreID: %v", err, req.Id))
+	if err != nil && err != sqlx.ErrNotFound {
+		//return nil, errors.Wrap(errx.NewErrCode(errx.DB_ERROR), fmt.Sprintf("MoviePageListByGenre - movie db FIND err: %v, genreID: %v", err, req.Id))
+		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
 	var movieInfos []*types.MovieInfo

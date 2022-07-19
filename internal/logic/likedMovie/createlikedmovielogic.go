@@ -60,12 +60,14 @@ func (l *CreateLikedMovieLogic) CreateLikedMovie(req *types.CreateLikedMovieReq)
 
 		sqlRes, err := l.svcCtx.LikedMovie.Insert(l.ctx, &newModel)
 		if err != nil {
-			return nil, errors.Wrap(errx.NewErrCode(errx.DB_ERROR), fmt.Sprintf("CreateLikedMovie - LikedMovie db Insert err: %v, req: %+v", err, req))
+			//return nil, errors.Wrap(errx.NewErrCode(errx.DB_ERROR), fmt.Sprintf("CreateLikedMovie - LikedMovie db Insert err: %v, req: %+v", err, req))
+			return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 		}
 
 		newModel.LikedMovieId, err = sqlRes.LastInsertId()
 		if err != nil {
-			return nil, errors.Wrap(errx.NewErrCode(errx.DB_AFFECTED_ZERO_ERROR), fmt.Sprintf("CreateLikedMovie - LikedMovie db Insert.LastInsertId err: %v, req: %+v", err, req))
+			//return nil, errors.Wrap(errx.NewErrCode(errx.DB_AFFECTED_ZERO_ERROR), fmt.Sprintf("CreateLikedMovie - LikedMovie db Insert.LastInsertId err: %v, req: %+v", err, req))
+			return nil, errx.NewErrCode(errx.DB_AFFECTED_ZERO_ERROR)
 		}
 		return &types.CreateLikedMovieResp{
 			LikedMovieID: newModel.MovieId,
@@ -73,5 +75,6 @@ func (l *CreateLikedMovieLogic) CreateLikedMovie(req *types.CreateLikedMovieReq)
 		}, nil
 	}
 
-	return nil, errors.Wrap(errx.NewErrCode(errx.MOVIE_ALREADY_LIKED), fmt.Sprintf("CreateLikedMovie - LikedMovie db FIND err: %v, req: %+v", err, req))
+	//return nil, errors.Wrap(errx.NewErrCode(errx.MOVIE_ALREADY_LIKED), fmt.Sprintf("CreateLikedMovie - LikedMovie db FIND err: %v, req: %+v", err, req))
+	return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 }

@@ -2,8 +2,6 @@ package user
 
 import (
 	"context"
-	"fmt"
-	"github.com/pkg/errors"
 	"github.com/ryantokmanmokmtm/movie-server/common/crytox"
 	"github.com/ryantokmanmokmtm/movie-server/common/errx"
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
@@ -34,34 +32,39 @@ func (l *UserSignUpLogic) UserSignUp(req *types.UserSignUpRequest) (resp *types.
 	lowEmail := strings.ToLower(req.Email)
 	userInfo, err := l.svcCtx.User.FindOneByEmail(l.ctx, lowEmail)
 	if err != nil && err != sqlx.ErrNotFound {
-		return nil, errors.Wrap(errx.NewErrCode(errx.DB_ERROR), fmt.Sprintf("UserSignUp - user db err:%v, req:%+v", err, req))
+		//return nil, errors.Wrap(errx.NewErrCode(errx.DB_ERROR), fmt.Sprintf("UserSignUp - user db err:%v, req:%+v", err, req))
+		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
-	if userInfo == nil {
-		newUser := user.Users{
-			Name:     req.UserName,
-			Email:    lowEmail,
-			Password: crytox.PasswordEncrypt(req.Password, l.svcCtx.Config.Salt),
-			//avatar for testing
-			Avatar: "https://upload.cc/i1/2022/07/03/MJIXkd.jpeg", //TODO: Upload User avatar
-			Cover:  "https://upload.cc/i1/2022/07/04/yQN7tU.jpeg", //TODO: Upload User Cover
-		}
+	if userInfo != nil {
+		return nil, errx.NewErrCode(errx.EMAIL_HAS_BEEN_REGISTERED)
 
-		res, err := l.svcCtx.User.Insert(l.ctx, &newUser)
-		if err != nil {
-			return nil, errors.Wrap(errx.NewErrCode(errx.DB_ERROR), fmt.Sprintf("UserSignUp - user db Insert err:%v, req:%+v", err, req))
-		}
-
-		newUser.Id, err = res.LastInsertId()
-		if err != nil {
-			return nil, errors.Wrap(errx.NewErrCode(errx.DB_AFFECTED_ZERO_ERROR), fmt.Sprintf("UserSignUp - user db Insert.LastInsertID err:%v, req:%+v", err, req))
-		}
-
-		return &types.UserSignUpResponse{
-			ID:    newUser.Id,
-			Name:  newUser.Name,
-			Email: lowEmail,
-		}, nil
 	}
-	return nil, errors.Wrap(errx.NewErrCode(errx.DB_ERROR), fmt.Sprintf("UserSignUp - user db err: %v, req:%+v", err, req))
+	//return nil, errors.Wrap(errx.NewErrCode(errx.DB_ERROR), fmt.Sprintf("UserSignUp - user db err: %v, req:%+v", err, req))
+	newUser := user.Users{
+		Name:     req.UserName,
+		Email:    lowEmail,
+		Password: crytox.PasswordEncrypt(req.Password, l.svcCtx.Config.Salt),
+		//avatar for testing
+		Avatar: "https://upload.cc/i1/2022/07/03/MJIXkd.jpeg", //TODO: Upload User avatar
+		Cover:  "https://upload.cc/i1/2022/07/04/yQN7tU.jpeg", //TODO: Upload User Cover
+	}
+
+	res, err := l.svcCtx.User.Insert(l.ctx, &newUser)
+	if err != nil {
+		//return nil, errors.Wrap(errx.NewErrCode(errx.DB_ERROR), fmt.Sprintf("UserSignUp - user db Insert err:%v, req:%+v", err, req))
+		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
+	}
+
+	newUser.Id, err = res.LastInsertId()
+	if err != nil {
+		//return nil, errors.Wrap(errx.NewErrCode(errx.DB_AFFECTED_ZERO_ERROR), fmt.Sprintf("UserSignUp - user db Insert.LastInsertID err:%v, req:%+v", err, req))
+		return nil, errx.NewErrCode(errx.DB_AFFECTED_ZERO_ERROR)
+	}
+
+	return &types.UserSignUpResponse{
+		ID:    newUser.Id,
+		Name:  newUser.Name,
+		Email: lowEmail,
+	}, nil
 }

@@ -2,8 +2,6 @@ package custom_list
 
 import (
 	"context"
-	"fmt"
-	"github.com/pkg/errors"
 	"github.com/ryantokmanmokmtm/movie-server/common/ctxtool"
 	"github.com/ryantokmanmokmtm/movie-server/common/errx"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
@@ -35,16 +33,19 @@ func (l *DeleteCustomListLogic) DeleteCustomList(req *types.DeleteCustomListReq)
 	//find user
 	user, err := l.svcCtx.User.FindOne(l.ctx, userID)
 	if err != nil && err != sqlx.ErrNotFound {
-		return nil, errors.Wrap(errx.NewErrCode(errx.DB_ERROR), fmt.Sprintf("DeleteCustomList - user db err:%v, userID:%v", err, userID))
+		//return nil, errors.Wrap(errx.NewErrCode(errx.DB_ERROR), fmt.Sprintf("DeleteCustomList - user db err:%v, userID:%v", err, userID))
+		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
 	if user == nil {
-		return nil, errors.Wrap(errx.NewErrCode(errx.USER_NOT_EXIST), fmt.Sprintf("DeleteCustomList - user db USER NOT FOUND err: %v, userID: %v", err, userID))
+		//return nil, errors.Wrap(errx.NewErrCode(errx.USER_NOT_EXIST), fmt.Sprintf("DeleteCustomList - user db USER NOT FOUND err: %v, userID: %v", err, userID))
+		return nil, errx.NewErrCode(errx.USER_NOT_EXIST)
 	}
 
 	err = l.svcCtx.List.Delete(l.ctx, req.ID)
 	if err != nil {
-		return nil, errors.Wrap(errx.NewErrCode(errx.DB_ERROR), fmt.Sprintf("DeleteCustomList - List db delete err:%v, req:%v", err, req))
+		//return nil, errors.Wrap(errx.NewErrCode(errx.DB_ERROR), fmt.Sprintf("DeleteCustomList - List db delete err:%v, req:%v", err, req))
+		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
 	return &types.DeleteCustomListResp{}, nil

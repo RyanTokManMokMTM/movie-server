@@ -2,12 +2,10 @@ package custom_list
 
 import (
 	"context"
-	"fmt"
-	"github.com/pkg/errors"
 	"github.com/ryantokmanmokmtm/movie-server/common/errx"
-
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
 	"github.com/ryantokmanmokmtm/movie-server/internal/types"
+	"github.com/zeromicro/go-zero/core/stores/sqlx"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -31,8 +29,9 @@ func (l *GetAllUserListLogic) GetAllUserList(req *types.AllCustomListReq) (resp 
 	logx.Info("Get All User List")
 	logx.Info(req.ID)
 	listInfos, err := l.svcCtx.List.FindAllByUserID(l.ctx, req.ID)
-	if err != nil {
-		return nil, errors.Wrap(errx.NewErrCode(errx.DB_ERROR), fmt.Sprintf("GetAllUserList - list db find by user id err: %v, userID: %v", err, req.ID))
+	if err != nil && err != sqlx.ErrNotFound {
+		//return nil, errors.Wrap(errx.NewErrCode(errx.DB_ERROR), fmt.Sprintf("GetAllUserList - list db find by user id err: %v, userID: %v", err, req.ID))
+		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
 	var listResp []types.ListInfo
@@ -47,5 +46,4 @@ func (l *GetAllUserListLogic) GetAllUserList(req *types.AllCustomListReq) (resp 
 	return &types.AllCustomListResp{
 		Lists: listResp,
 	}, nil
-	return
 }
