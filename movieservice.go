@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/pkg/errors"
 	"github.com/ryantokmanmokmtm/movie-server/common/errx"
 	"github.com/ryantokmanmokmtm/movie-server/internal/config"
 	"github.com/ryantokmanmokmtm/movie-server/internal/handler"
@@ -29,12 +28,12 @@ func main() {
 	handler.RegisterHandlers(server, ctx)
 
 	httpx.SetErrorHandler(func(err error) (int, interface{}) {
-		if ok := errors.As(err, errx.CommonError{}); ok {
-			return http.StatusOK, err.(*errx.CommonError).ToJSONResp()
-		} else {
-			return http.StatusInternalServerError, nil
+		switch e := err.(type) {
+		case *errx.CommonError:
+			return http.StatusOK, e.ToJSONResp()
+		default:
+			return http.StatusInternalServerError, errx.NewErrCode(errx.SERVER_COMMON_ERROR).ToJSONResp()
 		}
-
 	})
 
 	//Adding Static Route

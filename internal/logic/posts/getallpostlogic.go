@@ -3,6 +3,7 @@ package posts
 import (
 	"context"
 	"github.com/ryantokmanmokmtm/movie-server/common/errx"
+	"log"
 
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
 	"github.com/ryantokmanmokmtm/movie-server/internal/types"
@@ -28,6 +29,7 @@ func (l *GetAllPostLogic) GetAllPost(req *types.PostsInfoReq) (resp *types.Posts
 	// todo: add your logic here and delete this line
 	res, err := l.svcCtx.PostModel.FindAllWithInfoByCreateTime(l.ctx)
 	if err != nil {
+		log.Println(err.Error())
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 

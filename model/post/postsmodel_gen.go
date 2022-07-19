@@ -70,7 +70,6 @@ type (
 		CommentCount int64  `db:"comment_count"`
 		UserName     string `db:"name"`
 		UserAvatar   string `db:"avatar"`
-		MovieID      int64  `db:"movie_id"`
 		MovieTitle   string `db:"title"`
 		MoviePoster  string `db:"poster_path"`
 	}
@@ -128,10 +127,10 @@ func (m *defaultPostsModel) Update(ctx context.Context, data *Posts) error {
 }
 
 func (m *defaultPostsModel) FindAllWithInfoByCreateTime(ctx context.Context) ([]*PostsWithInfo, error) {
-	query := fmt.Sprintf("SELECT `posts`.*,movie_infos.title,movie_infos.poster_path,users.avatar,users.name ,COUNT(comments.comment_id) as coumment_cout FROM posts  " +
-		"LEFT JOIN comments ON comments.post_id = posts.post_id " +
-		"INNER JOIN movie_infos ON `posts`.movie_id = movie_infos.movie_id " +
-		"INNER JOIN users ON users.id = `posts`.user_id  GROUP BY `posts`.post_id ORDER BY `posts`.create_time DESC")
+	query := fmt.Sprintf("SELECT %s.*,movie_infos.title,movie_infos.poster_path,users.avatar,users.name ,COUNT(comments.comment_id) as comment_cout FROM posts  "+
+		"LEFT JOIN comments ON comments.post_id = %s.post_id "+
+		"INNER JOIN movie_infos ON %s.movie_id = movie_infos.movie_id "+
+		"INNER JOIN users ON users.id = %s.user_id  GROUP BY %s.post_id ORDER BY `posts`.create_time DESC", m.table, m.table, m.table, m.table, m.table)
 	var resp []*PostsWithInfo
 	err := m.QueryRowsNoCacheCtx(ctx, &resp, query)
 	switch err {
@@ -143,10 +142,10 @@ func (m *defaultPostsModel) FindAllWithInfoByCreateTime(ctx context.Context) ([]
 }
 
 func (m *defaultPostsModel) FindUserWithInfoByCreateTime(ctx context.Context, userID int64) ([]*PostsWithInfo, error) {
-	query := fmt.Sprintf("SELECT `posts`.*,movie_infos.title,movie_infos.poster_path,users.avatar,users.name ,COUNT(comments.comment_id) as coumment_cout FROM posts  " +
-		"LEFT JOIN comments ON comments.post_id = posts.post_id " +
-		"INNER JOIN movie_infos ON `posts`.movie_id = movie_infos.movie_id " +
-		"INNER JOIN users ON users.id = `posts`.user_id  WHERE posts.user_id = ? GROUP BY `posts`.post_id ORDER BY `posts`.create_time DESC")
+	query := fmt.Sprintf("SELECT %s.*,movie_infos.title,movie_infos.poster_path,users.avatar,users.name ,COUNT(comments.comment_id) as comment_cout FROM posts  "+
+		"LEFT JOIN comments ON comments.post_id = %s.post_id "+
+		"INNER JOIN movie_infos ON %s.movie_id = movie_infos.movie_id "+
+		"INNER JOIN users ON users.id = %s.user_id  WHERE %s.user_id = ? GROUP BY %s.post_id ORDER BY `posts`.create_time DESC", m.table, m.table, m.table, m.table, m.table, m.table)
 	var resp []*PostsWithInfo
 	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, userID)
 	switch err {
