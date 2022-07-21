@@ -10,6 +10,7 @@ CREATE TABLE `movie`.`users`(
     `cover` varchar(255) NULL DEFAULT  'cover.jpg' COMMENT 'user background cover',
     `create_time` timestamp DEFAULT current_timestamp,
     `update_time` timestamp DEFAULT current_timestamp ON UPDATE current_timestamp,
+    `delete_time` timestamp DEFAULT NULL,
     PRIMARY KEY(`id`),
     UNIQUE `idx_email_unique`(`email`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -18,7 +19,7 @@ CREATE TABLE `movie`.`users`(
 -- Table structure for genre_infos
 -- ----------------------------
 DROP TABLE IF EXISTS `movie`.`genre_infos`;
-CREATE TABLE `movie`.`genre_infos`  (
+CEATE TABLE `movie`.`genre_infos`  (
   `genre_id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` varchar(255) CHARACTER SET utf8mb4 NOT NULL,
   `created_at` timestamp default current_timestamp,
@@ -139,6 +140,7 @@ CREATE TABLE `movie`.`posts`(
     `post_like` int NOT NULL DEFAULT 0 comment 'post like ',
 		`create_time` timestamp DEFAULT current_timestamp,
     `update_time` timestamp DEFAULT current_timestamp ON UPDATE current_timestamp,
+    `deleted_at` datetime(3) NULL DEFAULT NULL,
 	PRIMARY KEY(`post_id`),
 	FOREIGN KEY(`movie_id`) REFERENCES `movie`.`movie_infos`(`movie_id`) ON UPDATE CASCADE ON DELETE CASCADE,
 	FOREIGN KEY(`user_id`) REFERENCES `movie`.`users`(`id`) ON UPDATE CASCADE ON DELETE CASCADE
@@ -151,7 +153,7 @@ CREATE TABLE `movie`.`lists`(
     `user_id` bigint unsigned NOT NULL,
     `create_time` timestamp DEFAULT current_timestamp,
     `update_time` timestamp DEFAULT current_timestamp ON UPDATE current_timestamp,
---     `list_last_update` timestamp on update current_timestamp,
+    `deleted_at` datetime(3) NULL DEFAULT NULL,
 	PRIMARY KEY(`list_id`),
     FOREIGN KEY(`user_id`) REFERENCES `movie`.`users`(`id`) ON UPDATE CASCADE ON DELETE CASCADE
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -166,6 +168,7 @@ CREATE TABLE `movie`.`lists_movies`(
     `user_ratetext` varchar(255) DEFAULT '',
     `create_time` timestamp DEFAULT current_timestamp,
     `update_time` timestamp DEFAULT current_timestamp ON UPDATE CURRENT_TIMESTAMP,
+    `deleted_at` datetime(3) NULL DEFAULT NULL,
     PRIMARY KEY(`lists_movie_id`),
 	FOREIGN KEY(`list_id`) REFERENCES `movie`.`lists`(`list_id`) ON UPDATE CASCADE ON DELETE CASCADE,
 	FOREIGN KEY(`movie_id`) REFERENCES `movie`.`movie_infos`(`movie_id`) ON UPDATE CASCADE ON DELETE CASCADE
@@ -177,6 +180,7 @@ CREATE TABLE `movie`.`like_articles`(
     `user_id` bigint unsigned NOT NULL,
     `article_id` bigint unsigned NOT NULL,
 	`update_time` timestamp DEFAULT current_timestamp ON UPDATE CURRENT_TIMESTAMP,
+    `deleted_at` datetime(3) NULL DEFAULT NULL,
     PRIMARY KEY(`like_article_id`),
     FOREIGN KEY(`user_id`) REFERENCES `movie`.`users`(`id`) ON UPDATE CASCADE ON DELETE CASCADE
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -190,6 +194,7 @@ CREATE TABLE `movie`.`liked_movies`(
 --     `movie_poster_path` varchar(255) DEFAULT '',
     `create_time` timestamp DEFAULT current_timestamp ,
 	`update_time` timestamp DEFAULT current_timestamp ON UPDATE CURRENT_TIMESTAMP,
+    `deleted_at` datetime(3) NULL DEFAULT NULL,
     PRIMARY KEY(`liked_movie_id`),
     UNIQUE KEY( `user_id`, `movie_id`),
 	FOREIGN KEY(`user_id`) REFERENCES `movie`.`users`(`id`) ON UPDATE CASCADE ON DELETE CASCADE,
@@ -205,16 +210,9 @@ CREATE TABLE `movie`.`comments`(
     `comment_like` int NOT NULL DEFAULT 0 comment 'comment like',
     `create_time` timestamp DEFAULT current_timestamp,
     `update_time` timestamp DEFAULT current_timestamp ON UPDATE current_timestamp,
+    `deleted_at` datetime(3) NULL DEFAULT NULL,
 	PRIMARY KEY(`comment_id`),
 	FOREIGN KEY(`user_id`) REFERENCES `movie`.`users`(`id`) ON UPDATE CASCADE ON DELETE CASCADE,
 	FOREIGN KEY(`post_id`) REFERENCES `movie`.`posts`(`post_id`) ON UPDATE CASCADE ON DELETE CASCADE
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-DROP TABLE IF EXISTS `movie`.`follow_user`;
-CREATE TABLE `movie`.`follow_user`(
-	`follow_id` BIGINT NOT NULL AUTO)INCREMENT,
-	`user_id` BEGIN NOT NULL COMMENT 'who follow some one',
-	`followed_user_id` BIGINT NOT NULL COMMENT 'who is being followed'
-	PRIMARY KEY(`follow_id`),
-	UNIQUE KEY `idx_userID_followedUserID`(`user_id`,`followed_user_id`) # 1 person will only follow one same person
-);

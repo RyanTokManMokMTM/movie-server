@@ -11,17 +11,24 @@ syntax = "v1"
 // Request and reponse
 type (
     MoviePageListByGenreRequest {
-        Id int64 `form:"id" validate:"numeric"`
+        Id uint `path:"genre_id" validate:"numeric"`
     }
     MoviePageListByGenreResponse {
         Resp []*MovieInfo `json:"movieInfos"`
     }
 //
     MovieGenresInfoRequest{
-        Id int64 `form:"id" validate:"numeric"`
+        Id uint `path:"movie_id" validate:"numeric"`
     }
     MovieGenresInfoResponse{
         resp []*GenreInfo `json:"genres"`
+    }
+
+    MovieDetailReq {
+        MovieID uint `path:"movie_id"`
+    }
+    MovieDetailResp {
+        MovieDetailInfo
     }
 
 
@@ -29,14 +36,33 @@ type (
 
 type (
     MovieInfo {
-        MovieID          int64   `json:"id"`
+        MovieID          uint   `json:"id"`
         PosterPath       string  `json:"poster"`
         Title            string  `json:"title"`
         VoteAverage      float64 `json:"vote_average"`
     }
 
+    MovieDetailInfo {
+        Adult            bool `json:"adult"`
+        BackdropPath     string `json:"backdrop_path"`
+        MovieId          uint  `json:"movie_id"`
+        OriginalLanguage string `json:"original_language"`
+        OriginalTitle    string `json:"original_title"`
+        Overview         string `json:"overview"`
+        Popularity       float64 `json:"popularity"`
+        PosterPath       string `json:"poster_path"`
+        ReleaseDate      string `json:"release_date"`
+        Title            string `json:"title"`
+        RunTime          int64 `json:"run_time"`
+        Video            bool `json:"video"`
+        VoteAverage      float64 `json:"Vote_average"`
+        VoteCount        int64 `json:"vote_count"`
+
+        Genres []GenreInfo `json:"genres"`
+    }
+
     GenreInfo{
-        Id int64 `json:"id"`
+        Id uint `json:"id"`
         Name string `json:"name"`
     }
 )
@@ -49,9 +75,13 @@ type (
 service MovieService{
     @doc "get movie by genre"
     @handler MoviePageListByGenre
-    get /movies/genre/list(MoviePageListByGenreRequest) returns (MoviePageListByGenreResponse);
+    get /movies/list/:genre_id(MoviePageListByGenreRequest) returns (MoviePageListByGenreResponse);
 
     @doc "get movie by genre"
     @handler MovieGenreByMovieID
-    get /movies/genres(MovieGenresInfoRequest) returns (MovieGenresInfoResponse);
+    get /movies/genres/:movie_id(MovieGenresInfoRequest) returns (MovieGenresInfoResponse);
+
+    @doc "get movie detail"
+    @handler GetMovieDetail
+    get /movies/:movie_id(MovieDetailReq) returns (MovieDetailResp);
 }

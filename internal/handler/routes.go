@@ -4,6 +4,7 @@ package handler
 import (
 	"net/http"
 
+	comment "github.com/ryantokmanmokmtm/movie-server/internal/handler/comment"
 	custom_list "github.com/ryantokmanmokmtm/movie-server/internal/handler/custom_list"
 	health "github.com/ryantokmanmokmtm/movie-server/internal/handler/health"
 	likedMovie "github.com/ryantokmanmokmtm/movie-server/internal/handler/likedMovie"
@@ -69,13 +70,18 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodGet,
-				Path:    "/movies/genre/list",
+				Path:    "/movies/list/:genre_id",
 				Handler: movie.MoviePageListByGenreHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodGet,
-				Path:    "/movies/genres",
+				Path:    "/movies/genres/:movie_id",
 				Handler: movie.MovieGenreByMovieIDHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/movies/:movie_id",
+				Handler: movie.GetMovieDetailHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/api/v1"),
@@ -180,6 +186,39 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodGet,
 				Path:    "/posts/:user_id",
 				Handler: posts.GetPostByUserIDHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/api/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodPost,
+				Path:    "/comments/:postID",
+				Handler: comment.CreateCommentHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPatch,
+				Path:    "/comments/:postID/:commentID",
+				Handler: comment.UpdateCommentHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodDelete,
+				Path:    "/comments/:postID/:commentID",
+				Handler: comment.DeleteCommentHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/api/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/comments/:postID",
+				Handler: comment.GetPostCommentHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/api/v1"),

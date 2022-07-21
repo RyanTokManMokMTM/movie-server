@@ -9,40 +9,41 @@ syntax = "v1"
 //)
 
 type (
-	UserLoginRequest {
+	UserLoginReq {
 		Email    string `json:"email" validate:"required,max=32,email"`
 		Password string `json:"password" validate:"required,min=8,max=32"`
 	}
-	UserLoginResponse {
+	UserLoginResp {
 		Token   string `json:"token"`
 		Expired int64 `json:"expired"`
+
+		//Refersher?
 	}
 
-	UserSignUpRequest {
+	UserSignUpReq {
 		UserName string `json:"name"`
 		Email    string `json:"email" validate:"email,max=32"`
 		Password string `json:"password" validate:"min=8,max=32"`
-//		ConfirmPassword string `json:"confirmPassword" validate:"eqfield=Password"`
 	}
-	UserSignUpResponse {
-		ID   int64  `json:"id"`
+	UserSignUpResp {
+		ID   uint  `json:"id"`
 		Name string `json:"name"`
 		Email string `json:"email"`
 	}
 
-	UserInfoRequest {
-		ID int64 `path:"id"`
+	UserInfoReq {
+		ID uint `path:"id"`
 	}
 
-	UserInfoResponse {
-		ID   int64  `json:"id"`
+	UserInfoResp {
+		ID   uint `json:"id"`
 		Name string `json:"name"`
 		Email string `jsons:"email"`
 	}
 
-	UserProfileRequest {}
-	UserProfileResponse {
-		ID int64 `json:"id"`
+	UserProfileReq {}
+	UserProfileResp {
+		ID uint `json:"id"`
 		Name string `json:"name"`
 		Email string `json:"email"`
 		Avatar string `json:"avatar"`
@@ -62,11 +63,11 @@ type (
 service MovieService {
 	@doc "user_login"
 	@handler UserLogin
-	post /user/login(UserLoginRequest)  returns (UserLoginResponse);
+	post /user/login(UserLoginReq)  returns (UserLoginResp);
 
 	@doc "user_register"
 	@handler  UserSignUp
-	post /user/signup(UserSignUpRequest) returns (UserSignUpResponse);
+	post /user/signup(UserSignUpReq) returns (UserSignUpResp);
 }
 
 @server (
@@ -76,7 +77,7 @@ service MovieService {
 service MovieService{
 	@doc "user_info"
 	@handler UserInfo
-	get /user/info/:id(UserInfoRequest) returns (UserInfoResponse);
+	get /user/info/:id(UserInfoReq) returns (UserInfoResp);
 }
 
 @server (
@@ -87,7 +88,7 @@ service MovieService{
 service MovieService{
 	@doc "user_profile"
 	@handler UserProfile
-	get /user/profile(UserProfileRequest) returns (UserProfileResponse);
+	get /user/profile(UserProfileReq) returns (UserProfileResp);
 }
 
 

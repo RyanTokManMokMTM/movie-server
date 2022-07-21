@@ -14,31 +14,31 @@ type (
         Title string `json:"title"`
     }
     CreateCustomListResp {
-        ID int64 `json:"id"`
+        ID uint `json:"id"`
         Title string `json:"title"`
         UpdateOn int64 `json:"update_on"`
     }
 
     UpdateCustomListReq {
-        ID int64 `json:"id"`
+        ID uint `json:"id"`
         Title string `json:"title"`
     }
     UpdateCustomListResp {}
 
     DeleteCustomListReq {
-        ID int64 `json:"id"`
+        ID uint `json:"id"`
     }
     DeleteCustomListResp {}
 
     AllCustomListReq {
-        ID int64 `path:"user_id"`
+        ID uint `path:"user_id"`
     }
     AllCustomListResp {
         Lists []ListInfo `json:"lists"`
     }
 
     UserListReq {
-        ID int64 `path:"list_id"`
+        ID uint `path:"list_id"`
     }
     UserListResp {
         List ListInfo `json:"list"`
@@ -47,7 +47,7 @@ type (
 
 type (
     ListInfo {
-        ID int64 `json:"id"`
+        ID uint `json:"id"`
         Title string `json:"title"`
         UpdateOn int64 `json:"update_on"`
     }

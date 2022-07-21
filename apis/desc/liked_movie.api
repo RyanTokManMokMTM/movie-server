@@ -10,20 +10,20 @@ syntax = "v1"
 
 type (
     CreateLikedMovieReq {
-        MovieID int64 `json:"movie_id"`
+        MovieID uint `json:"movie_id"`
     }
     CreateLikedMovieResp {
-        LikedMovieID int64 `json:"liked_movie_id"`
+        LikedMovieID uint `json:"liked_movie_id"`
         UserID int64 `json:"user_id"`
     }
 
     DeleteLikedMoviedReq {
-        MovieID int64 `json:"movie_id"`
+        MovieID uint `json:"movie_id"`
     }
     DeleteLikedMovieResp {}
 
     AllUserLikedMoviesReq {
-        ID int64 `path:"user_id"`
+        ID uint `path:"user_id"`
     }
     AllUserAllLikedMoviesResp {
         LikedMoviesList []*LikedMovieInfo `json:"liked_movies"`
@@ -44,7 +44,7 @@ type (
 type (
 
     LikedMovieInfo {
-        MovieID int64 `json:"id"`
+        MovieID uint `json:"id"`
         MovieName string `json:"movie_name"`
         Genres []GenreInfo `json:"genres"`
         MoviePoster string `json:"movie_poster"`

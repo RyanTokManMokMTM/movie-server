@@ -1,0 +1,102 @@
+syntax = "v1"
+
+info(
+    title: "Post Commnet API"
+    desc: "CRUD ABOUT COMMENT"
+    author: "type author here"
+    email: "type email here"
+    version: "type version here"
+)
+
+//Current User
+type (
+    CreateCommentReq {
+        PostID uint `path:"post_id"`
+        Comment string `json:"comment"`
+    }
+    CreateCommentResp {
+        CommentID uint `json:"comment"`
+        CreateAt int64 `json:"create_At"`
+    }
+
+    UpdateCommentReq {
+        PostID uint `path:"post_id"`
+        CommentID int64 `path:"comment_id"`
+        Comment string `json:"comment"`
+    }
+    UpdateCommentResp {
+        UpdateAt int64 `json:"update_at"`
+    }
+
+    DeleteCommentReq {
+        PostID uint `path:"post_id"`
+        CommentID string `json:"comment"`
+    }
+    DeleteCommentResp {}
+
+    GetPostCommentsReq {
+        PostID uint `path:"post_id"`
+    }
+    GetPostCommentsResp {
+        Comments []CommentInfo `json:"comments"`
+    }
+)
+
+//New Feature
+//To Other User
+//Reply , Like Comment etc
+//
+//type (
+//    LikePostCommentReq {
+//        PostID int64 `path:"post_id"`
+//        CommentID int64 `json:"comment_id"`
+//    }
+//    LikePostCommentResp {}
+//
+//    ReplyPostCommentReq {
+//        PostID int64 `path:"post_id"`
+//        CommentID int64 `json:"comment_id"`
+//        Comment string `json:"comment"`
+//    }
+//    ReplyPostCommentResp {}
+//)
+
+type (
+    CommentInfo {
+        CommentID uint `json:"comment_id"`
+        PostID int64 `json:"post_id"`
+        UserID int64 `json:"user_id"`
+        Comment string `json:"comment"`
+        CreateAt int64 `json:"create_at"`
+        UpdateAt int64 `json:"update_at"`
+    }
+)
+
+@server(
+    group: comment
+    prefix : /api/v1
+    jwt: Auth
+)
+service MovieService {
+    @doc "Create A New Comment"
+    @handler CreateComment
+    post /comments/:postID(CreateCommentReq) returns (CreateCommentResp);
+
+    @doc "Update Comment"
+    @handler UpdateComment
+    patch /comments/:postID/:commentID(UpdateCommentReq) returns (UpdateCommentResp);
+
+    @doc "Delete Comment"
+    @handler DeleteComment
+    delete /comments/:postID/:commentID(DeleteCommentReq) returns (DeleteCommentResp);
+}
+
+@server(
+    group: comment
+    prefix : /api/v1
+)
+service MovieService {
+    @doc "Get Post Comments"
+    @handler GetPostComment
+    get /comments/:postID(GetPostCommentsReq) returns (GetPostCommentsResp);
+}

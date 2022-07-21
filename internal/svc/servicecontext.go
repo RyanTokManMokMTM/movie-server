@@ -2,6 +2,8 @@ package svc
 
 import (
 	"github.com/ryantokmanmokmtm/movie-server/internal/config"
+	"github.com/ryantokmanmokmtm/movie-server/internal/dao"
+	"github.com/ryantokmanmokmtm/movie-server/internal/models"
 	"github.com/ryantokmanmokmtm/movie-server/model/genre"
 	"github.com/ryantokmanmokmtm/movie-server/model/liked_movie"
 	"github.com/ryantokmanmokmtm/movie-server/model/list"
@@ -10,8 +12,6 @@ import (
 	"github.com/ryantokmanmokmtm/movie-server/model/post"
 	"github.com/ryantokmanmokmtm/movie-server/model/user"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
 )
 
 type ServiceContext struct {
@@ -24,11 +24,12 @@ type ServiceContext struct {
 	LikedMovie liked_movie.LikedMoviesModel
 	PostModel  post.PostsModel
 
-	GormEngine *gorm.DB
+	DAO *dao.DAO //USING DATABASE ACCESS AS MODEL LAYER
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
 	conn := sqlx.NewMysql(c.MySQL.DataSource)
+
 	return &ServiceContext{
 		Config:     c,
 		User:       user.NewUsersModel(conn, c.CacheRedis),
@@ -38,18 +39,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		ListMovie:  list_movie.NewListsMoviesModel(conn, c.CacheRedis),
 		LikedMovie: liked_movie.NewLikedMoviesModel(conn, c.CacheRedis),
 		PostModel:  post.NewPostsModel(conn, c.CacheRedis),
-		GormEngine: gormConfig(c.MySQL.DataSource),
+		DAO:        dao.NewDAO(models.NewEngine(c)),
 	}
-}
-
-func gormConfig(mysqlConfig string) *gorm.DB {
-	db, err := gorm.Open(mysql.New(mysql.Config{
-		DSN: mysqlConfig,
-	}))
-
-	if err != nil {
-		panic("GORM INIT ERROR")
-	}
-
-	return db
 }

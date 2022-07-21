@@ -12,6 +12,7 @@ import "desc/movie.api"
 import "desc/liked_movie.api"
 import "desc/custom_list.api"
 import "desc/post.api"
+import "desc/comment.api"
 
 type (
 	HealthCheckReq  struct{}

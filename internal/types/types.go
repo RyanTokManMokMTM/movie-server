@@ -8,43 +8,43 @@ type HealthCheckResp struct {
 	Result string `json:"result"`
 }
 
-type UserLoginRequest struct {
+type UserLoginReq struct {
 	Email    string `json:"email" validate:"required,max=32,email"`
 	Password string `json:"password" validate:"required,min=8,max=32"`
 }
 
-type UserLoginResponse struct {
+type UserLoginResp struct {
 	Token   string `json:"token"`
 	Expired int64  `json:"expired"`
 }
 
-type UserSignUpRequest struct {
+type UserSignUpReq struct {
 	UserName string `json:"name"`
 	Email    string `json:"email" validate:"email,max=32"`
 	Password string `json:"password" validate:"min=8,max=32"`
 }
 
-type UserSignUpResponse struct {
-	ID    int64  `json:"id"`
+type UserSignUpResp struct {
+	ID    uint   `json:"id"`
 	Name  string `json:"name"`
 	Email string `json:"email"`
 }
 
-type UserInfoRequest struct {
-	ID int64 `path:"id"`
+type UserInfoReq struct {
+	ID uint `path:"id"`
 }
 
-type UserInfoResponse struct {
-	ID    int64  `json:"id"`
+type UserInfoResp struct {
+	ID    uint   `json:"id"`
 	Name  string `json:"name"`
 	Email string `jsons:"email"`
 }
 
-type UserProfileRequest struct {
+type UserProfileReq struct {
 }
 
-type UserProfileResponse struct {
-	ID     int64  `json:"id"`
+type UserProfileResp struct {
+	ID     uint   `json:"id"`
 	Name   string `json:"name"`
 	Email  string `json:"email"`
 	Avatar string `json:"avatar"`
@@ -52,7 +52,7 @@ type UserProfileResponse struct {
 }
 
 type MoviePageListByGenreRequest struct {
-	Id int64 `form:"id" validate:"numeric"`
+	Id uint `path:"genre_id" validate:"numeric"`
 }
 
 type MoviePageListByGenreResponse struct {
@@ -60,43 +60,69 @@ type MoviePageListByGenreResponse struct {
 }
 
 type MovieGenresInfoRequest struct {
-	Id int64 `form:"id" validate:"numeric"`
+	Id uint `path:"movie_id" validate:"numeric"`
 }
 
 type MovieGenresInfoResponse struct {
 	Resp []*GenreInfo `json:"genres"`
 }
 
+type MovieDetailReq struct {
+	MovieID uint `path:"movie_id"`
+}
+
+type MovieDetailResp struct {
+	MovieDetailInfo
+}
+
 type MovieInfo struct {
-	MovieID     int64   `json:"id"`
+	MovieID     uint    `json:"id"`
 	PosterPath  string  `json:"poster"`
 	Title       string  `json:"title"`
 	VoteAverage float64 `json:"vote_average"`
 }
 
+type MovieDetailInfo struct {
+	Adult            bool        `json:"adult"`
+	BackdropPath     string      `json:"backdrop_path"`
+	MovieId          uint        `json:"movie_id"`
+	OriginalLanguage string      `json:"original_language"`
+	OriginalTitle    string      `json:"original_title"`
+	Overview         string      `json:"overview"`
+	Popularity       float64     `json:"popularity"`
+	PosterPath       string      `json:"poster_path"`
+	ReleaseDate      string      `json:"release_date"`
+	Title            string      `json:"title"`
+	RunTime          int64       `json:"run_time"`
+	Video            bool        `json:"video"`
+	VoteAverage      float64     `json:"Vote_average"`
+	VoteCount        int64       `json:"vote_count"`
+	Genres           []GenreInfo `json:"genres"`
+}
+
 type GenreInfo struct {
-	Id   int64  `json:"id"`
+	Id   uint   `json:"id"`
 	Name string `json:"name"`
 }
 
 type CreateLikedMovieReq struct {
-	MovieID int64 `json:"movie_id"`
+	MovieID uint `json:"movie_id"`
 }
 
 type CreateLikedMovieResp struct {
-	LikedMovieID int64 `json:"liked_movie_id"`
+	LikedMovieID uint  `json:"liked_movie_id"`
 	UserID       int64 `json:"user_id"`
 }
 
 type DeleteLikedMoviedReq struct {
-	MovieID int64 `json:"movie_id"`
+	MovieID uint `json:"movie_id"`
 }
 
 type DeleteLikedMovieResp struct {
 }
 
 type AllUserLikedMoviesReq struct {
-	ID int64 `path:"user_id"`
+	ID uint `path:"user_id"`
 }
 
 type AllUserAllLikedMoviesResp struct {
@@ -104,7 +130,7 @@ type AllUserAllLikedMoviesResp struct {
 }
 
 type LikedMovieInfo struct {
-	MovieID      int64       `json:"id"`
+	MovieID      uint        `json:"id"`
 	MovieName    string      `json:"movie_name"`
 	Genres       []GenreInfo `json:"genres"`
 	MoviePoster  string      `json:"movie_poster"`
@@ -116,13 +142,13 @@ type CreateCustomListReq struct {
 }
 
 type CreateCustomListResp struct {
-	ID       int64  `json:"id"`
+	ID       uint   `json:"id"`
 	Title    string `json:"title"`
 	UpdateOn int64  `json:"update_on"`
 }
 
 type UpdateCustomListReq struct {
-	ID    int64  `json:"id"`
+	ID    uint   `json:"id"`
 	Title string `json:"title"`
 }
 
@@ -130,14 +156,14 @@ type UpdateCustomListResp struct {
 }
 
 type DeleteCustomListReq struct {
-	ID int64 `json:"id"`
+	ID uint `json:"id"`
 }
 
 type DeleteCustomListResp struct {
 }
 
 type AllCustomListReq struct {
-	ID int64 `path:"user_id"`
+	ID uint `path:"user_id"`
 }
 
 type AllCustomListResp struct {
@@ -145,7 +171,7 @@ type AllCustomListResp struct {
 }
 
 type UserListReq struct {
-	ID int64 `path:"list_id"`
+	ID uint `path:"list_id"`
 }
 
 type UserListResp struct {
@@ -153,7 +179,7 @@ type UserListResp struct {
 }
 
 type ListInfo struct {
-	ID       int64  `json:"id"`
+	ID       uint   `json:"id"`
 	Title    string `json:"title"`
 	UpdateOn int64  `json:"update_on"`
 }
@@ -161,16 +187,16 @@ type ListInfo struct {
 type CreatePostReq struct {
 	PostTitle string `json:"post_title"`
 	PostDesc  string `json:"post_desc"`
-	MovieID   int64  `json:"movie_id"`
+	MovieID   uint   `json:"movie_id"`
 }
 
 type CreatePostResp struct {
-	PostID     int64 `json:"id"`
+	PostID     uint  `json:"id"`
 	CreateTime int64 `json:"create_time"`
 }
 
 type UpdatePostReq struct {
-	PostID    int64  `json:"post_id"`
+	PostID    uint   `json:"post_id"`
 	PostTitle string `json:"post_title"`
 	PostDesc  string `json:"post_desc"`
 }
@@ -179,7 +205,7 @@ type UpdatePostResp struct {
 }
 
 type DeletePostReq struct {
-	PostID int64 `json:"post_id"`
+	PostID uint `json:"post_id"`
 }
 
 type DeletePostResp struct {
@@ -193,7 +219,7 @@ type PostsInfoResp struct {
 }
 
 type PostInfosByUserReq struct {
-	UserID int64 `path:"user_id"`
+	UserID uint `path:"user_id"`
 }
 
 type PostInfosByUserResp struct {
@@ -201,7 +227,7 @@ type PostInfosByUserResp struct {
 }
 
 type PostInfo struct {
-	PostID           int64         `json:"id"`
+	PostID           uint          `json:"id"`
 	PostUser         PostUserInfo  `json:"user_info"`
 	PostTitle        string        `json:"post_title"`
 	PostDesc         string        `json:"post_desc"`
@@ -212,13 +238,58 @@ type PostInfo struct {
 }
 
 type PostMovieInfo struct {
-	MovieID    int64  `json:"id"`
+	MovieID    uint   `json:"id"`
 	PosterPath string `json:"poster_path"`
 	Title      string `json:"title"`
 }
 
 type PostUserInfo struct {
-	UserID     int64  `json:"id"`
+	UserID     uint   `json:"id"`
 	UserName   string `json:"name"`
 	UserAvatar string `json:"avatar"`
+}
+
+type CreateCommentReq struct {
+	PostID  uint   `path:"post_id"`
+	Comment string `json:"comment"`
+}
+
+type CreateCommentResp struct {
+	CommentID uint  `json:"comment"`
+	CreateAt  int64 `json:"create_At"`
+}
+
+type UpdateCommentReq struct {
+	PostID    uint   `path:"post_id"`
+	CommentID int64  `path:"comment_id"`
+	Comment   string `json:"comment"`
+}
+
+type UpdateCommentResp struct {
+	UpdateAt int64 `json:"update_at"`
+}
+
+type DeleteCommentReq struct {
+	PostID    uint   `path:"post_id"`
+	CommentID string `json:"comment"`
+}
+
+type DeleteCommentResp struct {
+}
+
+type GetPostCommentsReq struct {
+	PostID uint `path:"post_id"`
+}
+
+type GetPostCommentsResp struct {
+	Comments []CommentInfo `json:"comments"`
+}
+
+type CommentInfo struct {
+	CommentID uint   `json:"comment_id"`
+	PostID    int64  `json:"post_id"`
+	UserID    int64  `json:"user_id"`
+	Comment   string `json:"comment"`
+	CreateAt  int64  `json:"create_at"`
+	UpdateAt  int64  `json:"update_at"`
 }

@@ -8,10 +8,9 @@ import (
 	"github.com/ryantokmanmokmtm/movie-server/common/jwtx"
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
 	"github.com/ryantokmanmokmtm/movie-server/internal/types"
-	"github.com/zeromicro/go-zero/core/stores/sqlx"
-	"time"
-
 	"github.com/zeromicro/go-zero/core/logx"
+	"gorm.io/gorm"
+	"time"
 )
 
 type UserLoginLogic struct {
@@ -28,28 +27,24 @@ func NewUserLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UserLog
 	}
 }
 
-func (l *UserLoginLogic) UserLogin(req *types.UserLoginRequest) (resp *types.UserLoginResponse, err error) {
+func (l *UserLoginLogic) UserLogin(req *types.UserLoginReq) (resp *types.UserLoginResp, err error) {
 	// todo: add your logic here and delete this line
 
-	res, err := l.svcCtx.User.FindOneByEmail(l.ctx, req.Email)
-	if err != nil && err != sqlx.ErrNotFound {
-		//return nil, errors.Wrap(errx.NewErrCode(errx.DB_ERROR), fmt.Sprintf("UserLogin - user db FindByEmail err:%v, Email:%v", err, req.Email))
+	user, err := l.svcCtx.DAO.FindUserByEmail(l.ctx, req.Email)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, errx.NewErrCode(errx.USER_NOT_EXIST)
+		}
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
-	if res == nil {
-		//return nil, errors.Wrap(errx.NewErrCode(errx.DB_ERROR), fmt.Sprintf("UserLogin - user db FindByEmail NotFound err:%v, Email:%v", err, req.Email))
-		return nil, errx.NewErrCode(errx.USER_NOT_EXIST)
-	}
-
 	hashedPassword := crytox.PasswordEncrypt(req.Password, l.svcCtx.Config.Salt)
-	if hashedPassword != res.Password {
-		//return nil, errors.Wrap(errx.NewErrCode(errx.USER_PASSWORD_INCORRECT), fmt.Sprintf("UserLogin - Password err:%v, Email:%v", err, req.Email))
+	if hashedPassword != user.Password {
 		return nil, errx.NewErrCode(errx.USER_PASSWORD_INCORRECT)
 	}
 
 	payload := map[string]interface{}{
-		ctxtool.CTXJWTUserID: res.Id,
+		ctxtool.CTXJWTUserID: user.Id,
 	}
 
 	now := time.Now().Unix()
@@ -58,12 +53,52 @@ func (l *UserLoginLogic) UserLogin(req *types.UserLoginRequest) (resp *types.Use
 
 	token, err := jwtx.GetToken(now, exp, key, payload)
 	if err != nil {
-		//return nil, errors.Wrap(errx.NewErrCode(errx.TOKEN_GENERATE_ERROR), fmt.Sprintf("UserLogin - Token Generate err:%v", err))
 		return nil, errx.NewErrCode(errx.TOKEN_GENERATE_ERROR)
 	}
 
-	return &types.UserLoginResponse{
+	return &types.UserLoginResp{
 		Token:   token,
 		Expired: now + exp,
 	}, nil
 }
+
+//
+//func (l *UserLoginLogic) UserLogin(req *types.UserLoginReq) (resp *types.UserLoginResp, err error) {
+//	// todo: add your logic here and delete this line
+//
+//	res, err := l.svcCtx.User.FindOneByEmail(l.ctx, req.Email)
+//	if err != nil && err != sqlx.ErrNotFound {
+//		//return nil, errors.Wrap(errx.NewErrCode(errx.DB_ERROR), fmt.Sprintf("UserLogin - user db FindByEmail err:%v, Email:%v", err, req.Email))
+//		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
+//	}
+//
+//	if res == nil {
+//		//return nil, errors.Wrap(errx.NewErrCode(errx.DB_ERROR), fmt.Sprintf("UserLogin - user db FindByEmail NotFound err:%v, Email:%v", err, req.Email))
+//		return nil, errx.NewErrCode(errx.USER_NOT_EXIST)
+//	}
+//
+//	hashedPassword := crytox.PasswordEncrypt(req.Password, l.svcCtx.Config.Salt)
+//	if hashedPassword != res.Password {
+//		//return nil, errors.Wrap(errx.NewErrCode(errx.USER_PASSWORD_INCORRECT), fmt.Sprintf("UserLogin - Password err:%v, Email:%v", err, req.Email))
+//		return nil, errx.NewErrCode(errx.USER_PASSWORD_INCORRECT)
+//	}
+//
+//	payload := map[string]interface{}{
+//		ctxtool.CTXJWTUserID: res.Id,
+//	}
+//
+//	now := time.Now().Unix()
+//	exp := l.svcCtx.Config.Auth.AccessExpire
+//	key := l.svcCtx.Config.Auth.AccessSecret
+//
+//	token, err := jwtx.GetToken(now, exp, key, payload)
+//	if err != nil {
+//		//return nil, errors.Wrap(errx.NewErrCode(errx.TOKEN_GENERATE_ERROR), fmt.Sprintf("UserLogin - Token Generate err:%v", err))
+//		return nil, errx.NewErrCode(errx.TOKEN_GENERATE_ERROR)
+//	}
+//
+//	return &types.UserLoginResp{
+//		Token:   token,
+//		Expired: now + exp,
+//	}, nil
+//}

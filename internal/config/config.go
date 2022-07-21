@@ -13,7 +13,9 @@ type Config struct {
 	}
 
 	MySQL struct {
-		DataSource string
+		DataSource   string
+		MaxIdleConns int
+		MaxOpenConns int
 	}
 
 	CacheRedis cache.CacheConf

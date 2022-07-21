@@ -8,12 +8,12 @@ import (
 
 var CTXJWTUserID = "user_id"
 
-func GetUserIDFromCTX(ctx context.Context) int64 {
-	var userID int64
+func GetUserIDFromCTX(ctx context.Context) uint {
+	var userID uint
 	if jwtUserID, ok := ctx.Value(CTXJWTUserID).(json.Number); ok {
 
 		if id, err := jwtUserID.Int64(); err == nil {
-			userID = id
+			userID = uint(id)
 		} else {
 			logx.WithContext(ctx).Info(err)
 		}

@@ -4,6 +4,8 @@ Port: 8000
 
 MySQL:
   DataSource: root:admin@tcp(127.0.0.1:3306)/movie?charset=utf8mb4&parseTime=true&loc=Asia%2FHong_Kong
+  MaxIdleConns: 100
+  MaxOpenConns: 100
 
 CacheRedis:
   - Host: 127.0.0.1:6379
@@ -16,4 +18,5 @@ Auth:
 
 Salt: W4tiDEeWlwxlRPYYRRMhJ63piS1ochvMymwfVdumittPoSxhkHNnZLe6m12C4v15
 
-#
+Log:
+  Encoding: plain

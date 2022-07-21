@@ -32,7 +32,7 @@ func main() {
 		case *errx.CommonError:
 			return http.StatusOK, e.ToJSONResp()
 		default:
-			return http.StatusInternalServerError, errx.NewErrCode(errx.SERVER_COMMON_ERROR).ToJSONResp()
+			return http.StatusInternalServerError, errx.NewCommonMessage(errx.SERVER_COMMON_ERROR, err.Error()).ToJSONResp()
 		}
 	})
 

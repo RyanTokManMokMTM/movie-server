@@ -1,28 +1,31 @@
 package errx
 
+import "github.com/zeromicro/go-zero/core/logx"
+
 var errMessage map[uint32]string
 
 func init() {
-	errorMessage := make(map[uint32]string)
+	errMessage = make(map[uint32]string)
 
-	errorMessage[SUCCESS] = "SUCCESS"
-	errorMessage[SERVER_COMMON_ERROR] = "SERVER INTERNAL ERROR"
-	errorMessage[REQ_PARAM_ERROR] = "REQUEST PARAMETER ERROR"
-	errorMessage[TOKEN_EXPIRED_ERROR] = "TOKEN HAS BEEN EXPIRED"
-	errorMessage[TOKEN_INVALID_ERROR] = "TOKEN HAS BEEN Invalid"
-	errorMessage[TOKEN_GENERATE_ERROR] = "TOKEN GENERATE FAILED"
-	errorMessage[DB_ERROR] = "DATABASE ERROR"
-	errorMessage[DB_AFFECTED_ZERO_ERROR] = "DATABASE AFFECTED 0 rows"
-	errorMessage[EMAIL_HAS_BEEN_REGISTERED] = "USER HAS BEEN REGISTERED"
-	errorMessage[USER_NOT_EXIST] = "USER NOT EXIST"
-	errorMessage[USER_PASSWORD_INCORRECT] = "USER PASSWORD INCORRECT"
-	errorMessage[MOVIE_NOT_EXIST] = "MOVIE NOT EXIST"
-	errorMessage[MOVIE_ALREADY_LIKED] = "MOVIE IS ALREADY LIKED"
-	errorMessage[POST_NOT_EXIST] = "POST NOT EXIST"
-	errorMessage[LIST_NOT_EXIST] = "LIST NOT EXIST"
+	errMessage[SUCCESS] = "SUCCESS"
+	errMessage[SERVER_COMMON_ERROR] = "SERVER INTERNAL ERROR"
+	errMessage[REQ_PARAM_ERROR] = "REQUEST PARAMETER ERROR"
+	errMessage[TOKEN_EXPIRED_ERROR] = "TOKEN HAS BEEN EXPIRED"
+	errMessage[TOKEN_INVALID_ERROR] = "TOKEN HAS BEEN Invalid"
+	errMessage[TOKEN_GENERATE_ERROR] = "TOKEN GENERATE FAILED"
+	errMessage[DB_ERROR] = "DATABASE ERROR"
+	errMessage[DB_AFFECTED_ZERO_ERROR] = "DATABASE AFFECTED 0 rows"
+	errMessage[EMAIL_HAS_BEEN_REGISTERED] = "USER HAS BEEN REGISTERED"
+	errMessage[USER_NOT_EXIST] = "USER NOT EXIST"
+	errMessage[USER_PASSWORD_INCORRECT] = "USER PASSWORD INCORRECT"
+	errMessage[MOVIE_NOT_EXIST] = "MOVIE NOT EXIST"
+	errMessage[MOVIE_ALREADY_LIKED] = "MOVIE IS ALREADY LIKED"
+	errMessage[POST_NOT_EXIST] = "POST NOT EXIST"
+	errMessage[LIST_NOT_EXIST] = "LIST NOT EXIST"
 }
 
 func MapErrMsg(errCode uint32) string {
+	logx.Info(errCode)
 	if msg, ok := errMessage[errCode]; ok {
 		return msg
 	}

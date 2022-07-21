@@ -1,7 +1,6 @@
 package {{.PkgName}}
 
 import (
-    "fmt"
 	"net/http"
 	"github.com/go-playground/locales/en"
 	ut "github.com/go-playground/universal-translator"
@@ -9,7 +8,6 @@ import (
 	en_translations "github.com/go-playground/validator/v10/translations/en"
 	"github.com/zeromicro/go-zero/rest/httpx"
 	"github.com/ryantokmanmokmtm/movie-server/common/errx" //common error package
-	"github.com/pkg/errors"
 
 	{{.ImportPackages}}
 )

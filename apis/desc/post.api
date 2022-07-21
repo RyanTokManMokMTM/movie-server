@@ -13,22 +13,22 @@ type (
     CreatePostReq {
         PostTitle string `json:"post_title"`
         PostDesc string `json:"post_desc"`
-        MovieID int64 `json:"movie_id"`
+        MovieID uint `json:"movie_id"`
     }
     CreatePostResp {
-        PostID int64 `json:"id"`
+        PostID uint `json:"id"`
         CreateTime int64 `json:"create_time"`
     }
 
     UpdatePostReq {
-        PostID int64 `json:"post_id"`
+        PostID uint `json:"post_id"`
         PostTitle string `json:"post_title"`
         PostDesc string `json:"post_desc"`
     }
     UpdatePostResp {}
 
     DeletePostReq {
-        PostID int64 `json:"post_id"`
+        PostID uint `json:"post_id"`
     }
     DeletePostResp {}
 
@@ -38,7 +38,7 @@ type (
     }
 
     PostInfosByUserReq {
-        UserID int64 `path:"user_id"`
+        UserID uint `path:"user_id"`
     }
     PostInfosByUserResp {
         Info []PostInfo `json:"post_info"`
@@ -47,7 +47,7 @@ type (
 
 type (
     PostInfo {
-        PostID int64 `json:"id"`
+        PostID uint `json:"id"`
         PostUser PostUserInfo `json:"user_info"`
         PostTitle string `json:"post_title"`
         PostDesc string `json:"post_desc"`
@@ -58,13 +58,13 @@ type (
     }
 
     PostMovieInfo {
-        MovieID          int64   `json:"id"`
+        MovieID          uint   `json:"id"`
         PosterPath       string  `json:"poster_path"`
         Title            string  `json:"title"`
     }
 
     PostUserInfo {
-        UserID int64 `json:"id"`
+        UserID uint `json:"id"`
         UserName string `json:"name"`
         UserAvatar string `json:"avatar"`
     }
