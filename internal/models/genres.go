@@ -8,9 +8,9 @@ import (
 
 type GenreInfo struct {
 	GenreId uint   `gorm:"primaryKey;not null;autoIncrement"`
-	Name    string `gorm:"not null"`
+	Name    string `gorm:"not null;type:varchar(32)"`
 
-	MovieInfo []MovieInfo `gorm:"many2many:genres_movies"`
+	MovieInfo []MovieInfo `gorm:"many2many:genres_movies;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 	DefaultModel
 }
 

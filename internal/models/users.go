@@ -7,18 +7,18 @@ import (
 )
 
 type User struct {
-	Id       uint `gorm:"primaryKey;not null;autoIncrement"`
-	Name     string
-	Email    string
-	Password string
-	Avatar   string
-	Cover    string
+	Id       uint   `gorm:"primaryKey;not null;autoIncrement"`
+	Name     string `gorm:"not null;type:varchar(64)"`
+	Email    string `gorm:"not null;type:varchar(64)"`
+	Password string `gorm:"not null;type:varchar(64)"`
+	Avatar   string `gorm:"not null;type:varchar(255)"`
+	Cover    string `gorm:"not null;type:varchar(255)"`
 
 	//can have a lot of list
-	List []List `gorm:"foreignKey:UserId;references:Id"`
-
+	List        []List      `gorm:"foreignKey:UserId;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+	LikedMovies []MovieInfo `gorm:"many2many:liked_movies;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 	//use may have a lot of post
-	//Post []Post `gorm:"foreignKey:UserID;references:Id"`
+	Posts []Post `gorm:"foreignKey:UserId;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 	DefaultModel
 }
 

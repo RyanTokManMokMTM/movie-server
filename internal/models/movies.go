@@ -22,8 +22,8 @@ type MovieInfo struct {
 	Video            bool        `json:"video" gorm:"not null"`
 	VoteAverage      float64     `json:"vote_average" gorm:"not null"`
 	VoteCount        int64       `json:"vote_count" gorm:"not null"`
-	GenreInfo        []GenreInfo `gorm:"many2many:genres_movies"`
-	Lists            []List      `gorm:"many2many:lists_movies"`
+	GenreInfo        []GenreInfo `gorm:"many2many:genres_movies;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+	Lists            []List      `gorm:"many2many:lists_movies;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 	DefaultModel
 }
 
