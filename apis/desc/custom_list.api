@@ -20,7 +20,7 @@ type (
     }
 
     UpdateCustomListReq {
-        ID uint `json:"id"`
+        ID uint `json:"list_id"`
         Title string `json:"title"`
     }
     UpdateCustomListResp {}
@@ -50,7 +50,11 @@ type (
         ID uint `json:"id"`
         Title string `json:"title"`
         UpdateOn int64 `json:"update_on"`
+
+        //Including a list of movie!
     }
+
+
 )
 
 
@@ -67,6 +71,8 @@ service MovieService {
     @doc "Get a custom list by list id"
     @handler GetListByID
     get /list/:list_id(UserListReq) returns (UserListResp);
+
+
 
 }
 

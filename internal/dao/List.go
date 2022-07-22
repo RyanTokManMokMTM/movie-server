@@ -6,25 +6,62 @@ import (
 )
 
 func (d *DAO) CreateNewList(ctx context.Context, ListTitle string) (*models.List, error) {
-	return nil, nil
+	newList := &models.List{
+		ListTitle: ListTitle,
+	}
+
+	if err := newList.CreateNewList(ctx, d.engine); err != nil {
+		return nil, err
+	}
+	return newList, nil
 }
 
-func (d *DAO) InsertMovieToList(ctx context.Context, listID, MovieID, userID uint) error {
-	return nil
+func (d *DAO) UpdateList(ctx context.Context, list *models.List) error {
+	return list.UpdateList(ctx, d.engine)
 }
 
-func (d *DAO) RemoveMovieFromList(ctx context.Context, listID, MovieID uint) error {
-	return nil
+func (d *DAO) DeleteList(ctx context.Context, listID, userID uint) error {
+	list := &models.List{
+		UserId: userID,
+		ListId: listID,
+	}
+	return list.DeleteList(ctx, d.engine)
 }
 
-func (d *DAO) DeleteList(ctx context.Context, listID uint) error {
-	return nil
+func (d *DAO) GetOneList(ctx context.Context, listID uint) (*models.List, error) {
+	list := &models.List{
+		ListId: listID,
+	}
+
+	if err := list.FindOneList(ctx, d.engine); err != nil {
+		return nil, err
+	}
+
+	return list, nil
 }
 
-func (d *DAO) GetListInfo(ctx context.Context, listID uint) (*models.List, error) {
-	return nil, nil
+func (d *DAO) GetUserLists(ctx context.Context, userID uint) ([]*models.List, error) {
+	list := &models.List{
+		UserId: userID,
+	}
+
+	resp, err := list.FindAllList(ctx, d.engine)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
 }
 
-func (d *DAO) GetAllListInfoByUserID(ctx context.Context, userID uint) ([]*models.List, error) {
-	return nil, nil
+func (d *DAO) FindMovieFromList(ctx context.Context, movieID, listID, userID uint) ([]*models.List, error) {
+	list := &models.List{
+		UserId: userID,
+	}
+
+	resp, err := list.FindAllList(ctx, d.engine)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
 }

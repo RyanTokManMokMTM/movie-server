@@ -148,7 +148,7 @@ type CreateCustomListResp struct {
 }
 
 type UpdateCustomListReq struct {
-	ID    uint   `json:"id"`
+	ID    uint   `json:"list_id"`
 	Title string `json:"title"`
 }
 
@@ -218,12 +218,20 @@ type PostsInfoResp struct {
 	Infos []PostInfo `json:"post_info"`
 }
 
-type PostInfosByUserReq struct {
-	UserID uint `path:"user_id"`
+type PostInfosByIDReq struct {
+	PostID uint `path:"post_id"`
 }
 
-type PostInfosByUserResp struct {
+type PostInfosByIDResp struct {
 	Info []PostInfo `json:"post_info"`
+}
+
+type PostInfoReq struct {
+	PostID uint `path:"post_id"`
+}
+
+type PostInfoResp struct {
+	Info PostInfo `json:"post_info"`
 }
 
 type PostInfo struct {

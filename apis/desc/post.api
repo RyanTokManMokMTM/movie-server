@@ -37,11 +37,18 @@ type (
         Infos []PostInfo `json:"post_info"`
     }
 
-    PostInfosByUserReq {
-        UserID uint `path:"user_id"`
+    PostInfosByIDReq {
+        PostID uint `path:"post_id"`
     }
-    PostInfosByUserResp {
+    PostInfosByIDResp {
         Info []PostInfo `json:"post_info"`
+    }
+
+    PostInfoReq {
+        PostID uint `path:"post_id"`
+    }
+    PostInfoResp {
+        Info PostInfo `json:"post_info"`
     }
 )
 
@@ -88,6 +95,10 @@ service MovieService {
     @doc "delete post"
     @handler DeletePost
     delete /posts(DeletePostReq) returns (DeletePostResp);
+
+    @doc "get all user post"
+    @handler GetAllUserPost
+    get /posts(PostsInfoReq) returns (PostsInfoResp);
 }
 
 @server(
@@ -97,9 +108,10 @@ service MovieService {
 service MovieService {
     @doc "Get all Post"
     @handler GetAllPost
-    get /posts(PostsInfoReq) returns (PostsInfoResp);
+    get /posts/all(PostsInfoReq) returns (PostsInfoResp);
 
-    @doc "Get Post by UserID"
-    @handler GetPostByUserID
-    get /posts/:user_id(PostInfosByUserReq) returns (PostInfosByUserResp);
+    @doc "Get PostInfo by PostID"
+    @handler GetPostByPostID
+    get /posts/:post_id(PostInfoReq) returns (PostInfoResp);
+
 }
