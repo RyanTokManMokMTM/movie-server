@@ -24,7 +24,7 @@ func NewGetAllPostLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetAll
 
 func (l *GetAllPostLogic) GetAllPost(req *types.PostsInfoReq) (resp *types.PostsInfoResp, err error) {
 	// todo: add your logic here and delete this line
-	res, err := l.svcCtx.DAO.GetAllPostInfo(l.ctx)
+	res, err := l.svcCtx.DAO.FindAllPosts(l.ctx)
 	if err != nil {
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}

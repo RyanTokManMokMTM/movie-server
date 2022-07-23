@@ -32,7 +32,9 @@ const (
 
 //List Service 130xxx
 const (
-	LIST_NOT_EXIST uint32 = 130001
+	LIST_NOT_EXIST             uint32 = 130001
+	LIST_MOVIE_ALREADY_IN_LIST uint32 = 130002
+	LIST_MOVIE_NOT_IN_LIST     uint32 = 130003
 )
 
 //Post Service 140xxx

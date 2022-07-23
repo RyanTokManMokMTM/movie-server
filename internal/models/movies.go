@@ -37,7 +37,16 @@ func (m *MovieInfo) GetMoviesInfoByID(ctx context.Context, db *gorm.DB) ([]*Movi
 
 func (m *MovieInfo) FindOneMovieWithGenres(ctx context.Context, db *gorm.DB) error {
 	logx.Info("MovieDB - Get Movie Detail")
-	if err := db.Debug().WithContext(ctx).Where("movie_id = ?", m.MovieId).Preload("GenreInfo").Find(&m).Error; err != nil {
+	if err := db.Debug().WithContext(ctx).Model(&m).Where("movie_id = ?", m.MovieId).Preload("GenreInfo").Find(&m).Error; err != nil {
+		fmt.Println(err.Error())
+		return err
+	}
+	return nil
+}
+
+func (m *MovieInfo) FindOneMovie(ctx context.Context, db *gorm.DB) error {
+	logx.Info("MovieDB - Get Movie")
+	if err := db.Debug().WithContext(ctx).Model(&m).First(&m).Error; err != nil {
 		fmt.Println(err.Error())
 		return err
 	}

@@ -27,12 +27,14 @@ func (m *List) CreateNewList(ctx context.Context, db *gorm.DB) error {
 }
 
 func (m *List) FindOneList(ctx context.Context, db *gorm.DB) error {
-	return db.Debug().WithContext(ctx).Model(&m).Where("list_id = ?", m.ListId).First(&m).Error
+	return db.Debug().WithContext(ctx).Model(&m).Where("list_id = ?", m.ListId).Preload("MovieInfos", func(tx *gorm.DB) *gorm.DB {
+		return tx.Limit(20)
+	}).First(&m).Error
 }
 
 func (m *List) FindAllList(ctx context.Context, db *gorm.DB) ([]*List, error) {
 	var lists []*List
-	if err := db.Debug().WithContext(ctx).Model(&m).Where("user_id = ?", m.UserId).Find(&lists).Error; err != nil {
+	if err := db.Debug().WithContext(ctx).Model(&m).Where("user_id = ?", m.UserId).Preload("MovieInfos").Find(&lists).Error; err != nil {
 		return nil, err
 	}
 	return lists, nil
@@ -46,7 +48,15 @@ func (m *List) DeleteList(ctx context.Context, db *gorm.DB) error {
 	return db.Debug().WithContext(ctx).Model(&m).Where("list_id = ? AND user_id = ?", m.ListId, m.UserId).Delete(&m).Error
 }
 
-func (m *List) InsertMovieToList(ctx context.Context, db *gorm.DB, info *MovieInfo) error {
-	return db.Debug().WithContext(ctx).Model(&m).Where("list_id = ?", m.ListId).Association("MovieInfos").Append(&info)
+func (m *List) FindOneMovieFromList(ctx context.Context, db *gorm.DB, info *MovieInfo) error {
 
+	return db.Debug().WithContext(ctx).Model(&m).Association("MovieInfos").Find(&info)
+}
+
+func (m *List) InsertMovieToList(ctx context.Context, db *gorm.DB, info *MovieInfo) error {
+	return db.Debug().WithContext(ctx).Model(&m).Association("MovieInfos").Append(info)
+}
+
+func (m *List) RemoveMovieFromList(ctx context.Context, db *gorm.DB, info *MovieInfo) error {
+	return db.Debug().WithContext(ctx).Model(&m).Association("MovieInfos").Delete(info)
 }

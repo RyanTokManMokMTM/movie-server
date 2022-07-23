@@ -7,26 +7,30 @@ import (
 	"github.com/ryantokmanmokmtm/movie-server/common/errx"
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
 	"github.com/ryantokmanmokmtm/movie-server/internal/types"
-	"github.com/zeromicro/go-zero/core/logx"
 	"gorm.io/gorm"
+
+	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type DeleteCustomListLogic struct {
+type InsertMovieToListLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
-func NewDeleteCustomListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DeleteCustomListLogic {
-	return &DeleteCustomListLogic{
+func NewInsertMovieToListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *InsertMovieToListLogic {
+	return &InsertMovieToListLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
 	}
 }
 
-func (l *DeleteCustomListLogic) DeleteCustomList(req *types.DeleteCustomListReq) (resp *types.DeleteCustomListResp, err error) {
+func (l *InsertMovieToListLogic) InsertMovieToList(req *types.InsertMovieReq) (resp *types.InsertMovieResp, err error) {
 	// todo: add your logic here and delete this line
+
+	logx.Infof("INSERT MOVIE TO LIST: LIST ID :%v, MOVIE:ID:%v", req.ListID, req.MovieID)
+
 	userID := ctxtool.GetUserIDFromCTX(l.ctx)
 	_, err = l.svcCtx.DAO.FindUserByID(l.ctx, userID)
 	if err != nil {
@@ -36,19 +40,25 @@ func (l *DeleteCustomListLogic) DeleteCustomList(req *types.DeleteCustomListReq)
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
-	//Need find one record here
-	_, err = l.svcCtx.DAO.FindOneList(l.ctx, req.ID)
+	movie, err := l.svcCtx.DAO.FindOneMovie(l.ctx, req.MovieID)
+	logx.Info(movie)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, errx.NewErrCode(errx.LIST_NOT_EXIST)
+			return nil, errx.NewErrCode(errx.MOVIE_NOT_EXIST)
 		}
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
-	if err := l.svcCtx.DAO.DeleteList(l.ctx, req.ID, userID); err != nil {
+	////Check movie exists
+	_, err = l.svcCtx.DAO.FindOneMovie(l.ctx, req.MovieID)
+	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, errx.NewErrCode(errx.LIST_NOT_EXIST)
+			return nil, errx.NewErrCode(errx.MOVIE_NOT_EXIST)
 		}
+		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
+	}
+
+	if err := l.svcCtx.DAO.InsertMovieToList(l.ctx, req.MovieID, req.ListID, userID); err != nil {
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 

@@ -27,7 +27,7 @@ func NewGetListByIDLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetLi
 func (l *GetListByIDLogic) GetListByID(req *types.UserListReq) (resp *types.UserListResp, err error) {
 	// todo: add your logic here and delete this line
 
-	list, err := l.svcCtx.DAO.GetOneList(l.ctx, req.ID)
+	list, err := l.svcCtx.DAO.FindOneList(l.ctx, req.ID)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errx.NewErrCode(errx.LIST_NOT_EXIST)
@@ -35,11 +35,22 @@ func (l *GetListByIDLogic) GetListByID(req *types.UserListReq) (resp *types.User
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
+	var movies []types.MovieInfo
+	for _, v := range list.MovieInfos {
+		movies = append(movies, types.MovieInfo{
+			MovieID:     v.MovieId,
+			Title:       v.Title,
+			PosterPath:  v.PosterPath,
+			VoteAverage: v.VoteAverage,
+		})
+	}
+
 	return &types.UserListResp{
 		List: types.ListInfo{
-			ID:       list.ListId,
-			Title:    list.ListTitle,
-			UpdateOn: list.UpdatedAt.Unix(),
+			ID:     list.ListId,
+			Title:  list.ListTitle,
+			Movies: movies,
+			//List of movie????
 		},
 	}, nil
 }

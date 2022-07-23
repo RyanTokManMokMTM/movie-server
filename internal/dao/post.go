@@ -24,7 +24,7 @@ func (d *DAO) DeletePost(ctx context.Context, postID, userID uint) error {
 	return post.DeletePost(ctx, d.engine)
 }
 
-func (d *DAO) GetPostInfo(ctx context.Context, postID uint) (*models.Post, error) {
+func (d *DAO) FindOnePostInfo(ctx context.Context, postID uint) (*models.Post, error) {
 	post := &models.Post{
 		PostId: postID,
 	}
@@ -35,7 +35,7 @@ func (d *DAO) GetPostInfo(ctx context.Context, postID uint) (*models.Post, error
 	return post, nil
 }
 
-func (d *DAO) GetAllPostInfo(ctx context.Context) ([]*models.Post, error) {
+func (d *DAO) FindAllPosts(ctx context.Context) ([]*models.Post, error) {
 	post := &models.Post{}
 	resp, err := post.GetAllPostInfoByCreateTimeDesc(ctx, d.engine)
 	if err != nil {
@@ -44,7 +44,7 @@ func (d *DAO) GetAllPostInfo(ctx context.Context) ([]*models.Post, error) {
 	return resp, err
 }
 
-func (d *DAO) GetAllUserPosts(ctx context.Context, userID uint) ([]*models.Post, error) {
+func (d *DAO) FindUserPosts(ctx context.Context, userID uint) ([]*models.Post, error) {
 	post := &models.Post{
 		UserId: userID,
 	}

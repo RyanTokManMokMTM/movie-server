@@ -22,6 +22,8 @@ func init() {
 	errMessage[MOVIE_ALREADY_LIKED] = "MOVIE IS ALREADY LIKED"
 	errMessage[POST_NOT_EXIST] = "POST NOT EXIST"
 	errMessage[LIST_NOT_EXIST] = "LIST NOT EXIST"
+	errMessage[LIST_MOVIE_ALREADY_IN_LIST] = "MOVIE ALREADY IN LIST"
+	errMessage[LIST_MOVIE_NOT_IN_LIST] = "MOVIE NOT IN LIST"
 }
 
 func MapErrMsg(errCode uint32) string {

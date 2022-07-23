@@ -28,7 +28,7 @@ func NewGetPostByPostIDLogic(ctx context.Context, svcCtx *svc.ServiceContext) *G
 
 func (l *GetPostByPostIDLogic) GetPostByPostID(req *types.PostInfoReq) (resp *types.PostInfoResp, err error) {
 	// todo: add your logic here and delete this line
-	postInfo, err := l.svcCtx.DAO.GetPostInfo(l.ctx, req.PostID)
+	postInfo, err := l.svcCtx.DAO.FindOnePostInfo(l.ctx, req.PostID)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errx.NewErrCode(errx.POST_NOT_EXIST)

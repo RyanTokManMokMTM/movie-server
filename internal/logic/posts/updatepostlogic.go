@@ -36,7 +36,7 @@ func (l *UpdatePostLogic) UpdatePost(req *types.UpdatePostReq) (resp *types.Upda
 	}
 
 	//find post
-	post, err := l.svcCtx.DAO.GetPostInfo(l.ctx, req.PostID)
+	post, err := l.svcCtx.DAO.FindOnePostInfo(l.ctx, req.PostID)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errx.NewErrCode(errx.POST_NOT_EXIST)

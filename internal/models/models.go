@@ -35,7 +35,6 @@ func NewEngine(c config.Config) *gorm.DB {
 
 	sql.SetMaxIdleConns(c.MySQL.MaxIdleConns)
 	sql.SetMaxOpenConns(c.MySQL.MaxOpenConns)
-
 	db.AutoMigrate(&GenreInfo{})
 	db.AutoMigrate(&MovieInfo{})
 	db.AutoMigrate(&User{})
@@ -44,4 +43,14 @@ func NewEngine(c config.Config) *gorm.DB {
 	db.AutoMigrate(&Comment{})
 
 	return db
+}
+
+func CloseDB(db *gorm.DB) {
+	sql, err := db.DB()
+	if err != nil {
+		logx.Error(err)
+		panic(err)
+	}
+
+	sql.Close()
 }

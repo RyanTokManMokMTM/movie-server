@@ -26,7 +26,7 @@ func NewGetMovieDetailLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ge
 func (l *GetMovieDetailLogic) GetMovieDetail(req *types.MovieDetailReq) (resp *types.MovieDetailResp, err error) {
 	// todo: add your logic here and delete this line
 	logx.Info("Get Movie Detail")
-	movie, err := l.svcCtx.DAO.GetMovieDetail(l.ctx, req.MovieID)
+	movie, err := l.svcCtx.DAO.FindOneMovieDetail(l.ctx, req.MovieID)
 	if err != nil {
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}

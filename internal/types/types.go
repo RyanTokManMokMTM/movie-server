@@ -110,8 +110,6 @@ type CreateLikedMovieReq struct {
 }
 
 type CreateLikedMovieResp struct {
-	LikedMovieID uint  `json:"liked_movie_id"`
-	UserID       int64 `json:"user_id"`
 }
 
 type DeleteLikedMoviedReq struct {
@@ -134,7 +132,7 @@ type LikedMovieInfo struct {
 	MovieName    string      `json:"movie_name"`
 	Genres       []GenreInfo `json:"genres"`
 	MoviePoster  string      `json:"movie_poster"`
-	MovieVoteAvg float32     `json:"vote_average"`
+	MovieVoteAvg float64     `json:"vote_average"`
 }
 
 type CreateCustomListReq struct {
@@ -142,9 +140,8 @@ type CreateCustomListReq struct {
 }
 
 type CreateCustomListResp struct {
-	ID       uint   `json:"id"`
-	Title    string `json:"title"`
-	UpdateOn int64  `json:"update_on"`
+	ID    uint   `json:"list_id"`
+	Title string `json:"title"`
 }
 
 type UpdateCustomListReq struct {
@@ -156,7 +153,7 @@ type UpdateCustomListResp struct {
 }
 
 type DeleteCustomListReq struct {
-	ID uint `json:"id"`
+	ID uint `json:"list_id"`
 }
 
 type DeleteCustomListResp struct {
@@ -178,10 +175,35 @@ type UserListResp struct {
 	List ListInfo `json:"list"`
 }
 
+type InsertMovieReq struct {
+	ListID  uint `path:"list_id"`
+	MovieID uint `path:"movie_id"`
+}
+
+type InsertMovieResp struct {
+}
+
+type RemoveMovieReq struct {
+	ListID  uint `path:"list_id"`
+	MovieID uint `path:"movie_id"`
+}
+
+type RemoveMovieResp struct {
+}
+
+type GetOneMovieFromListReq struct {
+	ListID  uint `path:"list_id"`
+	MovieID uint `path:"movie_id"`
+}
+
+type GetOneMovieFromListResp struct {
+	Movie MovieInfo `json:"movie_info"`
+}
+
 type ListInfo struct {
-	ID       uint   `json:"id"`
-	Title    string `json:"title"`
-	UpdateOn int64  `json:"update_on"`
+	ID     uint        `json:"list_id"`
+	Title  string      `json:"title"`
+	Movies []MovieInfo `json:"movie_list"`
 }
 
 type CreatePostReq struct {

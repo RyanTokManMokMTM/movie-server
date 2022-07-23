@@ -25,7 +25,7 @@ func NewMoviePageListByGenreLogic(ctx context.Context, svcCtx *svc.ServiceContex
 func (l *MoviePageListByGenreLogic) MoviePageListByGenre(req *types.MoviePageListByGenreRequest) (resp *types.MoviePageListByGenreResponse, err error) {
 	// todo: add your logic here and delete this line
 	// return a list of movie from relation table
-	list, err := l.svcCtx.DAO.GetMovieListByGenreID(l.ctx, req.Id)
+	list, err := l.svcCtx.DAO.FindMovieListByGenreID(l.ctx, req.Id)
 	if err != nil {
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}

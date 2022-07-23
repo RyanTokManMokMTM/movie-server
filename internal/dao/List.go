@@ -5,9 +5,10 @@ import (
 	"github.com/ryantokmanmokmtm/movie-server/internal/models"
 )
 
-func (d *DAO) CreateNewList(ctx context.Context, ListTitle string) (*models.List, error) {
+func (d *DAO) CreateNewList(ctx context.Context, ListTitle string, userID uint) (*models.List, error) {
 	newList := &models.List{
 		ListTitle: ListTitle,
+		UserId:    userID,
 	}
 
 	if err := newList.CreateNewList(ctx, d.engine); err != nil {
@@ -28,7 +29,7 @@ func (d *DAO) DeleteList(ctx context.Context, listID, userID uint) error {
 	return list.DeleteList(ctx, d.engine)
 }
 
-func (d *DAO) GetOneList(ctx context.Context, listID uint) (*models.List, error) {
+func (d *DAO) FindOneList(ctx context.Context, listID uint) (*models.List, error) {
 	list := &models.List{
 		ListId: listID,
 	}
@@ -36,11 +37,10 @@ func (d *DAO) GetOneList(ctx context.Context, listID uint) (*models.List, error)
 	if err := list.FindOneList(ctx, d.engine); err != nil {
 		return nil, err
 	}
-
 	return list, nil
 }
 
-func (d *DAO) GetUserLists(ctx context.Context, userID uint) ([]*models.List, error) {
+func (d *DAO) FindUserLists(ctx context.Context, userID uint) ([]*models.List, error) {
 	list := &models.List{
 		UserId: userID,
 	}
@@ -53,15 +53,47 @@ func (d *DAO) GetUserLists(ctx context.Context, userID uint) ([]*models.List, er
 	return resp, nil
 }
 
-func (d *DAO) FindMovieFromList(ctx context.Context, movieID, listID, userID uint) ([]*models.List, error) {
+////TO Check movie is in the list already
+func (d *DAO) FindOneMovieFromList(ctx context.Context, movieID, listID, userID uint) (*models.MovieInfo, error) {
 	list := &models.List{
 		UserId: userID,
+		ListId: listID,
 	}
+	MovieInfo := &models.MovieInfo{MovieId: movieID}
 
-	resp, err := list.FindAllList(ctx, d.engine)
-	if err != nil {
+	if err := list.FindOneMovieFromList(ctx, d.engine, MovieInfo); err != nil {
 		return nil, err
 	}
 
-	return resp, nil
+	return MovieInfo, nil
+}
+
+func (d *DAO) InsertMovieToList(ctx context.Context, movieID, listID, userID uint) error {
+	list := &models.List{
+		UserId: userID,
+		ListId: listID,
+	}
+
+	MovieInfo := models.MovieInfo{MovieId: movieID}
+
+	if err := list.InsertMovieToList(ctx, d.engine, &MovieInfo); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (d *DAO) RemoveMovieFromList(ctx context.Context, movieID, listID, userID uint) error {
+	list := &models.List{
+		UserId: userID,
+		ListId: listID,
+	}
+
+	MovieInfo := models.MovieInfo{MovieId: movieID}
+
+	if err := list.RemoveMovieFromList(ctx, d.engine, &MovieInfo); err != nil {
+		return err
+	}
+
+	return nil
 }

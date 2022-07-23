@@ -40,7 +40,7 @@ func (l *GetAllUserPostLogic) GetAllUserPost(req *types.PostsInfoReq) (resp *typ
 	}
 
 	//Get Post By User ID
-	res, err := l.svcCtx.DAO.GetAllUserPosts(l.ctx, userID)
+	res, err := l.svcCtx.DAO.FindUserPosts(l.ctx, userID)
 	if err != nil {
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}

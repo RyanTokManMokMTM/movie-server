@@ -148,6 +148,21 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/lists",
 				Handler: custom_list.DeleteCustomListHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/list/:list_id/movie/:movie_id",
+				Handler: custom_list.InsertMovieToListHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodDelete,
+				Path:    "/list/:list_id/movie/:movie_id",
+				Handler: custom_list.RemoveMovieFromListHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/list/:list_id/movie/:movie_id",
+				Handler: custom_list.GetOnlyMovieFromListHandler(serverCtx),
+			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 		rest.WithPrefix("/api/v1"),

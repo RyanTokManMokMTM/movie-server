@@ -4,11 +4,13 @@
 
 
 ### Work in progress
-| Service | Method |      Api       |       Desc       |
-|:-------:|:------:|:--------------:|:----------------:|
-|  User   |  POST  | /users/signup  |   Create User    |
-|  User   |  POST  | /users/signin  |      Login       |
-|  User   |  GET   | /users/profile | GET USER PROFILE |
+| Service | Method |      Api       |        Desc         |
+|:-------:|:------:|:--------------:|:-------------------:|
+|  User   |  POST  | /users/signup  |     Create User     |
+|  User   |  POST  | /users/signin  |        Login        |
+|  User   |  GET   | /users/profile |  GET USER PROFILE   |
+|  User   |  ———   |      ———       | Update User Profile |
+|  User   |  ———   |      ———       |  Update User Token  |
 
 | Service | Method |      Api       |                   Desc                   |
 |:-------:|:------:|:--------------:|:----------------------------------------:|
@@ -23,5 +25,16 @@
 |:-------:|:------:|:----------:|:----------------------------------------:|
 |  MOVIE  |  POST  |   /posts   |               Create Post                |
 |  MOVIE  |  GET   | /posts/all | Get All Post(10 posts by recent created) |
+|  MOVIE  |  ———   |    ———     |              ADD MOVIE INFO              |
+|  MOVIE  |  ———   |    ———     |            UPDATE MOVIE INFO             |
+|  MOVIE  |  ———   |    ———     |          GET upcoming etc MOVIE          |
+|  MOVIE  |  ———   |    ———     |              Movie Trailer               |
 
 
+| Service | Method |      Api       |                   Desc                   |
+|:-------:|:------:|:--------------:|:----------------------------------------:|
+|  LIST   |  POST  |     /lists     |               Create List                |
+|  LIST   | PATCH  |     /lists     |               UPDATE POST                |
+|  LIST   | DELETE |     /lists     |               DELETE POST                |
+|  LIST   |  GET   | /lists/:userID |             GET USER PROFILE             |
+|  LIST   |  GET   |     /lists     |           GET USER RECENT POST           |

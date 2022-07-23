@@ -5,7 +5,7 @@ import (
 	"github.com/ryantokmanmokmtm/movie-server/internal/models"
 )
 
-func (d *DAO) GetMovieListByGenreID(ctx context.Context, genreID uint) (*models.GenreInfo, error) {
+func (d *DAO) FindMovieListByGenreID(ctx context.Context, genreID uint) (*models.GenreInfo, error) {
 	genreModel := &models.GenreInfo{
 		GenreId: genreID,
 	}
