@@ -290,8 +290,7 @@ type CreateCommentResp struct {
 }
 
 type UpdateCommentReq struct {
-	PostID    uint   `path:"post_id"`
-	CommentID int64  `path:"comment_id"`
+	CommentID uint   `path:"comment_id"`
 	Comment   string `json:"comment"`
 }
 
@@ -300,8 +299,7 @@ type UpdateCommentResp struct {
 }
 
 type DeleteCommentReq struct {
-	PostID    uint   `path:"post_id"`
-	CommentID string `json:"comment"`
+	CommentID uint `path:"comment_id"`
 }
 
 type DeleteCommentResp struct {
@@ -316,10 +314,15 @@ type GetPostCommentsResp struct {
 }
 
 type CommentInfo struct {
-	CommentID uint   `json:"comment_id"`
-	PostID    int64  `json:"post_id"`
-	UserID    int64  `json:"user_id"`
-	Comment   string `json:"comment"`
-	CreateAt  int64  `json:"create_at"`
-	UpdateAt  int64  `json:"update_at"`
+	CommentID uint        `json:"comment_id"`
+	PostID    uint        `json:"post_id"`
+	UserInfo  CommentUser `json:"user_info"`
+	Comment   string      `json:"comment"`
+	UpdateAt  int64       `json:"update_at"`
+}
+
+type CommentUser struct {
+	UserID     uint   `json:"id"`
+	UserName   string `json:"name"`
+	UserAvatar string `json:"avatar"`
 }

@@ -215,17 +215,17 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodPost,
-				Path:    "/comments/:postID",
+				Path:    "/comments/:post_id",
 				Handler: comment.CreateCommentHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPatch,
-				Path:    "/comments/:postID/:commentID",
+				Path:    "/comments/:comment_id",
 				Handler: comment.UpdateCommentHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodDelete,
-				Path:    "/comments/:postID/:commentID",
+				Path:    "/comments/:comment_id",
 				Handler: comment.DeleteCommentHandler(serverCtx),
 			},
 		},
@@ -237,7 +237,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodGet,
-				Path:    "/comments/:postID",
+				Path:    "/comments/:post_id",
 				Handler: comment.GetPostCommentHandler(serverCtx),
 			},
 		},

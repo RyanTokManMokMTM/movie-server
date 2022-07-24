@@ -39,5 +39,10 @@ const (
 
 //Post Service 140xxx
 const (
-	POST_NOT_EXIST uint32 = 150001
+	POST_NOT_EXIST uint32 = 140001
+)
+
+//Comment Service 150xxx
+const (
+	POST_COMMENT_NOT_EXIST uint32 = 150001
 )

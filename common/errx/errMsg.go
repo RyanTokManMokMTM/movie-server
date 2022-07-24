@@ -24,6 +24,7 @@ func init() {
 	errMessage[LIST_NOT_EXIST] = "LIST NOT EXIST"
 	errMessage[LIST_MOVIE_ALREADY_IN_LIST] = "MOVIE ALREADY IN LIST"
 	errMessage[LIST_MOVIE_NOT_IN_LIST] = "MOVIE NOT IN LIST"
+	errMessage[POST_COMMENT_NOT_EXIST] = "COMMENT NOT EXIST"
 }
 
 func MapErrMsg(errCode uint32) string {

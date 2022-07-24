@@ -20,8 +20,8 @@ type (
     }
 
     UpdateCommentReq {
-        PostID uint `path:"post_id"`
-        CommentID int64 `path:"comment_id"`
+//        PostID uint `path:"post_id"`
+        CommentID uint `path:"comment_id"`
         Comment string `json:"comment"`
     }
     UpdateCommentResp {
@@ -29,8 +29,7 @@ type (
     }
 
     DeleteCommentReq {
-        PostID uint `path:"post_id"`
-        CommentID string `json:"comment"`
+        CommentID uint `path:"comment_id"`
     }
     DeleteCommentResp {}
 
@@ -64,11 +63,17 @@ type (
 type (
     CommentInfo {
         CommentID uint `json:"comment_id"`
-        PostID int64 `json:"post_id"`
-        UserID int64 `json:"user_id"`
+        PostID uint `json:"post_id"`
+        UserInfo CommentUser `json:"user_info"`
         Comment string `json:"comment"`
-        CreateAt int64 `json:"create_at"`
+//        CreateAt int64 `json:"create_at"`
         UpdateAt int64 `json:"update_at"`
+    }
+
+    CommentUser {
+        UserID uint `json:"id"`
+        UserName string `json:"name"`
+        UserAvatar string `json:"avatar"`
     }
 )
 
@@ -80,15 +85,15 @@ type (
 service MovieService {
     @doc "Create A New Comment"
     @handler CreateComment
-    post /comments/:postID(CreateCommentReq) returns (CreateCommentResp);
+    post /comments/:post_id(CreateCommentReq) returns (CreateCommentResp);
 
     @doc "Update Comment"
     @handler UpdateComment
-    patch /comments/:postID/:commentID(UpdateCommentReq) returns (UpdateCommentResp);
+    patch /comments/:comment_id(UpdateCommentReq) returns (UpdateCommentResp);
 
     @doc "Delete Comment"
     @handler DeleteComment
-    delete /comments/:postID/:commentID(DeleteCommentReq) returns (DeleteCommentResp);
+    delete /comments/:comment_id(DeleteCommentReq) returns (DeleteCommentResp);
 }
 
 @server(
@@ -98,5 +103,5 @@ service MovieService {
 service MovieService {
     @doc "Get Post Comments"
     @handler GetPostComment
-    get /comments/:postID(GetPostCommentsReq) returns (GetPostCommentsResp);
+    get /comments/:post_id(GetPostCommentsReq) returns (GetPostCommentsResp);
 }
