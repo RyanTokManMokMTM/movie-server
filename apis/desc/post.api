@@ -32,23 +32,33 @@ type (
     }
     DeletePostResp {}
 
-    PostsInfoReq {}
-    PostsInfoResp {
+    //For all user
+    AllPostsInfoReq {
+    }
+    AllPostsInfoResp {
         Infos []PostInfo `json:"post_info"`
     }
 
-    PostInfosByIDReq {
-        PostID uint `path:"post_id"`
+    FollowPostsInfoReq {
     }
-    PostInfosByIDResp {
-        Info []PostInfo `json:"post_info"`
+    FollowPostsInfoResp {
+        Infos []PostInfo `json:"post_info"`
     }
 
-    PostInfoReq {
+    //Get one post info
+    PostInfoByIdReq {
         PostID uint `path:"post_id"`
     }
-    PostInfoResp {
+    PostInfoByIdResp {
         Info PostInfo `json:"post_info"`
+    }
+
+    //get all post of the user
+    PostsInfoReq {
+        UserID uint `path:"user_id"`
+    }
+    PostsInfoResp {
+        Infos []PostInfo `json:"post_info"`
     }
 )
 
@@ -96,9 +106,16 @@ service MovieService {
     @handler DeletePost
     delete /posts(DeletePostReq) returns (DeletePostResp);
 
-    @doc "get all user post"
-    @handler GetAllUserPost
-    get /posts(PostsInfoReq) returns (PostsInfoResp);
+    //need to identify who we are -> filter
+    @doc "Get all Post(without self)"
+    @handler GetAllPost
+    get /posts/all(AllPostsInfoReq) returns (AllPostsInfoResp);
+
+    //need to identify who we are -> filter
+    @doc "Get all following Post(within self)"
+    @handler GetFollowingPost
+    get /posts/follow(FollowPostsInfoReq) returns (FollowPostsInfoResp);
+
 }
 
 @server(
@@ -106,12 +123,13 @@ service MovieService {
     prefix : api/v1
 )
 service MovieService {
-    @doc "Get all Post"
-    @handler GetAllPost
-    get /posts/all(PostsInfoReq) returns (PostsInfoResp);
 
     @doc "Get PostInfo by PostID"
     @handler GetPostByPostID
-    get /posts/:post_id(PostInfoReq) returns (PostInfoResp);
+    get /post/:post_id(PostInfoByIdReq) returns (PostInfoByIdResp);
+
+    @doc "get all user(userID) post"
+    @handler GetUserPosts
+    get /posts/:user_id(PostsInfoReq) returns (PostsInfoResp);
 
 }

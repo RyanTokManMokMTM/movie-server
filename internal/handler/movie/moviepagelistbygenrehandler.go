@@ -16,7 +16,7 @@ import (
 
 func MoviePageListByGenreHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.MoviePageListByGenreRequest
+		var req types.MoviePageListByGenreReq
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.Error(w, err)
 			return

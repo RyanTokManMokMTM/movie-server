@@ -158,11 +158,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/list/:list_id/movie/:movie_id",
 				Handler: custom_list.RemoveMovieFromListHandler(serverCtx),
 			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/list/:list_id/movie/:movie_id",
-				Handler: custom_list.GetOnlyMovieFromListHandler(serverCtx),
-			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 		rest.WithPrefix("/api/v1"),
@@ -187,8 +182,13 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 			{
 				Method:  http.MethodGet,
-				Path:    "/posts",
-				Handler: posts.GetAllUserPostHandler(serverCtx),
+				Path:    "/posts/all",
+				Handler: posts.GetAllPostHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/posts/follow",
+				Handler: posts.GetFollowingPostHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
@@ -199,13 +199,13 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodGet,
-				Path:    "/posts/all",
-				Handler: posts.GetAllPostHandler(serverCtx),
+				Path:    "/post/:post_id",
+				Handler: posts.GetPostByPostIDHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodGet,
-				Path:    "/posts/:post_id",
-				Handler: posts.GetPostByPostIDHandler(serverCtx),
+				Path:    "/posts/:user_id",
+				Handler: posts.GetUserPostsHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/api/v1"),

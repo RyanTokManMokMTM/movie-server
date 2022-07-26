@@ -35,9 +35,18 @@ func (d *DAO) FindOnePostInfo(ctx context.Context, postID uint) (*models.Post, e
 	return post, nil
 }
 
-func (d *DAO) FindAllPosts(ctx context.Context) ([]*models.Post, error) {
+func (d *DAO) FindAllPosts(ctx context.Context, userID uint) ([]*models.Post, error) {
 	post := &models.Post{}
-	resp, err := post.GetAllPostInfoByCreateTimeDesc(ctx, d.engine)
+	resp, err := post.GetAllPostInfoByCreateTimeDesc(ctx, d.engine, userID)
+	if err != nil {
+		return nil, err
+	}
+	return resp, err
+}
+
+func (d *DAO) FindFollowingPosts(ctx context.Context, userID uint) ([]*models.Post, error) {
+	post := &models.Post{}
+	resp, err := post.GetFollowPostInfoByCreateTimeDesc(ctx, d.engine, userID)
 	if err != nil {
 		return nil, err
 	}

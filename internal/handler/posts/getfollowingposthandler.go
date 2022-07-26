@@ -1,4 +1,4 @@
-package custom_list
+package posts
 
 import (
 	"github.com/go-playground/locales/en"
@@ -9,14 +9,14 @@ import (
 	"github.com/zeromicro/go-zero/rest/httpx"
 	"net/http"
 
-	"github.com/ryantokmanmokmtm/movie-server/internal/logic/custom_list"
+	"github.com/ryantokmanmokmtm/movie-server/internal/logic/posts"
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
 	"github.com/ryantokmanmokmtm/movie-server/internal/types"
 )
 
-func GetOnlyMovieFromListHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func GetFollowingPostHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.GetOneMovieFromListReq
+		var req types.FollowPostsInfoReq
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.Error(w, err)
 			return
@@ -34,8 +34,8 @@ func GetOnlyMovieFromListHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
-		l := custom_list.NewGetOnlyMovieFromListLogic(r.Context(), svcCtx)
-		resp, err := l.GetOnlyMovieFromList(&req)
+		l := posts.NewGetFollowingPostLogic(r.Context(), svcCtx)
+		resp, err := l.GetFollowingPost(&req)
 		if err != nil {
 			httpx.Error(w, err)
 		} else {

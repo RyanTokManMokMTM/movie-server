@@ -22,7 +22,7 @@ func NewMovieGenreByMovieIDLogic(ctx context.Context, svcCtx *svc.ServiceContext
 	}
 }
 
-func (l *MovieGenreByMovieIDLogic) MovieGenreByMovieID(req *types.MovieGenresInfoRequest) (resp *types.MovieGenresInfoResponse, err error) {
+func (l *MovieGenreByMovieIDLogic) MovieGenreByMovieID(req *types.MovieGenresInfoReq) (resp *types.MovieGenresInfoResp, err error) {
 	// todo: add your logic here and delete this line
 	movie, err := l.svcCtx.DAO.FindOneMovieDetail(l.ctx, req.Id)
 	if err != nil {
@@ -37,7 +37,7 @@ func (l *MovieGenreByMovieIDLogic) MovieGenreByMovieID(req *types.MovieGenresInf
 		})
 	}
 
-	return &types.MovieGenresInfoResponse{
+	return &types.MovieGenresInfoResp{
 		Resp: genreInfo,
 	}, nil
 }

@@ -3,7 +3,6 @@ package posts
 import (
 	"context"
 	"github.com/pkg/errors"
-	"github.com/ryantokmanmokmtm/movie-server/common/ctxtool"
 	"github.com/ryantokmanmokmtm/movie-server/common/errx"
 	"gorm.io/gorm"
 
@@ -13,25 +12,24 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type GetAllUserPostLogic struct {
+type GetUserPostsLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
-func NewGetAllUserPostLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetAllUserPostLogic {
-	return &GetAllUserPostLogic{
+func NewGetUserPostsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetUserPostsLogic {
+	return &GetUserPostsLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
 	}
 }
 
-func (l *GetAllUserPostLogic) GetAllUserPost(req *types.PostsInfoReq) (resp *types.PostsInfoResp, err error) {
+func (l *GetUserPostsLogic) GetUserPosts(req *types.PostsInfoReq) (resp *types.PostsInfoResp, err error) {
 	// todo: add your logic here and delete this line
-	userID := ctxtool.GetUserIDFromCTX(l.ctx)
 	//find that user
-	_, err = l.svcCtx.DAO.FindUserByID(l.ctx, userID)
+	_, err = l.svcCtx.DAO.FindUserByID(l.ctx, req.UserID)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errx.NewErrCode(errx.USER_NOT_EXIST)
@@ -40,7 +38,7 @@ func (l *GetAllUserPostLogic) GetAllUserPost(req *types.PostsInfoReq) (resp *typ
 	}
 
 	//Get Post By User ID
-	res, err := l.svcCtx.DAO.FindUserPosts(l.ctx, userID)
+	res, err := l.svcCtx.DAO.FindUserPosts(l.ctx, req.UserID)
 	if err != nil {
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}

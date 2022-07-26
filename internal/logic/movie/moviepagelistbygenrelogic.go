@@ -22,7 +22,7 @@ func NewMoviePageListByGenreLogic(ctx context.Context, svcCtx *svc.ServiceContex
 	}
 }
 
-func (l *MoviePageListByGenreLogic) MoviePageListByGenre(req *types.MoviePageListByGenreRequest) (resp *types.MoviePageListByGenreResponse, err error) {
+func (l *MoviePageListByGenreLogic) MoviePageListByGenre(req *types.MoviePageListByGenreReq) (resp *types.MoviePageListByGenreResp, err error) {
 	// todo: add your logic here and delete this line
 	// return a list of movie from relation table
 	list, err := l.svcCtx.DAO.FindMovieListByGenreID(l.ctx, req.Id)
@@ -38,32 +38,7 @@ func (l *MoviePageListByGenreLogic) MoviePageListByGenre(req *types.MoviePageLis
 			VoteAverage: v.VoteAverage,
 		})
 	}
-	return &types.MoviePageListByGenreResponse{
+	return &types.MoviePageListByGenreResp{
 		Resp: movies,
 	}, nil
 }
-
-//
-//func (l *MoviePageListByGenreLogic) MoviePageListByGenre(req *types.MoviePageListByGenreRequest) (resp *types.MoviePageListByGenreResponse, err error) {
-//	// todo: add your logic here and delete this line
-//	// return a list of movie from relation table
-//	res, err := l.svcCtx.Movie.MoviePageListsByGenreID(l.ctx, req.Id, 20)
-//	if err != nil && err != sqlx.ErrNotFound {
-//		//return nil, errors.Wrap(errx.NewErrCode(errx.DB_ERROR), fmt.Sprintf("MoviePageListByGenre - movie db FIND err: %v, genreID: %v", err, req.Id))
-//		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
-//	}
-//
-//	var movieInfos []*types.MovieInfo
-//	for _, v := range res {
-//		movieInfos = append(movieInfos, &types.MovieInfo{
-//			MovieId:     v.MovieId,
-//			PosterPath:  v.PosterPath,
-//			Title:       v.Title,
-//			VoteAverage: v.VoteAverage,
-//		})
-//	}
-//	return &types.MoviePageListByGenreResponse{
-//		Resp: movieInfos,
-//	}, nil
-//
-//}

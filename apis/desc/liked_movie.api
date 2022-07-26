@@ -60,7 +60,6 @@ service MovieService {
     @doc "Get all user liked movie info as a list"
     @handler GetUserLikedMovieList
     get /liked/movies/:user_id(AllUserLikedMoviesReq) returns (AllUserAllLikedMoviesResp);
-
 }
 
 @server (

@@ -14,7 +14,7 @@ type (
         Title string `json:"title"`
     }
     CreateCustomListResp {
-        ID uint `json:"list_id"`
+        ID uint `json:"id"`
         Title string `json:"title"`
 //        UpdateOn int64 `json:"update_on"`
     }
@@ -56,18 +56,18 @@ type (
     }
     RemoveMovieResp{}
 
-    GetOneMovieFromListReq {
-        ListID uint `path:"list_id"`
-        MovieID uint `path:"movie_id"`
-    }
-    GetOneMovieFromListResp{
-        Movie MovieInfo `json:"movie_info"`
-    }
+//    GetOneMovieFromListReq {
+//        ListID uint `path:"list_id"`
+//        MovieID uint `path:"movie_id"`
+//    }
+//    GetOneMovieFromListResp{
+//        Movie MovieInfo `json:"movie_info"`
+//    }
 )
 
 type (
     ListInfo {
-        ID uint `json:"list_id"`
+        ID uint `json:"id"`
         Title string `json:"title"`
         //Including a list of movie!
         Movies []MovieInfo `json:"movie_list"`
@@ -116,8 +116,8 @@ service MovieService {
     @doc "Remove Movie From List"
     @handler RemoveMovieFromList
     delete /list/:list_id/movie/:movie_id(RemoveMovieReq) returns (RemoveMovieResp);
-
-    //Testing only
-    @handler  GetOnlyMovieFromList
-    get /list/:list_id/movie/:movie_id (GetOneMovieFromListReq) returns (GetOneMovieFromListResp);
+//
+//    //Testing only
+//    @handler  GetOnlyMovieFromList
+//    get /list/:list_id/movie/:movie_id (GetOneMovieFromListReq) returns (GetOneMovieFromListResp);
 }

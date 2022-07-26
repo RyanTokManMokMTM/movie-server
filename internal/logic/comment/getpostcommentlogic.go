@@ -52,7 +52,7 @@ func (l *GetPostCommentLogic) GetPostComment(req *types.GetPostCommentsReq) (res
 				UserName:   v.User.Name,
 				UserAvatar: v.User.Avatar,
 			},
-			PostID:   v.PostID,
+			//PostID:   v.PostID,
 			Comment:  v.Comment,
 			UpdateAt: v.UpdatedAt.Unix(),
 		})

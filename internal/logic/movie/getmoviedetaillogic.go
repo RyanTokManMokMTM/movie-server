@@ -40,7 +40,7 @@ func (l *GetMovieDetailLogic) GetMovieDetail(req *types.MovieDetailReq) (resp *t
 	}
 
 	return &types.MovieDetailResp{
-		MovieDetailInfo: types.MovieDetailInfo{
+		Info: types.MovieDetailInfo{
 			Adult:            movie.Adult,
 			BackdropPath:     movie.BackdropPath,
 			MovieId:          movie.MovieId,

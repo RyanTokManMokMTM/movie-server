@@ -10,17 +10,17 @@ syntax = "v1"
 
 // Request and reponse
 type (
-    MoviePageListByGenreRequest {
+    MoviePageListByGenreReq {
         Id uint `path:"genre_id" validate:"numeric"`
     }
-    MoviePageListByGenreResponse {
-        Resp []*MovieInfo `json:"movieInfos"`
+    MoviePageListByGenreResp {
+        Resp []*MovieInfo `json:"movie_infos"`
     }
 //
-    MovieGenresInfoRequest{
+    MovieGenresInfoReq{
         Id uint `path:"movie_id" validate:"numeric"`
     }
-    MovieGenresInfoResponse{
+    MovieGenresInfoResp{
         resp []*GenreInfo `json:"genres"`
     }
 
@@ -28,7 +28,7 @@ type (
         MovieID uint `path:"movie_id"`
     }
     MovieDetailResp {
-        MovieDetailInfo
+        Info MovieDetailInfo `json:"info"`
     }
 
 
@@ -75,13 +75,14 @@ type (
 service MovieService{
     @doc "get movie by genre"
     @handler MoviePageListByGenre
-    get /movies/list/:genre_id(MoviePageListByGenreRequest) returns (MoviePageListByGenreResponse);
+    get /movies/list/:genre_id(MoviePageListByGenreReq) returns (MoviePageListByGenreResp);
 
     @doc "get movie by genre"
     @handler MovieGenreByMovieID
-    get /movies/genres/:movie_id(MovieGenresInfoRequest) returns (MovieGenresInfoResponse);
+    get /movies/genres/:movie_id(MovieGenresInfoReq) returns (MovieGenresInfoResp);
 
     @doc "get movie detail"
     @handler GetMovieDetail
     get /movies/:movie_id(MovieDetailReq) returns (MovieDetailResp);
+
 }

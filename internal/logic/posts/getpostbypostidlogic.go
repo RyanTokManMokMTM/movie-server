@@ -26,7 +26,7 @@ func NewGetPostByPostIDLogic(ctx context.Context, svcCtx *svc.ServiceContext) *G
 	}
 }
 
-func (l *GetPostByPostIDLogic) GetPostByPostID(req *types.PostInfoReq) (resp *types.PostInfoResp, err error) {
+func (l *GetPostByPostIDLogic) GetPostByPostID(req *types.PostInfoByIdReq) (resp *types.PostInfoByIdResp, err error) {
 	// todo: add your logic here and delete this line
 	postInfo, err := l.svcCtx.DAO.FindOnePostInfo(l.ctx, req.PostID)
 	if err != nil {
@@ -36,7 +36,7 @@ func (l *GetPostByPostIDLogic) GetPostByPostID(req *types.PostInfoReq) (resp *ty
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
-	return &types.PostInfoResp{
+	return &types.PostInfoByIdResp{
 		Info: types.PostInfo{
 			PostID:           postInfo.PostId,
 			PostDesc:         postInfo.PostDesc,

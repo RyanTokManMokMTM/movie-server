@@ -51,19 +51,19 @@ type UserProfileResp struct {
 	Cover  string `json:"cover"`
 }
 
-type MoviePageListByGenreRequest struct {
+type MoviePageListByGenreReq struct {
 	Id uint `path:"genre_id" validate:"numeric"`
 }
 
-type MoviePageListByGenreResponse struct {
-	Resp []*MovieInfo `json:"movieInfos"`
+type MoviePageListByGenreResp struct {
+	Resp []*MovieInfo `json:"movie_infos"`
 }
 
-type MovieGenresInfoRequest struct {
+type MovieGenresInfoReq struct {
 	Id uint `path:"movie_id" validate:"numeric"`
 }
 
-type MovieGenresInfoResponse struct {
+type MovieGenresInfoResp struct {
 	Resp []*GenreInfo `json:"genres"`
 }
 
@@ -72,7 +72,7 @@ type MovieDetailReq struct {
 }
 
 type MovieDetailResp struct {
-	MovieDetailInfo
+	Info MovieDetailInfo `json:"info"`
 }
 
 type MovieInfo struct {
@@ -140,7 +140,7 @@ type CreateCustomListReq struct {
 }
 
 type CreateCustomListResp struct {
-	ID    uint   `json:"list_id"`
+	ID    uint   `json:"id"`
 	Title string `json:"title"`
 }
 
@@ -191,17 +191,8 @@ type RemoveMovieReq struct {
 type RemoveMovieResp struct {
 }
 
-type GetOneMovieFromListReq struct {
-	ListID  uint `path:"list_id"`
-	MovieID uint `path:"movie_id"`
-}
-
-type GetOneMovieFromListResp struct {
-	Movie MovieInfo `json:"movie_info"`
-}
-
 type ListInfo struct {
-	ID     uint        `json:"list_id"`
+	ID     uint        `json:"id"`
 	Title  string      `json:"title"`
 	Movies []MovieInfo `json:"movie_list"`
 }
@@ -233,27 +224,34 @@ type DeletePostReq struct {
 type DeletePostResp struct {
 }
 
+type AllPostsInfoReq struct {
+}
+
+type AllPostsInfoResp struct {
+	Infos []PostInfo `json:"post_info"`
+}
+
+type FollowPostsInfoReq struct {
+}
+
+type FollowPostsInfoResp struct {
+	Infos []PostInfo `json:"post_info"`
+}
+
+type PostInfoByIdReq struct {
+	PostID uint `path:"post_id"`
+}
+
+type PostInfoByIdResp struct {
+	Info PostInfo `json:"post_info"`
+}
+
 type PostsInfoReq struct {
+	UserID uint `path:"user_id"`
 }
 
 type PostsInfoResp struct {
 	Infos []PostInfo `json:"post_info"`
-}
-
-type PostInfosByIDReq struct {
-	PostID uint `path:"post_id"`
-}
-
-type PostInfosByIDResp struct {
-	Info []PostInfo `json:"post_info"`
-}
-
-type PostInfoReq struct {
-	PostID uint `path:"post_id"`
-}
-
-type PostInfoResp struct {
-	Info PostInfo `json:"post_info"`
 }
 
 type PostInfo struct {
@@ -285,8 +283,8 @@ type CreateCommentReq struct {
 }
 
 type CreateCommentResp struct {
-	CommentID uint  `json:"comment"`
-	CreateAt  int64 `json:"create_At"`
+	CommentID uint  `json:"id"`
+	CreateAt  int64 `json:"create_at"`
 }
 
 type UpdateCommentReq struct {
@@ -314,8 +312,7 @@ type GetPostCommentsResp struct {
 }
 
 type CommentInfo struct {
-	CommentID uint        `json:"comment_id"`
-	PostID    uint        `json:"post_id"`
+	CommentID uint        `json:"id"`
 	UserInfo  CommentUser `json:"user_info"`
 	Comment   string      `json:"comment"`
 	UpdateAt  int64       `json:"update_at"`

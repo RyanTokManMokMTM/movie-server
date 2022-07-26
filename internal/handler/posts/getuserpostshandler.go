@@ -14,7 +14,7 @@ import (
 	"github.com/ryantokmanmokmtm/movie-server/internal/types"
 )
 
-func GetAllUserPostHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func GetUserPostsHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req types.PostsInfoReq
 		if err := httpx.Parse(r, &req); err != nil {
@@ -34,8 +34,8 @@ func GetAllUserPostHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
-		l := posts.NewGetAllUserPostLogic(r.Context(), svcCtx)
-		resp, err := l.GetAllUserPost(&req)
+		l := posts.NewGetUserPostsLogic(r.Context(), svcCtx)
+		resp, err := l.GetUserPosts(&req)
 		if err != nil {
 			httpx.Error(w, err)
 		} else {

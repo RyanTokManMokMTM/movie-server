@@ -16,6 +16,7 @@ type Post struct {
 	MovieInfo MovieInfo `gorm:"foreignKey:MovieInfoId;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 	UserInfo  User      `gorm:"foreignKey:UserId;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 	Comments  []Comment `gorm:"foreignKey:PostID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+
 	DefaultModel
 }
 
@@ -56,9 +57,17 @@ func (m *Post) GetPostInfo(ctx context.Context, db *gorm.DB) error {
 }
 
 //Get All PostInfo - 10 record by recent 10
-func (m *Post) GetAllPostInfoByCreateTimeDesc(ctx context.Context, db *gorm.DB) ([]*Post, error) {
+func (m *Post) GetAllPostInfoByCreateTimeDesc(ctx context.Context, db *gorm.DB, userID uint) ([]*Post, error) {
 	var resp []*Post
-	if err := db.Debug().WithContext(ctx).Model(&m).Preload("MovieInfo").Preload("UserInfo").Preload("Comments").Order("created_at desc").Limit(10).Find(&resp).Error; err != nil {
+	if err := db.Debug().WithContext(ctx).Model(&m).Preload("MovieInfo").Preload("UserInfo").Preload("Comments").Where("user_id != ?", userID).Order("created_at desc").Limit(10).Find(&resp).Error; err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (m *Post) GetFollowPostInfoByCreateTimeDesc(ctx context.Context, db *gorm.DB, userID uint) ([]*Post, error) {
+	var resp []*Post
+	if err := db.Debug().WithContext(ctx).Model(&m).Preload("MovieInfo").Preload("UserInfo").Preload("Comments").Where("user_id = ?", userID).Order("created_at desc").Limit(10).Find(&resp).Error; err != nil {
 		return nil, err
 	}
 	return resp, nil
