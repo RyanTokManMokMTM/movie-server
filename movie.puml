@@ -1,0 +1,52 @@
+@startmindmap
+!theme  bluegray
+skinparam backgroundColor white
+* Movie API
+** Server Heath Check
+*** √Ping
+** User
+*** √Login
+*** √Register
+*** √Get UserProfile
+*** Update User Profile
+**** Modify User Name(planing)
+**** Upload User Avatar
+**** Upload User Cover
+**** Update User favorite movie genre type
+**** Change Password
+
+** Post
+*** √Create New Post
+*** √Update Post
+*** √Delete Post
+*** √Get All Posts
+*** √Get Following Post
+*** √Get Post By PostID
+
+** Movie
+*** √Get Movie Detail
+*** √Get Movie Genre By MovieID
+*** √Get Movies By GenreID
+
+** Like Movie
+*** √Insert Liked Movie
+*** √Delete Liked Movie
+*** √Get User Liked Movies
+
+** List
+*** √Create User List
+*** √Delete User List
+*** √Get All User List
+*** √Get User List By ID
+*** √Get One Movie From List
+*** √Insert Movie To List
+*** √Remove Movie From List
+*** √pdate User List
+
+** Comment
+*** √Create Post Comment
+*** √Delete Post Comment
+*** √Get All Post Comment
+*** √Update Post Comment
+
+@endmindmap
