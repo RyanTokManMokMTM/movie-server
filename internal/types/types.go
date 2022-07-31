@@ -323,3 +323,9 @@ type CommentUser struct {
 	UserName   string `json:"name"`
 	UserAvatar string `json:"avatar"`
 }
+
+type UpgradeToWebSocketReq struct {
+}
+
+type UpgradeToWebSocketResp struct {
+}

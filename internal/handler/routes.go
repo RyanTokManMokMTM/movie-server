@@ -11,6 +11,7 @@ import (
 	movie "github.com/ryantokmanmokmtm/movie-server/internal/handler/movie"
 	posts "github.com/ryantokmanmokmtm/movie-server/internal/handler/posts"
 	user "github.com/ryantokmanmokmtm/movie-server/internal/handler/user"
+	websocket "github.com/ryantokmanmokmtm/movie-server/internal/handler/websocket"
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
@@ -242,5 +243,15 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 		},
 		rest.WithPrefix("/api/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/ws",
+				Handler: websocket.UpgradeToWebSocketHandler(serverCtx),
+			},
+		},
 	)
 }

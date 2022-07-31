@@ -1,0 +1,15 @@
+syntax = "v1"
+
+type (
+    UpgradeToWebSocketReq{}
+    UpgradeToWebSocketResp{}
+)
+
+@server (
+    group : websocket
+)
+service MovieService {
+    @doc "Connect to websocket"
+    @handler UpgradeToWebSocket
+    get /ws(UpgradeToWebSocketReq) returns (UpgradeToWebSocketResp)
+}

@@ -24,13 +24,13 @@ func NewEngine(c config.Config) *gorm.DB {
 
 	if err != nil {
 		logx.Error(err)
-		panic(err)
+		panic(err.(any))
 	}
 
 	sql, err := db.DB()
 	if err != nil {
 		logx.Error(err)
-		panic(err)
+		panic(err.(any))
 	}
 
 	sql.SetMaxIdleConns(c.MySQL.MaxIdleConns)
@@ -49,7 +49,7 @@ func CloseDB(db *gorm.DB) {
 	sql, err := db.DB()
 	if err != nil {
 		logx.Error(err)
-		panic(err)
+		panic(err.(any))
 	}
 
 	sql.Close()

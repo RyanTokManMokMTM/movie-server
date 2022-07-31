@@ -8,6 +8,7 @@ import (
 type List struct {
 	ListId    uint   `gorm:"primaryKey;not null;autoIncrement"`
 	ListTitle string `gorm:"not null;type:varchar(255);"` //unique?
+	ListIntro string `gorm:"null;type:longtext"`
 	UserId    uint   `gorm:"not null;type:bigint;unsigned"`
 	DefaultModel
 
