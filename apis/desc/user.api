@@ -52,6 +52,19 @@ type (
 //		//Need  liked moive list
 //		LikedMovies []*LikedMovieInfo `json:"liked_movies"`
 	}
+
+	UpdateProfileReq {
+		Name string `json:"name"`
+	}
+
+	UpdateProfileResp {
+	}
+
+	UploadImageReq {}
+	UploadImageResp{
+		Path string `json:"path"`
+	}
+
 )
 
 
@@ -89,6 +102,20 @@ service MovieService{
 	@doc "user_profile"
 	@handler UserProfile
 	get /user/profile(UserProfileReq) returns (UserProfileResp);
+
+	@doc "update user profile"
+	@handler UpdateUserProfile
+	patch /user/profile(UpdateProfileReq) returns (UpdateProfileResp);
+
+
+	@doc "update user avatar"
+	@handler UploadUserAvatar
+	patch /user/avatar(UploadImageReq) returns (UploadImageResp);
+
+
+	@doc "update user cover"
+	@handler UploadUserCover
+	patch /user/cover(UploadImageReq) returns (UploadImageResp);
 }
 
 

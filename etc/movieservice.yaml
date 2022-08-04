@@ -20,3 +20,5 @@ Salt: W4tiDEeWlwxlRPYYRRMhJ63piS1ochvMymwfVdumittPoSxhkHNnZLe6m12C4v15
 
 Log:
   Encoding: plain
+
+MaxBytes: 1073741824

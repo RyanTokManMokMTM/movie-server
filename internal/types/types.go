@@ -51,6 +51,20 @@ type UserProfileResp struct {
 	Cover  string `json:"cover"`
 }
 
+type UpdateProfileReq struct {
+	Name string `json:"name"`
+}
+
+type UpdateProfileResp struct {
+}
+
+type UploadImageReq struct {
+}
+
+type UploadImageResp struct {
+	Path string `json:"path"`
+}
+
 type MoviePageListByGenreReq struct {
 	Id uint `path:"genre_id" validate:"numeric"`
 }

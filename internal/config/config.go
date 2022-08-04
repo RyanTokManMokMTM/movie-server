@@ -7,6 +7,7 @@ import (
 
 type Config struct {
 	rest.RestConf
+	Path string `json:",default=./resources"`
 	Auth struct {
 		AccessSecret string
 		AccessExpire int64
@@ -20,4 +21,5 @@ type Config struct {
 
 	CacheRedis cache.CacheConf
 	Salt       string
+	MaxBytes   int64
 }
