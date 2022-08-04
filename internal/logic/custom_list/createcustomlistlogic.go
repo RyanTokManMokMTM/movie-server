@@ -35,12 +35,13 @@ func (l *CreateCustomListLogic) CreateCustomList(req *types.CreateCustomListReq)
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
-	list, err := l.svcCtx.DAO.CreateNewList(l.ctx, req.Title, userID)
+	list, err := l.svcCtx.DAO.CreateNewList(l.ctx, req.Title, req.Intro, userID)
 	if err != nil {
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 	return &types.CreateCustomListResp{
 		ID:    list.ListId,
 		Title: list.ListTitle,
+		Intro: list.ListIntro,
 	}, nil
 }

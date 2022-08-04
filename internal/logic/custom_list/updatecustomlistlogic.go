@@ -51,6 +51,10 @@ func (l *UpdateCustomListLogic) UpdateCustomList(req *types.UpdateCustomListReq)
 		list.ListTitle = req.Title
 	}
 
+	if req.Intro != "" {
+		list.ListIntro = req.Intro
+	}
+
 	if err := l.svcCtx.DAO.UpdateList(l.ctx, list); err != nil {
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}

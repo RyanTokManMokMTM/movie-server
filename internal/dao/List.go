@@ -5,9 +5,10 @@ import (
 	"github.com/ryantokmanmokmtm/movie-server/internal/models"
 )
 
-func (d *DAO) CreateNewList(ctx context.Context, ListTitle string, userID uint) (*models.List, error) {
+func (d *DAO) CreateNewList(ctx context.Context, ListTitle, ListIntro string, userID uint) (*models.List, error) {
 	newList := &models.List{
 		ListTitle: ListTitle,
+		ListIntro: ListIntro,
 		UserId:    userID,
 	}
 

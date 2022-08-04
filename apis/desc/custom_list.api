@@ -12,16 +12,18 @@ syntax = "v1"
 type (
     CreateCustomListReq {
         Title string `json:"title"`
+        Intro string `json:"intro"`
     }
     CreateCustomListResp {
         ID uint `json:"id"`
         Title string `json:"title"`
-//        UpdateOn int64 `json:"update_on"`
+        Intro string `json:"intro"`
     }
 
     UpdateCustomListReq {
         ID uint `json:"list_id"`
         Title string `json:"title"`
+        Intro string `json:"intro"`
     }
     UpdateCustomListResp {}
 
@@ -69,6 +71,7 @@ type (
     ListInfo {
         ID uint `json:"id"`
         Title string `json:"title"`
+        Intro string `json:"intro"`
         //Including a list of movie!
         Movies []MovieInfo `json:"movie_list"`
     }

@@ -49,6 +49,7 @@ func (l *GetListByIDLogic) GetListByID(req *types.UserListReq) (resp *types.User
 		List: types.ListInfo{
 			ID:     list.ListId,
 			Title:  list.ListTitle,
+			Intro:  list.ListIntro,
 			Movies: movies,
 			//List of movie????
 		},

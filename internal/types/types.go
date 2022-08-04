@@ -151,16 +151,19 @@ type LikedMovieInfo struct {
 
 type CreateCustomListReq struct {
 	Title string `json:"title"`
+	Intro string `json:"intro"`
 }
 
 type CreateCustomListResp struct {
 	ID    uint   `json:"id"`
 	Title string `json:"title"`
+	Intro string `json:"intro"`
 }
 
 type UpdateCustomListReq struct {
 	ID    uint   `json:"list_id"`
 	Title string `json:"title"`
+	Intro string `json:"intro"`
 }
 
 type UpdateCustomListResp struct {
@@ -208,6 +211,7 @@ type RemoveMovieResp struct {
 type ListInfo struct {
 	ID     uint        `json:"id"`
 	Title  string      `json:"title"`
+	Intro  string      `json:"intro"`
 	Movies []MovieInfo `json:"movie_list"`
 }
 
