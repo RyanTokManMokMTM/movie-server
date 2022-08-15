@@ -56,13 +56,13 @@ type (
     }
     RemoveMovieResp{}
 
-//    GetOneMovieFromListReq {
-//        ListID uint `path:"list_id"`
-//        MovieID uint `path:"movie_id"`
-//    }
-//    GetOneMovieFromListResp{
-//        Movie MovieInfo `json:"movie_info"`
-//    }
+    GetOneMovieFromUserListReq {
+        MovieID uint `path:"movie_id"`
+    }
+    GetOneMovieFromUserListResp {
+        ListId uint `json:"list_id"`
+        IsMovieInList bool `json:"is_movie_in_list"`
+    }
 )
 
 type (
@@ -116,8 +116,9 @@ service MovieService {
     @doc "Remove Movie From List"
     @handler RemoveMovieFromList
     delete /list/:list_id/movie/:movie_id(RemoveMovieReq) returns (RemoveMovieResp);
-//
-//    //Testing only
-//    @handler  GetOnlyMovieFromList
-//    get /list/:list_id/movie/:movie_id (GetOneMovieFromListReq) returns (GetOneMovieFromListResp);
+
+    @doc "Find one movie from list - from any list"
+    @handler GetOneMovieFromUserList
+    get /list/movie/:movie_id(GetOneMovieFromUserListReq) returns (GetOneMovieFromUserListResp);
+
 }

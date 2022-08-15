@@ -38,7 +38,7 @@ func (l *GetListByIDLogic) GetListByID(req *types.UserListReq) (resp *types.User
 	var movies []types.MovieInfo
 	for _, v := range list.MovieInfos {
 		movies = append(movies, types.MovieInfo{
-			MovieID:     v.MovieId,
+			MovieID:     v.Id,
 			Title:       v.Title,
 			PosterPath:  v.PosterPath,
 			VoteAverage: v.VoteAverage,

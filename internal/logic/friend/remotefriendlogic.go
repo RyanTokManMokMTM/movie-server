@@ -1,31 +1,33 @@
-package likedMovie
+package friend
 
 import (
 	"context"
 	"github.com/pkg/errors"
 	"github.com/ryantokmanmokmtm/movie-server/common/ctxtool"
 	"github.com/ryantokmanmokmtm/movie-server/common/errx"
+	"gorm.io/gorm"
+
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
 	"github.com/ryantokmanmokmtm/movie-server/internal/types"
+
 	"github.com/zeromicro/go-zero/core/logx"
-	"gorm.io/gorm"
 )
 
-type DeleteLikedMovieLogic struct {
+type RemoteFriendLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
-func NewDeleteLikedMovieLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DeleteLikedMovieLogic {
-	return &DeleteLikedMovieLogic{
+func NewRemoteFriendLogic(ctx context.Context, svcCtx *svc.ServiceContext) *RemoteFriendLogic {
+	return &RemoteFriendLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
 	}
 }
 
-func (l *DeleteLikedMovieLogic) DeleteLikedMovie(req *types.DeleteLikedMoviedReq) (resp *types.DeleteLikedMovieResp, err error) {
+func (l *RemoteFriendLogic) RemoteFriend(req *types.RemoveFriendReq) (resp *types.RemoveFriendResp, err error) {
 	// todo: add your logic here and delete this line
 	userID := ctxtool.GetUserIDFromCTX(l.ctx)
 
@@ -38,9 +40,14 @@ func (l *DeleteLikedMovieLogic) DeleteLikedMovie(req *types.DeleteLikedMoviedReq
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
-	if err := l.svcCtx.DAO.RemoveLikedMovie(l.ctx, req.MovieID, userID); err != nil {
+	friend, err := l.svcCtx.DAO.FindOneFriend(l.ctx, userID, req.FriendId)
+	if err != nil {
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
-	return
+	friend.State = 0
+	if err := l.svcCtx.DAO.UpdateFriendState(l.ctx, friend); err != nil {
+		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
+	}
+	return &types.RemoveFriendResp{}, nil
 }

@@ -36,7 +36,7 @@ func (l *GetAllUserListLogic) GetAllUserList(req *types.AllCustomListReq) (resp 
 
 		for _, movieInfo := range v.MovieInfos {
 			movieList = append(movieList, types.MovieInfo{
-				MovieID:     movieInfo.MovieId,
+				MovieID:     movieInfo.Id,
 				Title:       movieInfo.Title,
 				PosterPath:  movieInfo.PosterPath,
 				VoteAverage: movieInfo.VoteAverage,

@@ -35,7 +35,7 @@ func UpgradeToWebSocketHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 		}
 
 		l := websocket.NewUpgradeToWebSocketLogic(r.Context(), svcCtx)
-		resp, err := l.UpgradeToWebSocket(&req, w, r)
+		resp, err := l.UpgradeToWebSocket(&req)
 		if err != nil {
 			httpx.Error(w, err)
 		} else {

@@ -4,10 +4,12 @@ import (
 	"context"
 	"github.com/pkg/errors"
 	"github.com/ryantokmanmokmtm/movie-server/common/errx"
+	"gorm.io/gorm"
+
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
 	"github.com/ryantokmanmokmtm/movie-server/internal/types"
+
 	"github.com/zeromicro/go-zero/core/logx"
-	"gorm.io/gorm"
 )
 
 type GetUserLikedMovieListLogic struct {
@@ -25,7 +27,7 @@ func NewGetUserLikedMovieListLogic(ctx context.Context, svcCtx *svc.ServiceConte
 }
 
 func (l *GetUserLikedMovieListLogic) GetUserLikedMovieList(req *types.AllUserLikedMoviesReq) (resp *types.AllUserAllLikedMoviesResp, err error) {
-
+	// todo: add your logic here and delete this line
 	_, err = l.svcCtx.DAO.FindUserByID(l.ctx, req.ID)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -40,7 +42,7 @@ func (l *GetUserLikedMovieListLogic) GetUserLikedMovieList(req *types.AllUserLik
 	}
 
 	var likedMovie []*types.LikedMovieInfo
-	for _, v := range u.LikedMovies {
+	for _, v := range u.MovieInfos {
 		var genres []types.GenreInfo
 		for _, t := range v.GenreInfo {
 			genres = append(genres, types.GenreInfo{
@@ -50,7 +52,7 @@ func (l *GetUserLikedMovieListLogic) GetUserLikedMovieList(req *types.AllUserLik
 		}
 
 		likedMovie = append(likedMovie, &types.LikedMovieInfo{
-			MovieID:      v.MovieId,
+			MovieID:      v.Id,
 			MovieName:    v.Title,
 			Genres:       genres,
 			MoviePoster:  v.PosterPath,

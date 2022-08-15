@@ -6,6 +6,7 @@ import (
 
 	comment "github.com/ryantokmanmokmtm/movie-server/internal/handler/comment"
 	custom_list "github.com/ryantokmanmokmtm/movie-server/internal/handler/custom_list"
+	friend "github.com/ryantokmanmokmtm/movie-server/internal/handler/friend"
 	health "github.com/ryantokmanmokmtm/movie-server/internal/handler/health"
 	likedMovie "github.com/ryantokmanmokmtm/movie-server/internal/handler/likedMovie"
 	movie "github.com/ryantokmanmokmtm/movie-server/internal/handler/movie"
@@ -84,6 +85,16 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/movies/:movie_id",
 				Handler: movie.GetMovieDetailHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/movies/count/liked/movie_id",
+				Handler: movie.GetUserLikedCountHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/movies/count/collected/movie_id",
+				Handler: movie.GetUserCollectedCountHandler(serverCtx),
+			},
 		},
 		rest.WithPrefix("/api/v1"),
 	)
@@ -104,12 +115,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			{
 				Method:  http.MethodPost,
 				Path:    "/liked/movie",
-				Handler: likedMovie.CreateLikedMovieHandler(serverCtx),
+				Handler: likedMovie.LikedMovieHandler(serverCtx),
 			},
 			{
-				Method:  http.MethodDelete,
-				Path:    "/liked/movie",
-				Handler: likedMovie.DeleteLikedMovieHandler(serverCtx),
+				Method:  http.MethodGet,
+				Path:    "/liked/movie/:movie_id",
+				Handler: likedMovie.IsLikedMovieHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
@@ -158,6 +169,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodDelete,
 				Path:    "/list/:list_id/movie/:movie_id",
 				Handler: custom_list.RemoveMovieFromListHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/list/movie/:movie_id",
+				Handler: custom_list.GetOneMovieFromUserListHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
@@ -208,6 +224,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/posts/:user_id",
 				Handler: posts.GetUserPostsHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/posts/count/:user_id",
+				Handler: posts.CountAllUserPostHandler(serverCtx),
+			},
 		},
 		rest.WithPrefix("/api/v1"),
 	)
@@ -253,5 +274,43 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: websocket.UpgradeToWebSocketHandler(serverCtx),
 			},
 		},
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodPost,
+				Path:    "/friend",
+				Handler: friend.CreateNewFriendHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodDelete,
+				Path:    "/friend",
+				Handler: friend.RemoteFriendHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/friend/:friend_id",
+				Handler: friend.GetOneFriendHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/api/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/friend/:user_id/following",
+				Handler: friend.CountFollowingUserHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/friend/:user_id/followed",
+				Handler: friend.CountFollowedUserHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/api/v1"),
 	)
 }

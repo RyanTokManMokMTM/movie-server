@@ -32,7 +32,7 @@ func (l *MoviePageListByGenreLogic) MoviePageListByGenre(req *types.MoviePageLis
 	var movies []*types.MovieInfo
 	for _, v := range list.MovieInfo {
 		movies = append(movies, &types.MovieInfo{
-			MovieID:     v.MovieId,
+			MovieID:     v.Id,
 			PosterPath:  v.PosterPath,
 			Title:       v.Title,
 			VoteAverage: v.VoteAverage,

@@ -54,7 +54,7 @@ func (l *GetFollowingPostLogic) GetFollowingPost(req *types.FollowPostsInfoReq) 
 			PostTitle:        v.PostTitle,
 			PostCommentCount: int64(len(v.Comments)),
 			PostMovie: types.PostMovieInfo{
-				MovieID:    v.MovieInfo.MovieId,
+				MovieID:    v.MovieInfo.Id,
 				Title:      v.MovieInfo.Title,
 				PosterPath: v.MovieInfo.PosterPath,
 			},

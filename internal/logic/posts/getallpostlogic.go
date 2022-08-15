@@ -53,7 +53,7 @@ func (l *GetAllPostLogic) GetAllPost(req *types.AllPostsInfoReq) (resp *types.Al
 			PostTitle:        v.PostTitle,
 			PostCommentCount: int64(len(v.Comments)),
 			PostMovie: types.PostMovieInfo{
-				MovieID:    v.MovieInfo.MovieId,
+				MovieID:    v.MovieInfo.Id,
 				Title:      v.MovieInfo.Title,
 				PosterPath: v.MovieInfo.PosterPath,
 			},
@@ -92,7 +92,7 @@ func (l *GetAllPostLogic) GetAllPost(req *types.AllPostsInfoReq) (resp *types.Al
 //	//		CreateAt:         v.CreateTime.Unix(),
 //	//		//UpdateTime:       v.UpdateTime.Unix(),
 //	//		PostMovie: types.PostMovieInfo{
-//	//			MovieID:    v.MovieId,
+//	//			MovieID:    v.Id,
 //	//			Title:      v.MovieTitle,
 //	//			PosterPath: v.MoviePoster,
 //	//		},

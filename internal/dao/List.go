@@ -59,7 +59,7 @@ func (d *DAO) FindOneMovieFromList(ctx context.Context, movieID, listID, userID 
 		UserId: userID,
 		ListId: listID,
 	}
-	MovieInfo := &models.MovieInfo{MovieId: movieID}
+	MovieInfo := &models.MovieInfo{Id: movieID}
 
 	if err := list.FindOneMovieFromList(ctx, d.engine, MovieInfo); err != nil {
 		return nil, err
@@ -74,7 +74,7 @@ func (d *DAO) InsertMovieToList(ctx context.Context, movieID, listID, userID uin
 		ListId: listID,
 	}
 
-	MovieInfo := models.MovieInfo{MovieId: movieID}
+	MovieInfo := models.MovieInfo{Id: movieID}
 
 	if err := list.InsertMovieToList(ctx, d.engine, &MovieInfo); err != nil {
 		return err
@@ -89,7 +89,7 @@ func (d *DAO) RemoveMovieFromList(ctx context.Context, movieID, listID, userID u
 		ListId: listID,
 	}
 
-	MovieInfo := models.MovieInfo{MovieId: movieID}
+	MovieInfo := models.MovieInfo{Id: movieID}
 
 	if err := list.RemoveMovieFromList(ctx, d.engine, &MovieInfo); err != nil {
 		return err

@@ -40,20 +40,6 @@ func (d *DAO) UpdateUser(ctx context.Context, user *models.User) error {
 	return nil
 }
 
-func (d *DAO) AddLikedMovie(ctx context.Context, movieID, userID uint) error {
-	user := &models.User{Id: userID}
-	movie := &models.MovieInfo{MovieId: movieID}
-
-	return user.AddLikedMovie(ctx, d.engine, movie)
-}
-
-func (d *DAO) RemoveLikedMovie(ctx context.Context, movieID, userID uint) error {
-	user := &models.User{Id: userID}
-	movie := &models.MovieInfo{MovieId: movieID}
-
-	return user.RemoveLikedMovie(ctx, d.engine, movie)
-}
-
 func (d *DAO) GetUserLikedMovies(ctx context.Context, userID uint) (*models.User, error) {
 	user := &models.User{Id: userID}
 
@@ -62,4 +48,11 @@ func (d *DAO) GetUserLikedMovies(ctx context.Context, userID uint) (*models.User
 		return nil, err
 	}
 	return user, err
+}
+
+func (d *DAO) CreateLikedMovie(ctx context.Context, movieID, userID uint) error {
+	user := &models.User{Id: userID}
+	movie := &models.MovieInfo{Id: movieID}
+
+	return user.CreateLikedMovie(ctx, d.engine, movie)
 }

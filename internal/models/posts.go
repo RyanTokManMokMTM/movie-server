@@ -88,3 +88,12 @@ func (m *Post) GetUserPostsByCreateTimeDesc(ctx context.Context, db *gorm.DB) ([
 	}
 	return resp, nil
 }
+
+func (m *Post) CountUserPosts(ctx context.Context, db *gorm.DB) (int64, error) {
+	var count int64
+	if err := db.Debug().WithContext(ctx).Model(&m).Where("user_id = ?", m.UserId).Count(&count).Error; err != nil {
+		return 0, err
+	}
+
+	return count, nil
+}

@@ -63,3 +63,9 @@ func (d *DAO) FindUserPosts(ctx context.Context, userID uint) ([]*models.Post, e
 	}
 	return resp, err
 }
+
+func (d *DAO) CountUserPosts(ctx context.Context, userID uint) (int64, error) {
+	post := &models.Post{UserId: userID}
+
+	return post.CountUserPosts(ctx, d.engine)
+}

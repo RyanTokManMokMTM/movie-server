@@ -7,7 +7,7 @@ import (
 
 func (d *DAO) FindOneMovieDetail(ctx context.Context, movieID uint) (*models.MovieInfo, error) {
 	movies := &models.MovieInfo{
-		MovieId: movieID,
+		Id: movieID,
 	}
 
 	if err := movies.FindOneMovieWithGenres(ctx, d.engine); err != nil {
@@ -18,7 +18,7 @@ func (d *DAO) FindOneMovieDetail(ctx context.Context, movieID uint) (*models.Mov
 
 func (d *DAO) FindOneMovie(ctx context.Context, movieID uint) (*models.MovieInfo, error) {
 	movies := &models.MovieInfo{
-		MovieId: movieID,
+		Id: movieID,
 	}
 
 	if err := movies.FindOneMovie(ctx, d.engine); err != nil {

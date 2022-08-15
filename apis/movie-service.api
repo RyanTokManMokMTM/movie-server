@@ -14,6 +14,7 @@ import "desc/custom_list.api"
 import "desc/post.api"
 import "desc/comment.api"
 import "desc/websocket.api"
+import "desc/friend.api"
 
 type (
 	HealthCheckReq  struct{}

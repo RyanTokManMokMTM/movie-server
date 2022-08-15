@@ -9,16 +9,10 @@ syntax = "v1"
 //)
 
 type (
-    CreateLikedMovieReq {
+    LikedMovieReq {
         MovieID uint `json:"movie_id"`
     }
-    CreateLikedMovieResp {
-    }
-
-    DeleteLikedMoviedReq {
-        MovieID uint `json:"movie_id"`
-    }
-    DeleteLikedMovieResp {}
+    LikedMovieResp {}
 
     AllUserLikedMoviesReq {
         ID uint `path:"user_id"`
@@ -27,7 +21,12 @@ type (
         LikedMoviesList []*LikedMovieInfo `json:"liked_movies"`
     }
 
-
+    IsLikedMovieReq {
+        MovieID uint `path:"movie_id"`
+    }
+    IsLikedMovieResp {
+        IsLiked bool `json:"is_liked_movie"`
+    }
 
 )
 
@@ -68,12 +67,15 @@ service MovieService {
     jwt : Auth
 )
 service MovieService {
-    @doc "Create user liked movie"
-    @handler CreateLikedMovie
-    post /liked/movie(CreateLikedMovieReq) returns (CreateLikedMovieResp);
+    @doc "Create user liked movie or Update is exist"
+    @handler LikedMovie
+    post /liked/movie(LikedMovieReq) returns (LikedMovieResp);
+//
+//    @doc "Delete user liked movie"
+//    @handler DeleteLikedMovie
+//    delete /liked/movie(DeleteLikedMoviedReq) returns (DeleteLikedMovieResp);
 
-    @doc "Delete user liked movie"
-    @handler DeleteLikedMovie
-    delete /liked/movie(DeleteLikedMoviedReq) returns (DeleteLikedMovieResp);
-
+    @doc "Find Liked Movie"
+    @handler IsLikedMovie
+    get /liked/movie/:movie_id(IsLikedMovieReq) returns (IsLikedMovieResp);
 }

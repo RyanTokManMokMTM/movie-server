@@ -5,27 +5,29 @@ import (
 	"github.com/pkg/errors"
 	"github.com/ryantokmanmokmtm/movie-server/common/ctxtool"
 	"github.com/ryantokmanmokmtm/movie-server/common/errx"
+	"gorm.io/gorm"
+
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
 	"github.com/ryantokmanmokmtm/movie-server/internal/types"
+
 	"github.com/zeromicro/go-zero/core/logx"
-	"gorm.io/gorm"
 )
 
-type CreateLikedMovieLogic struct {
+type IsLikedMovieLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
-func NewCreateLikedMovieLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CreateLikedMovieLogic {
-	return &CreateLikedMovieLogic{
+func NewIsLikedMovieLogic(ctx context.Context, svcCtx *svc.ServiceContext) *IsLikedMovieLogic {
+	return &IsLikedMovieLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
 	}
 }
 
-func (l *CreateLikedMovieLogic) CreateLikedMovie(req *types.CreateLikedMovieReq) (resp *types.CreateLikedMovieResp, err error) {
+func (l *IsLikedMovieLogic) IsLikedMovie(req *types.IsLikedMovieReq) (resp *types.IsLikedMovieResp, err error) {
 	// todo: add your logic here and delete this line
 	userID := ctxtool.GetUserIDFromCTX(l.ctx)
 
@@ -38,17 +40,24 @@ func (l *CreateLikedMovieLogic) CreateLikedMovie(req *types.CreateLikedMovieReq)
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
-	_, err = l.svcCtx.DAO.FindOneMovie(l.ctx, req.MovieID)
+	//find liked movie record
+	um, err := l.svcCtx.DAO.FindOneUserLikedMovie(l.ctx, req.MovieID, userID)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, errx.NewErrCode(errx.MOVIE_NOT_EXIST)
+			return &types.IsLikedMovieResp{
+				IsLiked: false,
+			}, nil
 		}
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
-	if err := l.svcCtx.DAO.AddLikedMovie(l.ctx, req.MovieID, userID); err != nil {
-		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
+	if um.State == 0 {
+		return &types.IsLikedMovieResp{
+			IsLiked: false,
+		}, nil
 	}
 
-	return
+	return &types.IsLikedMovieResp{
+		IsLiked: true,
+	}, nil
 }

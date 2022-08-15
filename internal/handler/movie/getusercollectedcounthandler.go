@@ -1,4 +1,4 @@
-package likedMovie
+package movie
 
 import (
 	"github.com/go-playground/locales/en"
@@ -9,14 +9,14 @@ import (
 	"github.com/zeromicro/go-zero/rest/httpx"
 	"net/http"
 
-	"github.com/ryantokmanmokmtm/movie-server/internal/logic/likedMovie"
+	"github.com/ryantokmanmokmtm/movie-server/internal/logic/movie"
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
 	"github.com/ryantokmanmokmtm/movie-server/internal/types"
 )
 
-func DeleteLikedMovieHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func GetUserCollectedCountHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.DeleteLikedMoviedReq
+		var req types.CountMovieCollectedReq
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.Error(w, err)
 			return
@@ -34,8 +34,8 @@ func DeleteLikedMovieHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
-		l := likedMovie.NewDeleteLikedMovieLogic(r.Context(), svcCtx)
-		resp, err := l.DeleteLikedMovie(&req)
+		l := movie.NewGetUserCollectedCountLogic(r.Context(), svcCtx)
+		resp, err := l.GetUserCollectedCount(&req)
 		if err != nil {
 			httpx.Error(w, err)
 		} else {

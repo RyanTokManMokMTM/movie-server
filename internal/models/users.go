@@ -15,8 +15,11 @@ type User struct {
 	Cover    string `gorm:"not null;type:varchar(255)"`
 
 	//can have a lot of list
-	List        []List      `gorm:"foreignKey:UserId;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
-	LikedMovies []MovieInfo `gorm:"many2many:liked_movies;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+	List       []List      `gorm:"foreignKey:UserId;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+	MovieInfos []MovieInfo `gorm:"many2many:users_movies;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+
+	//this relationship for following and follower?
+	Friends []User `gorm:"many2many:friends;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 	//use may have a lot of post
 	Posts []Post `gorm:"foreignKey:UserId;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 	DefaultModel
@@ -58,19 +61,22 @@ func (m *User) UpdateInfo(ctx context.Context, db *gorm.DB) error {
 	return nil
 }
 
-func (m *User) AddLikedMovie(ctx context.Context, db *gorm.DB, movie *MovieInfo) error {
-	logx.Infof("UserDB - Add User Liked Movie:%+v \n", m)
-	return db.WithContext(ctx).Model(&m).Association("LikedMovies").Append(movie)
+func (m *User) CreateLikedMovie(ctx context.Context, db *gorm.DB, movie *MovieInfo) error {
+	logx.Infof("UserDB - Create User Liked Movie:%+v \n", m)
+	return db.WithContext(ctx).Model(&m).Association("MovieInfos").Append(movie)
+
 }
 
-func (m *User) RemoveLikedMovie(ctx context.Context, db *gorm.DB, movie *MovieInfo) error {
+func (m *User) UpdateLikedMovie(ctx context.Context, db *gorm.DB, movie *MovieInfo) error {
 	logx.Infof("UserDB - Remove User Liked Movie:%+v \n", m)
-	return db.WithContext(ctx).Model(&m).Association("LikedMovies").Delete(movie)
+	return db.WithContext(ctx).Model(&m).Association("MovieInfos").Delete(movie)
 }
 
 func (m *User) GetUserLikedMovies(ctx context.Context, db *gorm.DB) error {
 	logx.Infof("UserDB - User Liked Movies:%+v \n", m)
-	if err := db.Debug().WithContext(ctx).Preload("LikedMovies").Preload("LikedMovies.GenreInfo").Where("id = ?", m.Id).Find(&m).Error; err != nil {
+	if err := db.Debug().WithContext(ctx).Preload("MovieInfos", func(db *gorm.DB) *gorm.DB {
+		return db.Select("movie_infos.*").Joins("left join users_movies on users_movies.movie_info_id = movie_infos.id").Where("users_movies.state = ?", 1)
+	}).Preload("MovieInfos.GenreInfo").Where("id = ?", m.Id).Find(&m).Error; err != nil {
 		return err
 	}
 	return nil

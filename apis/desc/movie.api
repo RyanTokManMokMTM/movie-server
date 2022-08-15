@@ -32,6 +32,20 @@ type (
     }
 
 
+    CountMovieLikesReq {
+        MovieID uint `json:"movie_id"`
+    }
+    CountMovieLikedResp {
+        Count uint  `json:"total_liked"`
+    }
+
+    CountMovieCollectedReq {
+        MovieID uint `json:"movie_id"`
+    }
+
+    CountMovieCollectedResp {
+        Count uint  `json:"total_collected"`
+    }
 )
 
 type (
@@ -85,4 +99,11 @@ service MovieService{
     @handler GetMovieDetail
     get /movies/:movie_id(MovieDetailReq) returns (MovieDetailResp);
 
+    @doc "get total movie liked by user"
+    @handler  GetUserLikedCount
+    get /movies/count/liked/movie_id(CountMovieLikesReq) returns (CountMovieLikedResp);
+
+    @doc "get movie collected by user"
+    @handler GetUserCollectedCount
+    get /movies/count/collected/movie_id(CountMovieCollectedReq) returns (CountMovieCollectedResp);
 }

@@ -49,15 +49,15 @@ func (m *List) DeleteList(ctx context.Context, db *gorm.DB) error {
 	return db.Debug().WithContext(ctx).Model(&m).Where("list_id = ? AND user_id = ?", m.ListId, m.UserId).Delete(&m).Error
 }
 
-func (m *List) FindOneMovieFromList(ctx context.Context, db *gorm.DB, info *MovieInfo) error {
-
-	return db.Debug().WithContext(ctx).Model(&m).Association("MovieInfos").Find(&info)
-}
-
 func (m *List) InsertMovieToList(ctx context.Context, db *gorm.DB, info *MovieInfo) error {
 	return db.Debug().WithContext(ctx).Model(&m).Association("MovieInfos").Append(info)
 }
 
 func (m *List) RemoveMovieFromList(ctx context.Context, db *gorm.DB, info *MovieInfo) error {
 	return db.Debug().WithContext(ctx).Model(&m).Association("MovieInfos").Delete(info)
+}
+
+//TODO - Check Movie is already collected by user - return a list info
+func (m *List) FindOneMovieFromList(ctx context.Context, db *gorm.DB, info *MovieInfo) error {
+	return db.Debug().WithContext(ctx).Model(&m).Where("user_id = ?", m.ListId).Association("MovieInfos").Find(&info)
 }

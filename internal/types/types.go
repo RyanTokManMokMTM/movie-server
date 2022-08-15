@@ -51,6 +51,24 @@ type UserProfileResp struct {
 	Cover  string `json:"cover"`
 }
 
+type CountUserPostReq struct {
+}
+
+type CountUserPostResp struct {
+}
+
+type CountUserFollowingReq struct {
+}
+
+type CountUserFollowingResp struct {
+}
+
+type CountUserFollowedReq struct {
+}
+
+type CountUserFollowedResp struct {
+}
+
 type MoviePageListByGenreReq struct {
 	Id uint `path:"genre_id" validate:"numeric"`
 }
@@ -73,6 +91,22 @@ type MovieDetailReq struct {
 
 type MovieDetailResp struct {
 	Info MovieDetailInfo `json:"info"`
+}
+
+type CountMovieLikesReq struct {
+	MovieID uint `json:"movie_id"`
+}
+
+type CountMovieLikedResp struct {
+	Count uint `json:"total_liked"`
+}
+
+type CountMovieCollectedReq struct {
+	MovieID uint `json:"movie_id"`
+}
+
+type CountMovieCollectedResp struct {
+	Count uint `json:"total_collected"`
 }
 
 type MovieInfo struct {
@@ -105,18 +139,11 @@ type GenreInfo struct {
 	Name string `json:"name"`
 }
 
-type CreateLikedMovieReq struct {
+type LikedMovieReq struct {
 	MovieID uint `json:"movie_id"`
 }
 
-type CreateLikedMovieResp struct {
-}
-
-type DeleteLikedMoviedReq struct {
-	MovieID uint `json:"movie_id"`
-}
-
-type DeleteLikedMovieResp struct {
+type LikedMovieResp struct {
 }
 
 type AllUserLikedMoviesReq struct {
@@ -125,6 +152,14 @@ type AllUserLikedMoviesReq struct {
 
 type AllUserAllLikedMoviesResp struct {
 	LikedMoviesList []*LikedMovieInfo `json:"liked_movies"`
+}
+
+type IsLikedMovieReq struct {
+	MovieID uint `path:"movie_id"`
+}
+
+type IsLikedMovieResp struct {
+	IsLiked bool `json:"is_liked_movie"`
 }
 
 type LikedMovieInfo struct {
@@ -191,6 +226,15 @@ type RemoveMovieReq struct {
 type RemoveMovieResp struct {
 }
 
+type GetOneMovieFromUserListReq struct {
+	MovieID uint `path:"movie_id"`
+}
+
+type GetOneMovieFromUserListResp struct {
+	ListId        uint `json:"list_id"`
+	IsMovieInList bool `json:"is_movie_in_list"`
+}
+
 type ListInfo struct {
 	ID     uint        `json:"id"`
 	Title  string      `json:"title"`
@@ -252,6 +296,13 @@ type PostsInfoReq struct {
 
 type PostsInfoResp struct {
 	Infos []PostInfo `json:"post_info"`
+}
+
+type CountUserPostsReq struct {
+}
+
+type CountUserPostsResp struct {
+	Count uint `json:"total_liked"`
 }
 
 type PostInfo struct {
@@ -328,4 +379,42 @@ type UpgradeToWebSocketReq struct {
 }
 
 type UpgradeToWebSocketResp struct {
+}
+
+type CreateNewFriendReq struct {
+	FriendId uint `json:"friend_id"`
+}
+
+type CreateNewFriendResp struct {
+}
+
+type RemoveFriendReq struct {
+	FriendId uint `json:"friend_id"`
+}
+
+type RemoveFriendResp struct {
+}
+
+type GetOneFriendReq struct {
+	FriendId uint `path:"friend_id"`
+}
+
+type GetOneFriendResp struct {
+	IsFriend bool `json:"is_friend"`
+}
+
+type CountFollowingReq struct {
+	UserId uint `path:"user_id"`
+}
+
+type CountFollowingResp struct {
+	Total uint `json:"total"`
+}
+
+type CountFollowedReq struct {
+	UserId uint `path:"user_id"`
+}
+
+type CountFollowedResp struct {
+	Total uint `json:"total"`
 }

@@ -52,6 +52,15 @@ type (
 //		//Need  liked moive list
 //		LikedMovies []*LikedMovieInfo `json:"liked_movies"`
 	}
+
+	CountUserPostReq {}
+	CountUserPostResp {}
+
+	CountUserFollowingReq {}
+	CountUserFollowingResp {}
+
+	CountUserFollowedReq {}
+	CountUserFollowedResp {}
 )
 
 

@@ -14,9 +14,9 @@ import (
 	"github.com/ryantokmanmokmtm/movie-server/internal/types"
 )
 
-func CreateLikedMovieHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func LikedMovieHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.CreateLikedMovieReq
+		var req types.LikedMovieReq
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.Error(w, err)
 			return
@@ -34,8 +34,8 @@ func CreateLikedMovieHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
-		l := likedMovie.NewCreateLikedMovieLogic(r.Context(), svcCtx)
-		resp, err := l.CreateLikedMovie(&req)
+		l := likedMovie.NewLikedMovieLogic(r.Context(), svcCtx)
+		resp, err := l.LikedMovie(&req)
 		if err != nil {
 			httpx.Error(w, err)
 		} else {

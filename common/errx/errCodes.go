@@ -47,6 +47,12 @@ const (
 	POST_COMMENT_NOT_EXIST uint32 = 150001
 )
 
+//Friend Service 160xxx
+const (
+	FOLLOW_FRIEND_ERROR   uint32 = 160001
+	UNFOLLOW_FRIEND_ERROR uint32 = 160002
+)
+
 //WebSocket error
 const (
 	WEBSOCKET_CONNECTION_ERROR    uint32 = 200001
