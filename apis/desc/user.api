@@ -53,16 +53,6 @@ type (
 //		LikedMovies []*LikedMovieInfo `json:"liked_movies"`
 	}
 
-<<<<<<< HEAD
-	CountUserPostReq {}
-	CountUserPostResp {}
-
-	CountUserFollowingReq {}
-	CountUserFollowingResp {}
-
-	CountUserFollowedReq {}
-	CountUserFollowedResp {}
-=======
 	UpdateProfileReq {
 		Name string `json:"name"`
 	}
@@ -75,7 +65,6 @@ type (
 		Path string `json:"path"`
 	}
 
->>>>>>> 418a81cb68965b16ace3f6371d9705d2e90692a3
 )
 
 
