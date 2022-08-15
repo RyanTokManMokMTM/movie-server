@@ -46,6 +46,7 @@ func (l *GetAllUserListLogic) GetAllUserList(req *types.AllCustomListReq) (resp 
 		userLists = append(userLists, types.ListInfo{
 			ID:     v.ListId,
 			Title:  v.ListTitle,
+			Intro:  v.ListIntro,
 			Movies: movieList,
 		})
 	}

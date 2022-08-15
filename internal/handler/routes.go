@@ -63,6 +63,21 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/user/profile",
 				Handler: user.UserProfileHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodPatch,
+				Path:    "/user/profile",
+				Handler: user.UpdateUserProfileHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPatch,
+				Path:    "/user/avatar",
+				Handler: user.UploadUserAvatarHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPatch,
+				Path:    "/user/cover",
+				Handler: user.UploadUserCoverHandler(serverCtx),
+			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 		rest.WithPrefix("/api/v1"),

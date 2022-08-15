@@ -41,8 +41,8 @@ func (l *UserSignUpLogic) UserSignUp(req *types.UserSignUpReq) (resp *types.User
 			Name:     req.UserName,
 			Email:    req.Email,
 			Password: crytox.PasswordEncrypt(req.Password, l.svcCtx.Config.Salt),
-			Avatar:   "https://upload.cc/i1/2022/07/03/MJIXkd.jpeg", //TODO: Upload User avatar
-			Cover:    "https://upload.cc/i1/2022/07/04/yQN7tU.jpeg", //TODO: Upload User Cover
+			Avatar:   "/defaultAvatar.jpeg", //TODO: Upload User avatar
+			Cover:    "/defaultCover.jpeg",  //TODO: Upload User Cover
 		}
 
 		user, err := l.svcCtx.DAO.CreateUser(l.ctx, newUser)

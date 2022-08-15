@@ -53,6 +53,7 @@ type (
 //		LikedMovies []*LikedMovieInfo `json:"liked_movies"`
 	}
 
+<<<<<<< HEAD
 	CountUserPostReq {}
 	CountUserPostResp {}
 
@@ -61,6 +62,20 @@ type (
 
 	CountUserFollowedReq {}
 	CountUserFollowedResp {}
+=======
+	UpdateProfileReq {
+		Name string `json:"name"`
+	}
+
+	UpdateProfileResp {
+	}
+
+	UploadImageReq {}
+	UploadImageResp{
+		Path string `json:"path"`
+	}
+
+>>>>>>> 418a81cb68965b16ace3f6371d9705d2e90692a3
 )
 
 
@@ -98,6 +113,20 @@ service MovieService{
 	@doc "user_profile"
 	@handler UserProfile
 	get /user/profile(UserProfileReq) returns (UserProfileResp);
+
+	@doc "update user profile"
+	@handler UpdateUserProfile
+	patch /user/profile(UpdateProfileReq) returns (UpdateProfileResp);
+
+
+	@doc "update user avatar"
+	@handler UploadUserAvatar
+	patch /user/avatar(UploadImageReq) returns (UploadImageResp);
+
+
+	@doc "update user cover"
+	@handler UploadUserCover
+	patch /user/cover(UploadImageReq) returns (UploadImageResp);
 }
 
 
