@@ -10,21 +10,21 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type GetUserCollectedCountLogic struct {
+type GetMovieCollectedCountLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
-func NewGetUserCollectedCountLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetUserCollectedCountLogic {
-	return &GetUserCollectedCountLogic{
+func NewGetMovieCollectedCountLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetMovieCollectedCountLogic {
+	return &GetMovieCollectedCountLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
 	}
 }
 
-func (l *GetUserCollectedCountLogic) GetUserCollectedCount(req *types.CountMovieCollectedReq) (resp *types.CountMovieCollectedResp, err error) {
+func (l *GetMovieCollectedCountLogic) GetMovieCollectedCount(req *types.CountMovieCollectedReq) (resp *types.CountMovieCollectedResp, err error) {
 	// todo: add your logic here and delete this line
 
 	count, err := l.svcCtx.DAO.CountMovieCollected(l.ctx, req.MovieID)

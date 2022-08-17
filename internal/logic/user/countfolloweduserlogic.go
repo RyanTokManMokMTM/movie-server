@@ -1,4 +1,4 @@
-package friend
+package user
 
 import (
 	"context"
@@ -10,27 +10,27 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type CountFollowingUserLogic struct {
+type CountFollowedUserLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
-func NewCountFollowingUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CountFollowingUserLogic {
-	return &CountFollowingUserLogic{
+func NewCountFollowedUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CountFollowedUserLogic {
+	return &CountFollowedUserLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
 	}
 }
 
-func (l *CountFollowingUserLogic) CountFollowingUser(req *types.CountFollowingReq) (resp *types.CountFollowingResp, err error) {
+func (l *CountFollowedUserLogic) CountFollowedUser(req *types.CountFollowedReq) (resp *types.CountFollowedResp, err error) {
 	// todo: add your logic here and delete this line
-	count, err := l.svcCtx.DAO.CountFollowingUser(l.ctx, req.UserId)
+	count, err := l.svcCtx.DAO.CountFollowedUser(l.ctx, req.UserId)
 	if err != nil {
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
-	return &types.CountFollowingResp{
+	return &types.CountFollowedResp{
 		Total: uint(count),
 	}, nil
 }

@@ -38,7 +38,9 @@ type (
 	UserInfoResp {
 		ID   uint `json:"id"`
 		Name string `json:"name"`
-		Email string `jsons:"email"`
+		Email string `json:"email"`
+		Avatar string `json:"avatar"`
+		Cover string `json:"cover"`
 	}
 
 	UserProfileReq {}
@@ -63,6 +65,20 @@ type (
 	UploadImageReq {}
 	UploadImageResp{
 		Path string `json:"path"`
+	}
+
+	CountFollowingReq {
+		UserId uint `path:"user_id"`
+	}
+	CountFollowingResp {
+		Total uint `json:"total"`
+	}
+
+	CountFollowedReq {
+		UserId uint `path:"user_id"`
+	}
+	CountFollowedResp {
+		Total uint `json:"total"`
 	}
 
 )
@@ -91,6 +107,14 @@ service MovieService{
 	@doc "user_info"
 	@handler UserInfo
 	get /user/info/:id(UserInfoReq) returns (UserInfoResp);
+
+	@doc "Count how many users have been followed by user"
+	@handler CountFollowingUser
+	get /user/following/:user_id(CountFollowingReq) returns (CountFollowingResp);
+
+	@doc "Count how many users is following the user(owner)"
+	@handler CountFollowedUser
+	get /user/followed/:user_id(CountFollowedReq) returns (CountFollowedResp);
 }
 
 @server (

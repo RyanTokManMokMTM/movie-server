@@ -1,4 +1,4 @@
-package friend
+package likedMovie
 
 import (
 	"github.com/go-playground/locales/en"
@@ -9,14 +9,14 @@ import (
 	"github.com/zeromicro/go-zero/rest/httpx"
 	"net/http"
 
-	"github.com/ryantokmanmokmtm/movie-server/internal/logic/friend"
+	"github.com/ryantokmanmokmtm/movie-server/internal/logic/likedMovie"
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
 	"github.com/ryantokmanmokmtm/movie-server/internal/types"
 )
 
-func GetOneFriendHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func RemoveLikedMovieHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.GetOneFriendReq
+		var req types.RemoveLikedMovieReq
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.Error(w, err)
 			return
@@ -34,8 +34,8 @@ func GetOneFriendHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
-		l := friend.NewGetOneFriendLogic(r.Context(), svcCtx)
-		resp, err := l.GetOneFriend(&req)
+		l := likedMovie.NewRemoveLikedMovieLogic(r.Context(), svcCtx)
+		resp, err := l.RemoveLikedMovie(&req)
 		if err != nil {
 			httpx.Error(w, err)
 		} else {

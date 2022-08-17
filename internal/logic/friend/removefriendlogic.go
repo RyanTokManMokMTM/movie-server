@@ -13,21 +13,21 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type RemoteFriendLogic struct {
+type RemoveFriendLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
-func NewRemoteFriendLogic(ctx context.Context, svcCtx *svc.ServiceContext) *RemoteFriendLogic {
-	return &RemoteFriendLogic{
+func NewRemoveFriendLogic(ctx context.Context, svcCtx *svc.ServiceContext) *RemoveFriendLogic {
+	return &RemoveFriendLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
 	}
 }
 
-func (l *RemoteFriendLogic) RemoteFriend(req *types.RemoveFriendReq) (resp *types.RemoveFriendResp, err error) {
+func (l *RemoveFriendLogic) RemoveFriend(req *types.RemoveFriendReq) (resp *types.RemoveFriendResp, err error) {
 	// todo: add your logic here and delete this line
 	userID := ctxtool.GetUserIDFromCTX(l.ctx)
 

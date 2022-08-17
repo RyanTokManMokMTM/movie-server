@@ -14,7 +14,7 @@ import (
 	"github.com/ryantokmanmokmtm/movie-server/internal/types"
 )
 
-func GetUserLikedCountHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func GetMovieLikedCountHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req types.CountMovieLikesReq
 		if err := httpx.Parse(r, &req); err != nil {
@@ -34,8 +34,8 @@ func GetUserLikedCountHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
-		l := movie.NewGetUserLikedCountLogic(r.Context(), svcCtx)
-		resp, err := l.GetUserLikedCount(&req)
+		l := movie.NewGetMovieLikedCountLogic(r.Context(), svcCtx)
+		resp, err := l.GetMovieLikedCount(&req)
 		if err != nil {
 			httpx.Error(w, err)
 		} else {

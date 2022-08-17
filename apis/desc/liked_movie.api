@@ -28,6 +28,14 @@ type (
         IsLiked bool `json:"is_liked_movie"`
     }
 
+    RemoveLikedMovieReq  {
+        MovieID uint `json:"movie_id"`
+    }
+
+    RemoveLikedMovieResp  {
+    }
+
+
 )
 
 /*
@@ -71,9 +79,9 @@ service MovieService {
     @handler LikedMovie
     post /liked/movie(LikedMovieReq) returns (LikedMovieResp);
 //
-//    @doc "Delete user liked movie"
-//    @handler DeleteLikedMovie
-//    delete /liked/movie(DeleteLikedMoviedReq) returns (DeleteLikedMovieResp);
+    @doc "remove user liked movie - update state "
+    @handler RemoveLikedMovie
+    patch /liked/movie(RemoveLikedMovieReq) returns (RemoveLikedMovieResp);
 
     @doc "Find Liked Movie"
     @handler IsLikedMovie

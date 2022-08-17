@@ -1,4 +1,4 @@
-package movie
+package user
 
 import (
 	"context"
@@ -10,29 +10,27 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type GetUserLikedCountLogic struct {
+type CountFollowingUserLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
-func NewGetUserLikedCountLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetUserLikedCountLogic {
-	return &GetUserLikedCountLogic{
+func NewCountFollowingUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CountFollowingUserLogic {
+	return &CountFollowingUserLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
 	}
 }
 
-func (l *GetUserLikedCountLogic) GetUserLikedCount(req *types.CountMovieLikesReq) (resp *types.CountMovieLikedResp, err error) {
+func (l *CountFollowingUserLogic) CountFollowingUser(req *types.CountFollowingReq) (resp *types.CountFollowingResp, err error) {
 	// todo: add your logic here and delete this line
-	//get - how many likes are the movie has
-
-	count, err := l.svcCtx.DAO.CountLikesOfMovie(l.ctx, req.MovieID)
+	count, err := l.svcCtx.DAO.CountFollowingUser(l.ctx, req.UserId)
 	if err != nil {
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
-	return &types.CountMovieLikedResp{
-		Count: uint(count),
+	return &types.CountFollowingResp{
+		Total: uint(count),
 	}, nil
 }

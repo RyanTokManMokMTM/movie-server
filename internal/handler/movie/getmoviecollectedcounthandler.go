@@ -14,7 +14,7 @@ import (
 	"github.com/ryantokmanmokmtm/movie-server/internal/types"
 )
 
-func GetUserCollectedCountHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func GetMovieCollectedCountHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req types.CountMovieCollectedReq
 		if err := httpx.Parse(r, &req); err != nil {
@@ -34,8 +34,8 @@ func GetUserCollectedCountHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
-		l := movie.NewGetUserCollectedCountLogic(r.Context(), svcCtx)
-		resp, err := l.GetUserCollectedCount(&req)
+		l := movie.NewGetMovieCollectedCountLogic(r.Context(), svcCtx)
+		resp, err := l.GetMovieCollectedCount(&req)
 		if err != nil {
 			httpx.Error(w, err)
 		} else {

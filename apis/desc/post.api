@@ -61,16 +61,18 @@ type (
         Infos []PostInfo `json:"post_info"`
     }
 //
-//    CountPostLikedReq {
-//        PostID uint `json:"post_id"`
-//    }
-//    CountPostLikedResp {
-//        Count uint `json:"total_liked"`
-//    }
-
-    CountUserPostsReq {}
-    CountUserPostsResp {
+    CountPostLikedReq {
+        PostID uint `json:"post_id"`
+    }
+    CountPostLikedResp {
         Count uint `json:"total_liked"`
+    }
+
+    CountUserPostsReq {
+        UserId uint `path:"user_id"`
+    }
+    CountUserPostsResp {
+        Count uint `json:"total_posts"`
     }
 )
 

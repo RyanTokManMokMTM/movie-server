@@ -2,7 +2,6 @@ package models
 
 import (
 	"context"
-	"github.com/pkg/errors"
 	"gorm.io/gorm"
 )
 
@@ -30,11 +29,6 @@ func (m *ListMovie) FindOneMovieFromAnyList(ctx context.Context, db *gorm.DB, us
 	var userListID []uint
 	if err := db.Debug().WithContext(ctx).Model(&List{}).Select("list_id").Where("user_id = ?", userId).Find(&userListID).Error; err != nil {
 		return err
-	}
-
-	if len(userListID) == 0 {
-		//this user has no any list
-		return errors.New("USER HAS NO ANY LIST")
 	}
 
 	//this query will query all list of the user and get a movie by movie id

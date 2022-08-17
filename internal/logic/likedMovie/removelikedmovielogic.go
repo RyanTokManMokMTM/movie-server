@@ -1,4 +1,4 @@
-package friend
+package likedMovie
 
 import (
 	"context"
@@ -13,21 +13,21 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type GetOneFriendLogic struct {
+type RemoveLikedMovieLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
-func NewGetOneFriendLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetOneFriendLogic {
-	return &GetOneFriendLogic{
+func NewRemoveLikedMovieLogic(ctx context.Context, svcCtx *svc.ServiceContext) *RemoveLikedMovieLogic {
+	return &RemoveLikedMovieLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
 	}
 }
 
-func (l *GetOneFriendLogic) GetOneFriend(req *types.GetOneFriendReq) (resp *types.GetOneFriendResp, err error) {
+func (l *RemoveLikedMovieLogic) RemoveLikedMovie(req *types.RemoveLikedMovieReq) (resp *types.RemoveLikedMovieResp, err error) {
 	// todo: add your logic here and delete this line
 	userID := ctxtool.GetUserIDFromCTX(l.ctx)
 
@@ -40,19 +40,17 @@ func (l *GetOneFriendLogic) GetOneFriend(req *types.GetOneFriendReq) (resp *type
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
-	f, err := l.svcCtx.DAO.FindOneFriend(l.ctx, userID, req.FriendId)
-	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+	//find movie record
+	lm, err := l.svcCtx.DAO.FindOneUserLikedMovie(l.ctx, req.MovieID, userID)
+	if err != nil {
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
-	if errors.Is(err, gorm.ErrRecordNotFound) || f.State == 0 { // 0 is unfollowing state
-		//create a new record
-		return &types.GetOneFriendResp{
-			IsFriend: false,
-		}, nil
+	lm.State = 0
+	err = l.svcCtx.DAO.UpdateUserLikedMovieState(l.ctx, lm)
+	if err != nil {
+		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
-	return &types.GetOneFriendResp{
-		IsFriend: true,
-	}, nil
+	return &types.RemoveLikedMovieResp{}, nil
 }

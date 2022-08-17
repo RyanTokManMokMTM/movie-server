@@ -35,9 +35,11 @@ type UserInfoReq struct {
 }
 
 type UserInfoResp struct {
-	ID    uint   `json:"id"`
-	Name  string `json:"name"`
-	Email string `jsons:"email"`
+	ID     uint   `json:"id"`
+	Name   string `json:"name"`
+	Email  string `json:"email"`
+	Avatar string `json:"avatar"`
+	Cover  string `json:"cover"`
 }
 
 type UserProfileReq struct {
@@ -65,6 +67,22 @@ type UploadImageResp struct {
 	Path string `json:"path"`
 }
 
+type CountFollowingReq struct {
+	UserId uint `path:"user_id"`
+}
+
+type CountFollowingResp struct {
+	Total uint `json:"total"`
+}
+
+type CountFollowedReq struct {
+	UserId uint `path:"user_id"`
+}
+
+type CountFollowedResp struct {
+	Total uint `json:"total"`
+}
+
 type MoviePageListByGenreReq struct {
 	Id uint `path:"genre_id" validate:"numeric"`
 }
@@ -90,7 +108,7 @@ type MovieDetailResp struct {
 }
 
 type CountMovieLikesReq struct {
-	MovieID uint `json:"movie_id"`
+	MovieID uint `path:"movie_id"`
 }
 
 type CountMovieLikedResp struct {
@@ -98,7 +116,7 @@ type CountMovieLikedResp struct {
 }
 
 type CountMovieCollectedReq struct {
-	MovieID uint `json:"movie_id"`
+	MovieID uint `path:"movie_id"`
 }
 
 type CountMovieCollectedResp struct {
@@ -156,6 +174,13 @@ type IsLikedMovieReq struct {
 
 type IsLikedMovieResp struct {
 	IsLiked bool `json:"is_liked_movie"`
+}
+
+type RemoveLikedMovieReq struct {
+	MovieID uint `json:"movie_id"`
+}
+
+type RemoveLikedMovieResp struct {
 }
 
 type LikedMovieInfo struct {
@@ -298,11 +323,20 @@ type PostsInfoResp struct {
 	Infos []PostInfo `json:"post_info"`
 }
 
+type CountPostLikedReq struct {
+	PostID uint `json:"post_id"`
+}
+
+type CountPostLikedResp struct {
+	Count uint `json:"total_liked"`
+}
+
 type CountUserPostsReq struct {
+	UserId uint `path:"user_id"`
 }
 
 type CountUserPostsResp struct {
-	Count uint `json:"total_liked"`
+	Count uint `json:"total_posts"`
 }
 
 type PostInfo struct {
@@ -401,20 +435,4 @@ type GetOneFriendReq struct {
 
 type GetOneFriendResp struct {
 	IsFriend bool `json:"is_friend"`
-}
-
-type CountFollowingReq struct {
-	UserId uint `path:"user_id"`
-}
-
-type CountFollowingResp struct {
-	Total uint `json:"total"`
-}
-
-type CountFollowedReq struct {
-	UserId uint `path:"user_id"`
-}
-
-type CountFollowedResp struct {
-	Total uint `json:"total"`
 }

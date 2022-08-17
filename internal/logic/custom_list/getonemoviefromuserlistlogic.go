@@ -49,6 +49,13 @@ func (l *GetOneMovieFromUserListLogic) GetOneMovieFromUserList(req *types.GetOne
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
+	if list.ListListId == 0 {
+		return &types.GetOneMovieFromUserListResp{
+			ListId:        0,
+			IsMovieInList: false,
+		}, nil
+	}
+
 	return &types.GetOneMovieFromUserListResp{
 		ListId:        list.ListListId,
 		IsMovieInList: true,
