@@ -396,6 +396,14 @@ type GetPostCommentsResp struct {
 	Comments []CommentInfo `json:"comments"`
 }
 
+type CountPostCommentsReq struct {
+	PostId uint `path:"path_id"`
+}
+
+type CountPostCommentsResp struct {
+	TotalComment uint `json:"total_comment"`
+}
+
 type CommentInfo struct {
 	CommentID uint        `json:"id"`
 	UserInfo  CommentUser `json:"user_info"`

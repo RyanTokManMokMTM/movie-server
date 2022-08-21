@@ -39,6 +39,13 @@ type (
     GetPostCommentsResp {
         Comments []CommentInfo `json:"comments"`
     }
+
+    CountPostCommentsReq {
+        PostId uint `path:"path_id"`
+    }
+    CountPostCommentsResp {
+        TotalComment uint `json:"total_comment"`
+    }
 )
 
 //New Feature

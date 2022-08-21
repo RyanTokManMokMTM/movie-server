@@ -57,6 +57,10 @@ func (l *GetPostCommentLogic) GetPostComment(req *types.GetPostCommentsReq) (res
 			UpdateAt: v.UpdatedAt.Unix(),
 		})
 	}
+
+	if len(comments) == 0 {
+		comments = make([]types.CommentInfo, 0)
+	}
 	return &types.GetPostCommentsResp{
 		Comments: comments,
 	}, nil
