@@ -41,17 +41,17 @@ func NewEngine(c config.Config) *gorm.DB {
 	db.AutoMigrate(&UserMovie{})
 	db.AutoMigrate(&Friend{})
 	if err := db.SetupJoinTable(&User{}, "MovieInfos", &UserMovie{}); err != nil {
-		panic(err.Error())
+		panic(err.(any))
 	}
 
 	if err := db.SetupJoinTable(&User{}, "Friends", &Friend{}); err != nil {
-		panic(err.Error())
+		panic(err.(any))
 	}
 
 	db.AutoMigrate(&List{})
 	db.AutoMigrate(&ListMovie{})
 	if err := db.SetupJoinTable(&List{}, "MovieInfos", &ListMovie{}); err != nil {
-		panic(err.Error())
+		panic(err.(any))
 	}
 	db.AutoMigrate(&Post{})
 	db.AutoMigrate(&Comment{})

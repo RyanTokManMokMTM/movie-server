@@ -372,6 +372,17 @@ type CreateCommentResp struct {
 	CreateAt  int64 `json:"create_at"`
 }
 
+type CreateReplyCommentReq struct {
+	PostID         uint   `path:"post_id"`
+	ReplyCommentId uint   `path:"comment_id"`
+	Comment        string `json:"comment"`
+}
+
+type CreateReplyCommentResp struct {
+	CommentID uint  `json:"id"`
+	CreateAt  int64 `json:"create_at"`
+}
+
 type UpdateCommentReq struct {
 	CommentID uint   `path:"comment_id"`
 	Comment   string `json:"comment"`
@@ -405,10 +416,11 @@ type CountPostCommentsResp struct {
 }
 
 type CommentInfo struct {
-	CommentID uint        `json:"id"`
-	UserInfo  CommentUser `json:"user_info"`
-	Comment   string      `json:"comment"`
-	UpdateAt  int64       `json:"update_at"`
+	CommentID    uint          `json:"id"`
+	UserInfo     CommentUser   `json:"user_info"`
+	Comment      string        `json:"comment"`
+	UpdateAt     int64         `json:"update_at"`
+	ReplyComment []CommentInfo `json:"reply_comments"`
 }
 
 type CommentUser struct {

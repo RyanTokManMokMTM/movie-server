@@ -20,6 +20,7 @@ type User struct {
 
 	//this relationship for following and follower?
 	Friends []User `gorm:"many2many:friends;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+	//Genres []GenreInfo `gorm` //one u
 	//use may have a lot of post
 	Posts []Post `gorm:"foreignKey:UserId;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 	DefaultModel

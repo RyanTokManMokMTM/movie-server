@@ -2,6 +2,7 @@ package dao
 
 import (
 	"context"
+	"database/sql"
 	"github.com/ryantokmanmokmtm/movie-server/internal/models"
 )
 
@@ -10,6 +11,19 @@ func (d *DAO) CreatePostComment(ctx context.Context, userID, PostID uint, commen
 		PostID:  PostID,
 		UserID:  userID,
 		Comment: comment,
+	}
+	if err := newComment.CreatePostComment(ctx, d.engine); err != nil {
+		return nil, err
+	}
+	return newComment, nil
+}
+
+func (d *DAO) CreatePostReplyComment(ctx context.Context, userID, PostID, replyCommentId uint, comment string) (*models.Comment, error) {
+	newComment := &models.Comment{
+		PostID:  PostID,
+		UserID:  userID,
+		Comment: comment,
+		ReplyTo: sql.NullInt64{Int64: int64(replyCommentId), Valid: true},
 	}
 	if err := newComment.CreatePostComment(ctx, d.engine); err != nil {
 		return nil, err

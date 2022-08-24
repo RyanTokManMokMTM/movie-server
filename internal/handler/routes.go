@@ -271,6 +271,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: comment.CreateCommentHandler(serverCtx),
 			},
 			{
+				Method:  http.MethodPost,
+				Path:    "/comments/:post_id/reply/:comment_id",
+				Handler: comment.CreateReplyCommentHandler(serverCtx),
+			},
+			{
 				Method:  http.MethodPatch,
 				Path:    "/comments/:comment_id",
 				Handler: comment.UpdateCommentHandler(serverCtx),

@@ -2,17 +2,20 @@ package models
 
 import (
 	"context"
+	"database/sql"
 	"gorm.io/gorm"
 )
 
 type Comment struct {
-	CommentID uint   `gorm:"primaryKey;not null;autoIncrement"`
-	PostID    uint   `gorm:"not null;type:bigint;unsigned;"`
-	UserID    uint   `gorm:"not null;type:bigint;unsigned"`
-	Comment   string `gorm:"not null;type:longtext"`
+	CommentID uint          `gorm:"primaryKey;not null;autoIncrement"`
+	PostID    uint          `gorm:"not null;type:bigint;unsigned;"`
+	UserID    uint          `gorm:"not null;type:bigint;unsigned"`
+	Comment   string        `gorm:"not null;type:longtext"`
+	ReplyTo   sql.NullInt64 `gorm:"null;type:bigint;unsigned"` //if this field is null ,it means not a reply message
 
-	//Post Post `gorm:"foreignKey:PostID;references:PostId"`
-	User User `gorm:"foreignKey:UserID;references:Id;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+	User     User      `gorm:"foreignKey:UserID;references:Id;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+	Comments []Comment `gorm:"foreignKey:ReplyTo;references:CommentID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"` // a list of reply comment
+
 	DefaultModel
 }
 
@@ -34,11 +37,17 @@ func (m *Comment) DeletePostComment(ctx context.Context, db *gorm.DB) error {
 
 func (m *Comment) FindOnePostComments(ctx context.Context, db *gorm.DB) ([]*Comment, error) {
 	var comments []*Comment
-	if err := db.Debug().WithContext(ctx).Model(m).Where("post_id = ?", m.PostID).Preload("User").Find(&comments).Error; err != nil {
+	if err := db.Debug().WithContext(ctx).Model(m).Where("post_id = ?", m.PostID).Preload("User").Preload("Comments", func(tx *gorm.DB) *gorm.DB {
+		return db.Preload("User")
+	}).Find(&comments).Error; err != nil {
 		return nil, err
 	}
 	return comments, nil
 }
+
+//func (m *Comment) FindCommentReply(ctx context.Context, db *gorm.DB) ([]*Comment, error) {
+//
+//}
 
 func (m *Comment) FindOneComment(ctx context.Context, db *gorm.DB) error {
 	return db.Debug().WithContext(ctx).Where("comment_id = ?", m.CommentID).First(m).Error

@@ -19,6 +19,16 @@ type (
         CreateAt int64 `json:"create_at"`
     }
 
+    CreateReplyCommentReq {
+        PostID uint `path:"post_id"`
+        ReplyCommentId uint `path:"comment_id"`
+        Comment string `json:"comment"`
+    }
+    CreateReplyCommentResp {
+        CommentID uint `json:"id"`
+        CreateAt int64 `json:"create_at"`
+    }
+
     UpdateCommentReq {
 //        PostID uint `path:"post_id"`
         CommentID uint `path:"comment_id"`
@@ -75,6 +85,8 @@ type (
         Comment string `json:"comment"`
 //        CreateAt int64 `json:"create_at"`
         UpdateAt int64 `json:"update_at"`
+
+        ReplyComment []CommentInfo `json:"reply_comments"`
     }
 
     CommentUser {
@@ -93,6 +105,10 @@ service MovieService {
     @doc "Create A New Comment"
     @handler CreateComment
     post /comments/:post_id(CreateCommentReq) returns (CreateCommentResp);
+
+    @doc "Create A New Reply Comment"
+    @handler CreateReplyComment
+    post /comments/:post_id/reply/:comment_id(CreateReplyCommentReq) returns (CreateCommentResp);
 
     @doc "Update Comment"
     @handler UpdateComment
