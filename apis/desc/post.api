@@ -173,5 +173,4 @@ service MovieService {
     )
     @handler CountAllUserPost
     get /posts/count/:user_id(CountUserPostsReq) returns (CountUserPostsResp);
-
 }

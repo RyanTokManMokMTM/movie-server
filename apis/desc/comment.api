@@ -58,7 +58,7 @@ type (
     }
 
     CountPostCommentsReq {
-        PostId uint `path:"path_id"`
+        PostId uint `path:"post_id"`
     }
     CountPostCommentsResp {
         TotalComment uint `json:"total_comment"`

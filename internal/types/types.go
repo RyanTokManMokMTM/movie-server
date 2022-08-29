@@ -439,7 +439,7 @@ type GetReplyCommentResp struct {
 }
 
 type CountPostCommentsReq struct {
-	PostId uint `path:"path_id"`
+	PostId uint `path:"post_id"`
 }
 
 type CountPostCommentsResp struct {
