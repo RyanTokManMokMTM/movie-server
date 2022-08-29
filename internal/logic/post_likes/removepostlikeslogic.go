@@ -56,9 +56,7 @@ func (l *RemovePostLikesLogic) RemovePostLikes(req *types.RemovePostLikesReq) (r
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
-	postLiked.State = 0
-
-	if err := l.svcCtx.DAO.UpdatePostLiked(l.ctx, postLiked); err != nil {
+	if err := l.svcCtx.DAO.DeletePostLikes(l.ctx, postLiked); err != nil {
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 

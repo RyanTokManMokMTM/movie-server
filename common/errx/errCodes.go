@@ -55,7 +55,7 @@ const (
 	UNFOLLOW_FRIEND_ERROR uint32 = 160002
 )
 
-//PostLiked Service
+//PostsLiked Service
 const (
 	NOT_LIKE_POST_YET uint32 = 1700001
 )

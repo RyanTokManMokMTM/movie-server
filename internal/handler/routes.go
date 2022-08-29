@@ -267,6 +267,13 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/posts/:user_id",
 				Handler: posts.GetUserPostsHandler(serverCtx),
 			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/api/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
 			{
 				Method:  http.MethodGet,
 				Path:    "/posts/count/:user_id",
@@ -392,7 +399,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: post_likes.CreatePostLikesHandler(serverCtx),
 			},
 			{
-				Method:  http.MethodPatch,
+				Method:  http.MethodDelete,
 				Path:    "/liked/post",
 				Handler: post_likes.RemovePostLikesHandler(serverCtx),
 			},

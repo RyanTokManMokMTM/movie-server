@@ -50,7 +50,7 @@ service  MovieService{
         summary : "remove Post likes"
     )
     @handler RemovePostLikes
-    patch /liked/post(RemovePostLikesReq) returns (RemovePostLikesResq);
+    delete /liked/post(RemovePostLikesReq) returns (RemovePostLikesResq);
 
     @doc (
         summary : "is post liked by user"

@@ -49,7 +49,7 @@ func (l *CreatePostLikesLogic) CreatePostLikes(req *types.CreatePostLikesReq) (r
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
-	postLiked, err := l.svcCtx.DAO.FindOnePostLiked(l.ctx, userID, req.PostId)
+	_, err = l.svcCtx.DAO.FindOnePostLiked(l.ctx, userID, req.PostId)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			//Create a new record
@@ -65,12 +65,12 @@ func (l *CreatePostLikesLogic) CreatePostLikes(req *types.CreatePostLikesReq) (r
 	//if postLiked.State == 1 {
 	//	postLiked.State = 1
 	//} else {
-	postLiked.State = 1 //always be true
+	//postLiked.State = 1 //always be true
 	//}
 
-	if err := l.svcCtx.DAO.UpdatePostLiked(l.ctx, postLiked); err != nil {
-		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
-	}
+	//if err := l.svcCtx.DAO.UpdatePostLiked(l.ctx, postLiked); err != nil {
+	//	return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
+	//}
 
-	return &types.CreatePostLikesResp{}, nil
+	return &types.CreatePostLikesResp{}, nil //already liked - do nothing?
 }

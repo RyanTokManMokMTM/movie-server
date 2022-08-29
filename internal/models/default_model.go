@@ -42,6 +42,14 @@ func NewEngine(c config.Config) *gorm.DB {
 	db.AutoMigrate(&Friend{})
 	db.AutoMigrate(&PostLiked{})
 	db.AutoMigrate(&CommentLiked{})
+
+	db.AutoMigrate(&List{})
+	db.AutoMigrate(&ListMovie{})
+	if err := db.SetupJoinTable(&List{}, "MovieInfos", &ListMovie{}); err != nil {
+		panic(err.(any))
+	}
+	db.AutoMigrate(&Post{})
+	db.AutoMigrate(&Comment{})
 	//db.AutoMigrate(&UserInterestedGenre{})
 	if err := db.SetupJoinTable(&User{}, "MovieInfos", &UserMovie{}); err != nil {
 		panic(err.(any))
@@ -52,20 +60,16 @@ func NewEngine(c config.Config) *gorm.DB {
 	if err := db.SetupJoinTable(&User{}, "PostsLiked", &PostLiked{}); err != nil {
 		panic(err.(any))
 	}
+	if err := db.SetupJoinTable(&Post{}, "PostsLiked", &PostLiked{}); err != nil {
+		panic(err.(any))
+	}
+
 	if err := db.SetupJoinTable(&User{}, "CommentLiked", &CommentLiked{}); err != nil {
 		panic(err.(any))
 	}
 	//if err := db.SetupJoinTable(&User{}, "InterestedGenre", &UserInterestedGenre{}); err != nil {
 	//	panic(err.(any))
 	//}
-
-	db.AutoMigrate(&List{})
-	db.AutoMigrate(&ListMovie{})
-	if err := db.SetupJoinTable(&List{}, "MovieInfos", &ListMovie{}); err != nil {
-		panic(err.(any))
-	}
-	db.AutoMigrate(&Post{})
-	db.AutoMigrate(&Comment{})
 
 	return db
 }

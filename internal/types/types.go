@@ -362,14 +362,15 @@ type CountUserPostsResp struct {
 }
 
 type PostInfo struct {
-	PostID           uint          `json:"id"`
-	PostUser         PostUserInfo  `json:"user_info"`
-	PostTitle        string        `json:"post_title"`
-	PostDesc         string        `json:"post_desc"`
-	PostMovie        PostMovieInfo `json:"post_movie_info"`
-	PostLikeCount    int64         `json:"post_like_count"`
-	PostCommentCount int64         `json:"post_comment_count"`
-	CreateAt         int64         `json:"create_at"`
+	PostID            uint          `json:"id"`
+	PostUser          PostUserInfo  `json:"user_info"`
+	PostTitle         string        `json:"post_title"`
+	PostDesc          string        `json:"post_desc"`
+	PostMovie         PostMovieInfo `json:"post_movie_info"`
+	PostLikeCount     int64         `json:"post_like_count"`
+	PostCommentCount  int64         `json:"post_comment_count"`
+	IsPostLikedByUser uint          `json:"is_post_liked"`
+	CreateAt          int64         `json:"create_at"`
 }
 
 type PostMovieInfo struct {

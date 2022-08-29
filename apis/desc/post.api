@@ -85,6 +85,7 @@ type (
         PostMovie PostMovieInfo `json:"post_movie_info"`
         PostLikeCount int64 `json:"post_like_count"`
         PostCommentCount int64 `json:"post_comment_count"`
+        IsPostLikedByUser uint `json:"is_post_liked"`
         CreateAt int64 `json:"create_at"`
     }
 
@@ -145,21 +146,28 @@ service MovieService {
 @server(
     group : posts
     prefix : api/v1
+    jwt : Auth
 )
 service MovieService {
 
     @doc (
-        summary : "Get PostInfo by PostID"
+        summary : "Get PostInfo by PostID with user liked post"
     )
     @handler GetPostByPostID
     get /post/:post_id(PostInfoByIdReq) returns (PostInfoByIdResp);
 
     @doc (
-        summary : "get all user(userID) post"
+        summary : "get all user(userID) post with user liked post"
     )
     @handler GetUserPosts
     get /posts/:user_id(PostsInfoReq) returns (PostsInfoResp);
+}
 
+@server(
+    group : posts
+    prefix : api/v1
+)
+service MovieService {
     @doc (
         summary : "Count all user post"
     )

@@ -5,8 +5,8 @@ import (
 	"github.com/ryantokmanmokmtm/movie-server/internal/models"
 )
 
-func (d *DAO) UpdatePostLiked(ctx context.Context, postLiked *models.PostLiked) error {
-	return postLiked.UpdatePostLiked(ctx, d.engine)
+func (d *DAO) DeletePostLikes(ctx context.Context, postLiked *models.PostLiked) error {
+	return postLiked.RemovePostLikes(ctx, d.engine)
 }
 
 func (d *DAO) FindOnePostLiked(ctx context.Context, userId, postId uint) (*models.PostLiked, error) {

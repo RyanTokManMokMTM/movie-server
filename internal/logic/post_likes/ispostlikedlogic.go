@@ -48,7 +48,7 @@ func (l *IsPostLikedLogic) IsPostLiked(req *types.IsPostLikedReq) (resp *types.I
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
-	postLiked, err := l.svcCtx.DAO.FindOnePostLiked(l.ctx, userID, req.PostId)
+	_, err = l.svcCtx.DAO.FindOnePostLiked(l.ctx, userID, req.PostId)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return &types.IsPostLikedResp{
@@ -58,11 +58,11 @@ func (l *IsPostLikedLogic) IsPostLiked(req *types.IsPostLikedReq) (resp *types.I
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
-	if postLiked.State == 0 {
-		return &types.IsPostLikedResp{
-			IsLiked: false,
-		}, nil
-	}
+	//if postLiked.State == 0 {
+	//	return &types.IsPostLikedResp{
+	//		IsLiked: false,
+	//	}, nil
+	//}
 
 	return &types.IsPostLikedResp{
 		IsLiked: true,

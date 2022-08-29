@@ -47,6 +47,17 @@ func (l *GetAllPostLogic) GetAllPost(req *types.AllPostsInfoReq) (resp *types.Al
 	//Post List
 	var posts []types.PostInfo
 	for _, v := range res {
+
+		var isPostLiked uint = 0
+		_, err := l.svcCtx.DAO.FindOnePostLiked(l.ctx, userID, v.PostId)
+		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
+		}
+
+		if !errors.Is(err, gorm.ErrRecordNotFound) {
+			isPostLiked = 1
+		}
+
 		posts = append(posts, types.PostInfo{
 			PostID:           v.PostId,
 			PostDesc:         v.PostDesc,
@@ -57,13 +68,14 @@ func (l *GetAllPostLogic) GetAllPost(req *types.AllPostsInfoReq) (resp *types.Al
 				Title:      v.MovieInfo.Title,
 				PosterPath: v.MovieInfo.PosterPath,
 			},
-			PostLikeCount: v.PostLike,
+			PostLikeCount: int64(len(v.PostsLiked)),
 			PostUser: types.PostUserInfo{
 				UserID:     v.UserInfo.Id,
 				UserName:   v.UserInfo.Name,
 				UserAvatar: v.UserInfo.Avatar,
 			},
-			CreateAt: v.CreatedAt.Unix(),
+			CreateAt:          v.CreatedAt.Unix(),
+			IsPostLikedByUser: isPostLiked,
 		})
 	}
 
