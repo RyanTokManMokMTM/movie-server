@@ -1,12 +1,12 @@
 syntax = "v1"
 
-//info(
-//    title: "type title here"
-//    desc: "type desc here"
-//    author: "type author here"
-//    email: "type email here"
-//    version: "type version here"
-//)
+info(
+    title: "movie api"
+    desc: "movie api"
+    author: "Jackson.tmm"
+    email: "ryantokmanmokmtm"
+    version: "demo"
+)
 
 // Request and reponse
 type (
@@ -87,23 +87,33 @@ type (
 
 )
 service MovieService{
-    @doc "get movie by genre"
+    @doc (
+        summary : "get movie by genre"
+    )
     @handler MoviePageListByGenre
     get /movies/list/:genre_id(MoviePageListByGenreReq) returns (MoviePageListByGenreResp);
 
-    @doc "get movie by genre"
+    @doc (
+        summary : "get movie by genre"
+    )
     @handler MovieGenreByMovieID
     get /movies/genres/:movie_id(MovieGenresInfoReq) returns (MovieGenresInfoResp);
 
-    @doc "get movie detail"
+    @doc (
+        summary : "get movie detail"
+    )
     @handler GetMovieDetail
     get /movies/:movie_id(MovieDetailReq) returns (MovieDetailResp);
 
-    @doc "get total movie liked by user"
+    @doc (
+        summary  : "get total movie liked by user"
+    )
     @handler  GetMovieLikedCount
     get /movie/count/liked/:movie_id(CountMovieLikesReq) returns (CountMovieLikedResp);
 
-    @doc "get movie collected by user"
+    @doc (
+        summary : "get movie collected by user"
+    )
     @handler GetMovieCollectedCount
     get /movie/count/collected/:movie_id(CountMovieCollectedReq) returns (CountMovieCollectedResp);
 }

@@ -2,6 +2,7 @@ package models
 
 import (
 	"context"
+	"github.com/pkg/errors"
 	"github.com/zeromicro/go-zero/core/logx"
 	"gorm.io/gorm"
 )
@@ -22,7 +23,10 @@ type User struct {
 	Friends []User `gorm:"many2many:friends;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 	//Genres []GenreInfo `gorm` //one u
 	//use may have a lot of post
-	Posts []Post `gorm:"foreignKey:UserId;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+	Posts           []Post      `gorm:"foreignKey:UserId;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+	PostsLiked      []Post      `gorm:"many2many:post_liked;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+	CommentLiked    []Comment   `gorm:"many2many:comment_liked;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+	InterestedGenre []GenreInfo `gorm:"many2many:users_genres;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 	DefaultModel
 }
 
@@ -81,4 +85,152 @@ func (m *User) GetUserLikedMovies(ctx context.Context, db *gorm.DB) error {
 		return err
 	}
 	return nil
+}
+
+//RETURN A LIST OF USERINFO
+func (m *User) GetFollowingList(ctx context.Context, db *gorm.DB) ([]*User, error) {
+
+	//get friend list id
+	var userId []uint
+	if err := db.Debug().WithContext(ctx).Model(&Friend{}).Select("friend_id").Where("user_id = ?", m.Id).Find(&userId).Error; err != nil {
+		return nil, err
+	}
+
+	var users []*User
+	if err := db.Debug().WithContext(ctx).Model(&m).Where("id IN (?)", userId).Find(&users).Error; err != nil {
+		return nil, err
+	}
+
+	return users, nil
+}
+
+//RETURN A LIST OF USERINFO
+func (m *User) GetFollowedList(ctx context.Context, db *gorm.DB) ([]*User, error) {
+
+	//get friend list id
+	var userId []uint
+	if err := db.Debug().WithContext(ctx).Model(&Friend{}).Select("user_id").Where("friend_id = ?", m.Id).Find(&userId).Error; err != nil {
+		return nil, err
+	}
+
+	var users []*User
+	if err := db.Debug().WithContext(ctx).Model(&m).Where("id IN (?)", userId).Find(&users).Error; err != nil {
+		return nil, err
+	}
+	return users, nil
+}
+
+//PostLiked
+func (m *User) CreateUserPostLiked(ctx context.Context, db *gorm.DB, post *Post) error {
+	return db.Debug().WithContext(ctx).Model(&m).Omit("PostsLiked.*").Association("PostsLiked").Append(post)
+}
+
+//CommentLiked
+func (m *User) CreateUserCommentLiked(ctx context.Context, db *gorm.DB, comment *Comment) error {
+	return db.Debug().WithContext(ctx).Model(&m).Omit("CommentLiked.*").Association("CommentLiked").Append(comment)
+}
+
+//CreateUserGenre
+func (m *User) UpdateUserGenreTrans(ctx context.Context, db *gorm.DB, ids []uint) error {
+	/*
+		Getting All user genre first
+
+		remove all existed,but will not exist after update~
+	*/
+
+	return db.Debug().WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		user := &User{}
+		logx.Infof("transaction begin...")
+
+		//getting all existing genre
+		if err := tx.Debug().WithContext(ctx).Preload("InterestedGenre").Take(&user, m.Id).Error; err != nil {
+			return err
+		}
+
+		//getting genre by ids
+		var genres []GenreInfo //all genreInfo need to be inserted into user genre db
+		if err := tx.Debug().WithContext(ctx).Model(&GenreInfo{}).Where("genre_id IN (?)", ids).Find(&genres).Error; err != nil {
+			return err
+		}
+
+		if len(genres) != len(ids) {
+			return errors.New("some genre_id is not exist ")
+		}
+
+		//logx.Infof("Found Genres : %+v", genres)
+
+		//user genre not contain in genres
+		genresToRemove := filter(user.InterestedGenre, func(genre GenreInfo) bool {
+			return !contains(genres, genre)
+		})
+
+		if len(genresToRemove) > 0 {
+			if err := tx.Debug().WithContext(ctx).Model(&user).Association("InterestedGenre").Delete(&genresToRemove); err != nil {
+				return err
+			}
+		}
+
+		//now we need to update
+		//getting new user Genres ->
+		if err := tx.Debug().WithContext(ctx).Preload("InterestedGenre").Take(&user, m.Id).Error; err != nil {
+			return err
+		}
+
+		genresToBeUpdate := filter(genres, func(genre GenreInfo) bool {
+			return !contains(user.InterestedGenre, genre)
+		})
+
+		//logx.Infof("find genre to append to%+v", genresToBeUpdate)
+		if len(genresToBeUpdate) > 0 {
+			for _, ug := range genresToBeUpdate {
+				if err := tx.Debug().WithContext(ctx).Model(&user).Omit("InterestedGenre.*").Association("InterestedGenre").Append(&ug); err != nil {
+					return err
+				}
+			}
+		}
+		logx.Infof("transaction Completed...")
+		return nil
+	})
+
+	//return db.Debug().WithContext(ctx).Model(&m).Omit("GenreInfo.*").Association("GenreInfo").Append(genre)
+}
+
+func (m *User) FindUserGenres(ctx context.Context, db *gorm.DB) (*[]GenreInfo, error) {
+	var genreIds []uint
+
+	if err := db.Debug().WithContext(ctx).Model(&m).Select("genre_info_genre_id").Association("InterestedGenre").Find(&genreIds); err != nil {
+		return nil, err
+	}
+
+	var genreInfos []GenreInfo
+	if err := db.Debug().WithContext(ctx).Model(&genreInfos).Where("genre_id IN (?)", genreIds).Find(&genreInfos).Error; err != nil {
+		return nil, err
+	}
+
+	return &genreInfos, nil
+}
+
+//Util tool
+func filter(elements []GenreInfo, handler func(genre GenreInfo) bool) []GenreInfo {
+	i := 0
+	for _, ele := range elements {
+		if handler(ele) {
+			elements[i] = ele
+			i++
+		}
+	}
+
+	return elements[:i]
+}
+
+func contains(elements []GenreInfo, target GenreInfo) bool {
+
+	//elements contain target??
+	for _, ele := range elements {
+		if ele.GenreId == target.GenreId {
+			return true
+		}
+	}
+
+	return false //not found
 }

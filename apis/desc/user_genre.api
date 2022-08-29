@@ -1,0 +1,40 @@
+syntax = "v1"
+
+type (
+    UpdateUserGenreReq{
+        GenreIds []uint `json:"genre_ids"`
+    }
+    UpdateUserGenreResp{}
+
+    GetUserGenreReq {
+        UserId uint `path:"user_id"`
+    }
+    GetUserGenreResp {
+        UserGenres []GenreInfo `json:"user_genres"`
+    }
+)
+
+@server (
+    group : user_genre
+    jwt : Auth
+    prefix : /api/v1
+)
+service MovieService {
+    @doc (
+        summary :"Update User Genre"
+    )
+    @handler UpdateUserGenre
+    patch /user/genres(UpdateUserGenreReq) returns (UpdateUserGenreResp);
+}
+
+@server (
+    group : user_genre
+    prefix : /api/v1
+)
+service MovieService {
+    @doc (
+        summary :  "Get User Genre"
+    )
+    @handler GetUserGenre
+    get /user/genres/:user_id(GetUserGenreReq) returns (GetUserGenreResp);
+}

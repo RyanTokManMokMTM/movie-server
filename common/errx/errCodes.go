@@ -55,6 +55,16 @@ const (
 	UNFOLLOW_FRIEND_ERROR uint32 = 160002
 )
 
+//PostLiked Service
+const (
+	NOT_LIKE_POST_YET uint32 = 1700001
+)
+
+//CommentLiked Service
+const (
+	NOT_LIKE_COMMENT_YET uint32 = 180001
+)
+
 //WebSocket error
 const (
 	WEBSOCKET_CONNECTION_ERROR    uint32 = 200001

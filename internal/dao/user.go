@@ -56,3 +56,30 @@ func (d *DAO) CreateLikedMovie(ctx context.Context, movieID, userID uint) error 
 
 	return user.CreateLikedMovie(ctx, d.engine, movie)
 }
+
+func (d *DAO) FindUserFollowingList(ctx context.Context, userId uint) ([]*models.User, error) {
+	user := &models.User{
+		Id: userId,
+	}
+
+	return user.GetFollowingList(ctx, d.engine)
+}
+
+func (d *DAO) FindUserFollowedList(ctx context.Context, userId uint) ([]*models.User, error) {
+	f := &models.User{
+		Id: userId,
+	}
+
+	return f.GetFollowedList(ctx, d.engine)
+}
+
+func (d *DAO) CreatePostLiked(ctx context.Context, userId uint, postId *models.Post) error {
+	u := &models.User{Id: userId}
+	return u.CreateUserPostLiked(ctx, d.engine, postId)
+}
+
+func (d *DAO) CreateCommentLiked(ctx context.Context, userId uint, comment *models.Comment) error {
+	u := &models.User{Id: userId}
+
+	return u.CreateUserCommentLiked(ctx, d.engine, comment)
+}

@@ -5,13 +5,16 @@ import (
 	"net/http"
 
 	comment "github.com/ryantokmanmokmtm/movie-server/internal/handler/comment"
+	comment_likes "github.com/ryantokmanmokmtm/movie-server/internal/handler/comment_likes"
 	custom_list "github.com/ryantokmanmokmtm/movie-server/internal/handler/custom_list"
 	friend "github.com/ryantokmanmokmtm/movie-server/internal/handler/friend"
 	health "github.com/ryantokmanmokmtm/movie-server/internal/handler/health"
 	likedMovie "github.com/ryantokmanmokmtm/movie-server/internal/handler/likedMovie"
 	movie "github.com/ryantokmanmokmtm/movie-server/internal/handler/movie"
+	post_likes "github.com/ryantokmanmokmtm/movie-server/internal/handler/post_likes"
 	posts "github.com/ryantokmanmokmtm/movie-server/internal/handler/posts"
 	user "github.com/ryantokmanmokmtm/movie-server/internal/handler/user"
+	user_genre "github.com/ryantokmanmokmtm/movie-server/internal/handler/user_genre"
 	websocket "github.com/ryantokmanmokmtm/movie-server/internal/handler/websocket"
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
 
@@ -61,6 +64,16 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodGet,
 				Path:    "/user/followed/:user_id",
 				Handler: user.CountFollowedUserHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/user/following/list/:user_id",
+				Handler: user.GetUserFollowingListHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/user/followed/list/:user_id",
+				Handler: user.GetUserFollowedListHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/api/v1"),
@@ -297,6 +310,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/comments/:post_id",
 				Handler: comment.GetPostCommentHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/comments/reply/:comment_id",
+				Handler: comment.GetReplyCommentHandler(serverCtx),
+			},
 		},
 		rest.WithPrefix("/api/v1"),
 	)
@@ -330,6 +348,95 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/api/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodPost,
+				Path:    "/liked/comment",
+				Handler: comment_likes.CreateCommentLikesHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPatch,
+				Path:    "/liked/comment",
+				Handler: comment_likes.RemoveCommentLikesHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/liked/comment/:comment_id",
+				Handler: comment_likes.IsCommentLikedHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/api/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/liked/comment/count/:comment_id",
+				Handler: comment_likes.CountCommentLikesHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/api/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodPost,
+				Path:    "/liked/post",
+				Handler: post_likes.CreatePostLikesHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPatch,
+				Path:    "/liked/post",
+				Handler: post_likes.RemovePostLikesHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/liked/post/:post_id",
+				Handler: post_likes.IsPostLikedHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/api/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/liked/post/count/:post_id",
+				Handler: post_likes.CountPostLikesHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/api/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodPatch,
+				Path:    "/user/genres",
+				Handler: user_genre.UpdateUserGenreHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/api/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/user/genres/:user_id",
+				Handler: user_genre.GetUserGenreHandler(serverCtx),
+			},
+		},
 		rest.WithPrefix("/api/v1"),
 	)
 }

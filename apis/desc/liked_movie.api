@@ -1,12 +1,12 @@
 syntax = "v1"
 
-//info(
-//    title: "type title here"
-//    desc: "type desc here"
-//    author: "type author here"
-//    email: "type email here"
-//    version: "type version here"
-//)
+info(
+    title: "like movie api"
+    desc: "like movie api"
+    author: "Jackson.tmm"
+    email: "ryantokmanmokmtm"
+    version: "demo"
+)
 
 type (
     LikedMovieReq {
@@ -64,7 +64,9 @@ type (
     prefix : /api/v1
 )
 service MovieService {
-    @doc "Get all user liked movie info as a list"
+    @doc (
+        summary : "Get all user liked movie info as a list"
+    )
     @handler GetUserLikedMovieList
     get /liked/movies/:user_id(AllUserLikedMoviesReq) returns (AllUserAllLikedMoviesResp);
 }
@@ -75,15 +77,21 @@ service MovieService {
     jwt : Auth
 )
 service MovieService {
-    @doc "Create user liked movie or Update is exist"
+    @doc (
+        summary : "Create user liked movie or Update is exist"
+    )
     @handler LikedMovie
     post /liked/movie(LikedMovieReq) returns (LikedMovieResp);
 //
-    @doc "remove user liked movie - update state "
+    @doc (
+        summary : "remove user liked movie - update state "
+    )
     @handler RemoveLikedMovie
     patch /liked/movie(RemoveLikedMovieReq) returns (RemoveLikedMovieResp);
 
-    @doc "Find Liked Movie"
+    @doc (
+        summary : "Find Liked Movie"
+    )
     @handler IsLikedMovie
     get /liked/movie/:movie_id(IsLikedMovieReq) returns (IsLikedMovieResp);
 }

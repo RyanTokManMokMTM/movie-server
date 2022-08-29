@@ -1,11 +1,11 @@
 syntax = "v1"
 
 info(
-    title: "follow or unfollow user service"
-    desc: "follow or unfollow user service"
-//    author: "type author here"
-//    email: "type email here"
-//    version: "type version here"
+    title: "follow or unfollow user API"
+    desc: "follow or unfollow user API"
+    author: "Jackson.tmm"
+    email: "ryantokmanmokmtm"
+    version: "demo"
 )
 
 type (
@@ -47,29 +47,22 @@ type (
     jwt : Auth
 )
 service MovieService {
-    @doc "Add New Friend to user following list"
+    @doc (
+        summary : "Add New Friend to user following list"
+    )
     @handler CreateNewFriend
     post /friend(CreateNewFriendReq) returns (CreateNewFriendResp);
 
-    @doc "Remote a followed friend from following list"
+    @doc (
+        summary : "Remote a followed friend from following list"
+    )
     @handler RemoveFriend
     patch /friend(RemoveFriendReq) returns (RemoveFriendResp);
 
-    @doc "get user is followed by user"
+    @doc (
+        summary : "get user is followed by user"
+    )
     @handler GetOneFriend
     get /friend/:friend_id(GetOneFriendReq) returns (GetOneFriendResp);
-}
 
-//@server (
-//    group : friend
-//    prefix : /api/v1
-//)
-//service MovieService {
-//    @doc "Count how many users have been followed by user"
-//    @handler CountFollowingUser
-//    get /friend/:user_id/following(CountFollowingReq) returns (CountFollowingResp);
-//
-//    @doc "Count how many users is following the user(owner)"
-//    @handler CountFollowedUser
-//    get /friend/:user_id/followed(CountFollowedReq) returns (CountFollowedResp);
-//}
+}

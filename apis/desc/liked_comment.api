@@ -1,0 +1,75 @@
+syntax = "v1"
+
+info(
+    title: "like comment api"
+    desc: "like comment api"
+    author: "Jackson.tmm"
+    email: "ryantokmanmokmtm"
+    version: "demo"
+)
+
+type (
+    CreateCommentLikesReq {
+        CommentId uint `json:"comment_id"`
+    }
+    CreateCommentLikesResp {}
+
+    RemoveCommentLikesReq {
+        CommentId uint `json:"comment_id"`
+    }
+    RemoveCommentLikesResq {}
+
+    IsCommentLikedReq {
+        CommentId uint `path:"comment_id"`
+    }
+    IsCommentLikedResp {
+        IsLiked bool `json:"is_liked"`
+    }
+
+    CountCommentLikesReq {
+        CommentId uint `path:"comment_id"`
+
+    }
+    CountCommentLikesResp {
+        TotalLikes uint `json:"total_likes"`
+    }
+)
+
+
+
+@server (
+    group : comment_likes
+    jwt : Auth
+    prefix : /api/v1
+)
+service  MovieService{
+    @doc (
+        summary : "create comment likes"
+    )
+    @handler CreateCommentLikes
+    post /liked/comment(CreateCommentLikesReq) returns (CreateCommentLikesResp);
+
+    @doc (
+        summary  : "remove comment likes"
+    )
+    @handler RemoveCommentLikes
+    patch /liked/comment(RemoveCommentLikesReq) returns (RemoveCommentLikesResq);
+
+    @doc (
+        summary : "is comment liked by user"
+    )
+    @handler IsCommentLiked
+    get /liked/comment/:comment_id(IsCommentLikedReq) returns (IsCommentLikedResp);
+}
+
+@server (
+    group : comment_likes
+    prefix : /api/v1
+)
+service  MovieService{
+    @doc (
+        summary : "Count total comment likes"
+    )
+    @handler CountCommentLikes
+    get /liked/comment/count/:comment_id(CountCommentLikesReq) returns (CountCommentLikesResp);
+}

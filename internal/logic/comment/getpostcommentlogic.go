@@ -45,21 +45,6 @@ func (l *GetPostCommentLogic) GetPostComment(req *types.GetPostCommentsReq) (res
 
 	var comments []types.CommentInfo
 	for _, v := range commentList {
-		var replyComment []types.CommentInfo
-		for _, reply := range v.Comments {
-			replyComment = append(replyComment, types.CommentInfo{
-				CommentID: reply.CommentID,
-				UserInfo: types.CommentUser{
-					UserID:     reply.User.Id,
-					UserName:   reply.User.Name,
-					UserAvatar: reply.User.Avatar,
-				},
-				//PostID:   v.PostID,
-				Comment:  reply.Comment,
-				UpdateAt: reply.UpdatedAt.Unix(),
-			})
-		}
-
 		comments = append(comments, types.CommentInfo{
 			CommentID: v.CommentID,
 			UserInfo: types.CommentUser{
@@ -69,7 +54,7 @@ func (l *GetPostCommentLogic) GetPostComment(req *types.GetPostCommentsReq) (res
 			},
 			//PostID:   v.PostID,
 			Comment:      v.Comment,
-			ReplyComment: replyComment,
+			ReplyComment: uint(len(v.Comments)),
 			UpdateAt:     v.UpdatedAt.Unix(),
 		})
 	}

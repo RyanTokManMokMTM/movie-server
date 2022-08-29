@@ -58,9 +58,3 @@ func (m *Friend) CountFollowedUser(ctx context.Context, db *gorm.DB) (int64, err
 	}
 	return count, nil
 }
-
-//RETURN A LIST OF USERINFO
-func (m *Friend) GetFollowingList(ctx context.Context, db *gorm.DB) {}
-
-//RETURN A LIST OF USERINFO
-func (m *Friend) GetFollowedList(ctx context.Context, db *gorm.DB) {}

@@ -50,7 +50,7 @@ func (m *Post) DeletePost(ctx context.Context, db *gorm.DB) error {
 
 //Get PostInfo by postID
 func (m *Post) GetPostInfo(ctx context.Context, db *gorm.DB) error {
-	if err := db.Debug().WithContext(ctx).Model(&m).Where("post_id = ?", m.PostId).Preload("MovieInfo").Preload("UserInfo").Preload("Comments").First(&m).Error; err != nil {
+	if err := db.Debug().WithContext(ctx).Model(&m).Preload("MovieInfo").Preload("UserInfo").Preload("Comments").First(&m).Error; err != nil {
 		return err
 	}
 	return nil

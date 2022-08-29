@@ -1,0 +1,75 @@
+syntax = "v1"
+
+info(
+    title: "like post api"
+    desc: "like post api"
+    author: "Jackson.tmm"
+    email: "ryantokmanmokmtm"
+    version: "demo"
+)
+
+type (
+    CreatePostLikesReq {
+        PostId uint `json:"post_id"`
+    }
+    CreatePostLikesResp {}
+
+    RemovePostLikesReq {
+        PostId uint `json:"post_id"`
+    }
+    RemovePostLikesResq {}
+
+    IsPostLikedReq {
+        PostId uint `path:"post_id"`
+    }
+    IsPostLikedResp {
+        IsLiked bool `json:"is_liked"`
+    }
+
+    CountPostLikesReq {
+        PostId uint `path:"post_id"`
+    }
+    CountPostLikesResp {
+        TotalLikes uint `json:"total_likes"`
+    }
+)
+
+@server (
+    group : post_likes
+    jwt : Auth
+    prefix : /api/v1
+)
+service  MovieService{
+    @doc (
+        summary : "create Post likes"
+    )
+    @handler CreatePostLikes
+    post /liked/post(CreatePostLikesReq) returns (CreatePostLikesResp);
+
+    @doc (
+        summary : "remove Post likes"
+    )
+    @handler RemovePostLikes
+    patch /liked/post(RemovePostLikesReq) returns (RemovePostLikesResq);
+
+    @doc (
+        summary : "is post liked by user"
+    )
+    @handler IsPostLiked
+    get /liked/post/:post_id(IsPostLikedReq) returns (IsPostLikedResp);
+}
+
+@server (
+    group : post_likes
+    prefix : /api/v1
+)
+service  MovieService{
+    @doc (
+        summary : "Count totl post likes"
+    )
+    @handler CountPostLikes
+    get /liked/post/count/:post_id(CountPostLikesReq) returns (CountPostLikesResp);
+}
+
+
+

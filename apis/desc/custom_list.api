@@ -1,13 +1,12 @@
 syntax = "v1"
 //
-//info(
-//    title: "type title here"
-//    desc: "type desc here"
-//    author: "type author here"
-//    email: "type email here"
-//    version: "type version here"
-//)
-
+info(
+    title: "custom list API"
+    desc: "custom list API"
+    author: "Jackson.tmm"
+    email: "ryantokmanmokmtm"
+    version: "demo"
+)
 
 type (
     CreateCustomListReq {
@@ -84,11 +83,15 @@ type (
     prefix : /api/v1
 )
 service MovieService {
-    @doc "Get All User List by user ID"
+    @doc (
+        summary : "Get All User List by user ID"
+    )
     @handler GetAllUserList
     get /lists/:user_id(AllCustomListReq) returns (AllCustomListResp);
 
-    @doc "Get a custom list by list id"
+    @doc (
+        summary : "Get a custom list by list id"
+    )
     @handler GetListByID
     get /list/:list_id(UserListReq) returns (UserListResp);
 
@@ -100,27 +103,39 @@ service MovieService {
     jwt : Auth
 )
 service MovieService {
-    @doc "Create a new custom list"
+    @doc (
+        summary :"Get a custom list by list id"
+    )
     @handler CreateCustomList
     post /lists(CreateCustomListReq) returns (CreateCustomListResp);
 
-    @doc "Update a custom list"
+    @doc (
+        summary : "Update a custom list"
+    )
     @handler UpdateCustomList
     patch /lists(UpdateCustomListReq) returns (UpdateCustomListResp);
 
-    @doc "Delete a custom list"
+    @doc (
+        summary : "Delete a custom list"
+    )
     @handler DeleteCustomList
     delete /lists(DeleteCustomListReq) returns (DeleteCustomListResp);
 
-    @doc "Add Movie To List"
+    @doc (
+        summary : "Add Movie To List"
+    )
     @handler InsertMovieToList
     post /list/:list_id/movie/:movie_id(InsertMovieReq) returns (InsertMovieResp);
 
-    @doc "Remove Movie From List"
+    @doc (
+        summary : "Remove Movie From List"
+    )
     @handler RemoveMovieFromList
     delete /list/:list_id/movie/:movie_id(RemoveMovieReq) returns (RemoveMovieResp);
 
-    @doc "Find one movie from list - from any list"
+    @doc (
+        summary : "Find one movie from list - from any list"
+    )
     @handler GetOneMovieFromUserList
     get /list/movie/:movie_id(GetOneMovieFromUserListReq) returns (GetOneMovieFromUserListResp);
 

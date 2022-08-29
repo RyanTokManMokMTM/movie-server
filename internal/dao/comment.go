@@ -55,6 +55,14 @@ func (d *DAO) FindPostComments(ctx context.Context, postID uint) ([]*models.Comm
 	return list, err
 }
 
+func (d *DAO) FindReplyComments(ctx context.Context, commentID uint) ([]*models.Comment, error) {
+	comment := models.Comment{
+		ReplyTo: sql.NullInt64{Int64: int64(commentID), Valid: true},
+	}
+
+	return comment.FindReplyComments(ctx, d.engine)
+}
+
 func (d *DAO) FindOneComment(ctx context.Context, commentID uint) (*models.Comment, error) {
 	comment := &models.Comment{
 		CommentID: commentID,

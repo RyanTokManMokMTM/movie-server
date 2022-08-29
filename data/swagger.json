@@ -1,0 +1,3275 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "movie service api",
+    "description": "movie service api",
+    "version": "demo"
+  },
+  "host": "127.0.0.1",
+  "basePath": "/api/v1",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/v1/comments/reply/{comment_id}": {
+      "get": {
+        "summary": "Get Reply Comments by id",
+        "operationId": "GetReplyComment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetReplyCommentResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "comment_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "comment"
+        ]
+      }
+    },
+    "/api/v1/comments/{comment_id}": {
+      "delete": {
+        "summary": "Delete Comment",
+        "operationId": "DeleteComment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/DeleteCommentResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "comment_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DeleteCommentReq"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "comment"
+        ]
+      },
+      "patch": {
+        "summary": "Update Comment",
+        "operationId": "UpdateComment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/UpdateCommentResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "comment_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdateCommentReq"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "comment"
+        ]
+      }
+    },
+    "/api/v1/comments/{post_id}": {
+      "get": {
+        "summary": "Get Post Comments",
+        "operationId": "GetPostComment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetPostCommentsResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "post_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "comment"
+        ]
+      },
+      "post": {
+        "summary": "Create Comment",
+        "operationId": "CreateComment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CreateCommentResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "post_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateCommentReq"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "comment"
+        ]
+      }
+    },
+    "/api/v1/comments/{post_id}/reply/{comment_id}": {
+      "post": {
+        "summary": "Create A New Reply Comment",
+        "operationId": "CreateReplyComment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CreateCommentResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "post_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "comment_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateReplyCommentReq"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "comment"
+        ]
+      }
+    },
+    "/api/v1/friend": {
+      "post": {
+        "summary": "Add New Friend to user following list",
+        "operationId": "CreateNewFriend",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CreateNewFriendResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateNewFriendReq"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "friend"
+        ]
+      },
+      "patch": {
+        "summary": "Remote a followed friend from following list",
+        "operationId": "RemoveFriend",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/RemoveFriendResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RemoveFriendReq"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "friend"
+        ]
+      }
+    },
+    "/api/v1/friend/{friend_id}": {
+      "get": {
+        "summary": "get user is followed by user",
+        "operationId": "GetOneFriend",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetOneFriendResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "friend_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "friend"
+        ]
+      }
+    },
+    "/api/v1/liked/comment": {
+      "post": {
+        "summary": "create comment likes",
+        "operationId": "CreateCommentLikes",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CreateCommentLikesResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateCommentLikesReq"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "comment_likes"
+        ]
+      },
+      "patch": {
+        "summary": "remove comment likes",
+        "operationId": "RemoveCommentLikes",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/RemoveCommentLikesResq"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RemoveCommentLikesReq"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "comment_likes"
+        ]
+      }
+    },
+    "/api/v1/liked/comment/count/{comment_id}": {
+      "get": {
+        "summary": "Count total comment likes",
+        "operationId": "CountCommentLikes",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CountCommentLikesResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "comment_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "comment_likes"
+        ]
+      }
+    },
+    "/api/v1/liked/comment/{comment_id}": {
+      "get": {
+        "summary": "is comment liked by user",
+        "operationId": "IsCommentLiked",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/IsCommentLikedResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "comment_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "comment_likes"
+        ]
+      }
+    },
+    "/api/v1/liked/movie": {
+      "post": {
+        "summary": "Create user liked movie or Update is exist",
+        "operationId": "LikedMovie",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/LikedMovieResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/LikedMovieReq"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "likedMovie"
+        ]
+      },
+      "patch": {
+        "summary": "remove user liked movie - update state ",
+        "operationId": "RemoveLikedMovie",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/RemoveLikedMovieResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RemoveLikedMovieReq"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "likedMovie"
+        ]
+      }
+    },
+    "/api/v1/liked/movie/{movie_id}": {
+      "get": {
+        "summary": "Find Liked Movie",
+        "operationId": "IsLikedMovie",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/IsLikedMovieResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "movie_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "likedMovie"
+        ]
+      }
+    },
+    "/api/v1/liked/movies/{user_id}": {
+      "get": {
+        "summary": "Get all user liked movie info as a list",
+        "operationId": "GetUserLikedMovieList",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/AllUserAllLikedMoviesResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "likedMovie"
+        ]
+      }
+    },
+    "/api/v1/liked/post": {
+      "post": {
+        "summary": "create Post likes",
+        "operationId": "CreatePostLikes",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CreatePostLikesResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreatePostLikesReq"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "post_likes"
+        ]
+      },
+      "patch": {
+        "summary": "remove Post likes",
+        "operationId": "RemovePostLikes",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/RemovePostLikesResq"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RemovePostLikesReq"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "post_likes"
+        ]
+      }
+    },
+    "/api/v1/liked/post/count/{post_id}": {
+      "get": {
+        "summary": "Count totl post likes",
+        "operationId": "CountPostLikes",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CountPostLikesResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "post_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "post_likes"
+        ]
+      }
+    },
+    "/api/v1/liked/post/{post_id}": {
+      "get": {
+        "summary": "is post liked by user",
+        "operationId": "IsPostLiked",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/IsPostLikedResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "post_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "post_likes"
+        ]
+      }
+    },
+    "/api/v1/list/movie/{movie_id}": {
+      "get": {
+        "summary": "Find one movie from list - from any list",
+        "operationId": "GetOneMovieFromUserList",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetOneMovieFromUserListResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "movie_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "custom_list"
+        ]
+      }
+    },
+    "/api/v1/list/{list_id}": {
+      "get": {
+        "summary": "Get a custom list by list id",
+        "operationId": "GetListByID",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/UserListResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "list_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "custom_list"
+        ]
+      }
+    },
+    "/api/v1/list/{list_id}/movie/{movie_id}": {
+      "delete": {
+        "summary": "Remove Movie From List",
+        "operationId": "RemoveMovieFromList",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/RemoveMovieResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "list_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "movie_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RemoveMovieReq"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "custom_list"
+        ]
+      },
+      "post": {
+        "summary": "Add Movie To List",
+        "operationId": "InsertMovieToList",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/InsertMovieResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "list_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "movie_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/InsertMovieReq"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "custom_list"
+        ]
+      }
+    },
+    "/api/v1/lists": {
+      "delete": {
+        "summary": "Delete a custom list",
+        "operationId": "DeleteCustomList",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/DeleteCustomListResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DeleteCustomListReq"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "custom_list"
+        ]
+      },
+      "post": {
+        "summary": "Get a custom list by list id",
+        "operationId": "CreateCustomList",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CreateCustomListResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateCustomListReq"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "custom_list"
+        ]
+      },
+      "patch": {
+        "summary": "Update a custom list",
+        "operationId": "UpdateCustomList",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/UpdateCustomListResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdateCustomListReq"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "custom_list"
+        ]
+      }
+    },
+    "/api/v1/lists/{user_id}": {
+      "get": {
+        "summary": "Get All User List by user ID",
+        "operationId": "GetAllUserList",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/AllCustomListResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "custom_list"
+        ]
+      }
+    },
+    "/api/v1/movie/count/collected/{movie_id}": {
+      "get": {
+        "summary": "get movie collected by user",
+        "operationId": "GetMovieCollectedCount",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CountMovieCollectedResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "movie_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "movie"
+        ]
+      }
+    },
+    "/api/v1/movie/count/liked/{movie_id}": {
+      "get": {
+        "summary": "get total movie liked by user",
+        "operationId": "GetMovieLikedCount",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CountMovieLikedResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "movie_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "movie"
+        ]
+      }
+    },
+    "/api/v1/movies/genres/{movie_id}": {
+      "get": {
+        "summary": "get movie by genre",
+        "operationId": "MovieGenreByMovieID",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/MovieGenresInfoResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "movie_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "movie"
+        ]
+      }
+    },
+    "/api/v1/movies/list/{genre_id}": {
+      "get": {
+        "summary": "get movie by genre",
+        "operationId": "MoviePageListByGenre",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/MoviePageListByGenreResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "genre_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "movie"
+        ]
+      }
+    },
+    "/api/v1/movies/{movie_id}": {
+      "get": {
+        "summary": "get movie detail",
+        "operationId": "GetMovieDetail",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/MovieDetailResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "movie_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "movie"
+        ]
+      }
+    },
+    "/api/v1/user/avatar": {
+      "patch": {
+        "summary": "update user avatar",
+        "operationId": "UploadUserAvatar",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/UploadImageResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UploadImageReq"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/api/v1/user/cover": {
+      "patch": {
+        "summary": "update user cover",
+        "operationId": "UploadUserCover",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/UploadImageResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UploadImageReq"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/api/v1/user/followed/list/{user_id}": {
+      "get": {
+        "summary": "Get Followed List",
+        "operationId": "GetUserFollowedList",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetFollowedListResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/api/v1/user/followed/{user_id}": {
+      "get": {
+        "summary": "Count how many users is following the user(owner)",
+        "operationId": "CountFollowedUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CountFollowedResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/api/v1/user/following/list/{user_id}": {
+      "get": {
+        "summary": "Get Following List",
+        "operationId": "GetUserFollowingList",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetFollowingListResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/api/v1/user/following/{user_id}": {
+      "get": {
+        "summary": "Count how many users have been followed by user",
+        "operationId": "CountFollowingUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CountFollowingResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/api/v1/user/genres": {
+      "patch": {
+        "summary": "Update User Genre",
+        "operationId": "UpdateUserGenre",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/UpdateUserGenreResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdateUserGenreReq"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "user_genre"
+        ]
+      }
+    },
+    "/api/v1/user/genres/{user_id}": {
+      "get": {
+        "summary": "Get User Genre",
+        "operationId": "GetUserGenre",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetUserGenreResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "user_genre"
+        ]
+      }
+    },
+    "/api/v1/user/info/{id}": {
+      "get": {
+        "summary": "user_info",
+        "operationId": "UserInfo",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/UserInfoResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/api/v1/user/login": {
+      "post": {
+        "summary": "user_login",
+        "operationId": "UserLogin",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/UserLoginResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserLoginReq"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/api/v1/user/profile": {
+      "get": {
+        "summary": "user_profile",
+        "operationId": "UserProfile",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/UserProfileResp"
+            }
+          }
+        },
+        "requestBody": {},
+        "tags": [
+          "user"
+        ]
+      },
+      "patch": {
+        "summary": "update user profile",
+        "operationId": "UpdateUserProfile",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/UpdateProfileResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdateProfileReq"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/api/v1/user/signup": {
+      "post": {
+        "summary": "user_register",
+        "operationId": "UserSignUp",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/UserSignUpResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserSignUpReq"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/ping": {
+      "get": {
+        "summary": "server health check",
+        "operationId": "HealthCheck",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/HealthCheckResp"
+            }
+          }
+        },
+        "requestBody": {},
+        "tags": [
+          "health"
+        ]
+      }
+    },
+    "/ws": {
+      "get": {
+        "summary": "upgrade to websocket",
+        "operationId": "UpgradeToWebSocket",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/UpgradeToWebSocketResp"
+            }
+          }
+        },
+        "requestBody": {},
+        "tags": [
+          "websocket"
+        ]
+      }
+    },
+    "api/v1/post/{post_id}": {
+      "get": {
+        "summary": "Get PostInfo by PostID",
+        "operationId": "GetPostByPostID",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/PostInfoByIdResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "post_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "posts"
+        ]
+      }
+    },
+    "api/v1/posts": {
+      "delete": {
+        "summary": "delete post",
+        "operationId": "DeletePost",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/DeletePostResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DeletePostReq"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "posts"
+        ]
+      },
+      "post": {
+        "summary": "Create Post",
+        "operationId": "CreatePost",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CreatePostResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreatePostReq"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "posts"
+        ]
+      },
+      "patch": {
+        "summary": "Update Post",
+        "operationId": "UpdatePost",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/UpdatePostResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdatePostReq"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "posts"
+        ]
+      }
+    },
+    "api/v1/posts/all": {
+      "get": {
+        "summary": "Get all Post(without self)",
+        "operationId": "GetAllPost",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/AllPostsInfoResp"
+            }
+          }
+        },
+        "requestBody": {},
+        "tags": [
+          "posts"
+        ]
+      }
+    },
+    "api/v1/posts/count/{user_id}": {
+      "get": {
+        "summary": "Count all user post",
+        "operationId": "CountAllUserPost",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CountUserPostsResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "posts"
+        ]
+      }
+    },
+    "api/v1/posts/follow": {
+      "get": {
+        "summary": "Get all following Post(within self)",
+        "operationId": "GetFollowingPost",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/FollowPostsInfoResp"
+            }
+          }
+        },
+        "requestBody": {},
+        "tags": [
+          "posts"
+        ]
+      }
+    },
+    "api/v1/posts/{user_id}": {
+      "get": {
+        "summary": "get all user(userID) post",
+        "operationId": "GetUserPosts",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/PostsInfoResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "posts"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "AllCustomListReq": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "AllCustomListReq",
+      "required": [
+        "user_id"
+      ]
+    },
+    "AllCustomListResp": {
+      "type": "object",
+      "properties": {
+        "lists": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ListInfo"
+          }
+        }
+      },
+      "title": "AllCustomListResp",
+      "required": [
+        "lists"
+      ]
+    },
+    "AllPostsInfoReq": {
+      "type": "object",
+      "title": "AllPostsInfoReq"
+    },
+    "AllPostsInfoResp": {
+      "type": "object",
+      "properties": {
+        "post_info": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PostInfo"
+          }
+        }
+      },
+      "title": "AllPostsInfoResp",
+      "required": [
+        "post_info"
+      ]
+    },
+    "AllUserAllLikedMoviesResp": {
+      "type": "object",
+      "properties": {
+        "liked_movies": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LikedMovieInfo"
+          }
+        }
+      },
+      "title": "AllUserAllLikedMoviesResp",
+      "required": [
+        "liked_movies"
+      ]
+    },
+    "AllUserLikedMoviesReq": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "AllUserLikedMoviesReq",
+      "required": [
+        "user_id"
+      ]
+    },
+    "CommentInfo": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/uint"
+        },
+        "user_info": {
+          "$ref": "#/definitions/CommentUser"
+        },
+        "comment": {
+          "type": "string"
+        },
+        "update_at": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "reply_comments": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "CommentInfo",
+      "required": [
+        "id",
+        "user_info",
+        "comment",
+        "update_at",
+        "reply_comments"
+      ]
+    },
+    "CommentUser": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/uint"
+        },
+        "name": {
+          "type": "string"
+        },
+        "avatar": {
+          "type": "string"
+        }
+      },
+      "title": "CommentUser",
+      "required": [
+        "id",
+        "name",
+        "avatar"
+      ]
+    },
+    "CountCommentLikesReq": {
+      "type": "object",
+      "properties": {
+        "comment_id": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "CountCommentLikesReq",
+      "required": [
+        "comment_id"
+      ]
+    },
+    "CountCommentLikesResp": {
+      "type": "object",
+      "properties": {
+        "total_likes": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "CountCommentLikesResp",
+      "required": [
+        "total_likes"
+      ]
+    },
+    "CountFollowedReq": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "CountFollowedReq",
+      "required": [
+        "user_id"
+      ]
+    },
+    "CountFollowedResp": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "CountFollowedResp",
+      "required": [
+        "total"
+      ]
+    },
+    "CountFollowingReq": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "CountFollowingReq",
+      "required": [
+        "user_id"
+      ]
+    },
+    "CountFollowingResp": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "CountFollowingResp",
+      "required": [
+        "total"
+      ]
+    },
+    "CountMovieCollectedReq": {
+      "type": "object",
+      "properties": {
+        "movie_id": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "CountMovieCollectedReq",
+      "required": [
+        "movie_id"
+      ]
+    },
+    "CountMovieCollectedResp": {
+      "type": "object",
+      "properties": {
+        "total_collected": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "CountMovieCollectedResp",
+      "required": [
+        "total_collected"
+      ]
+    },
+    "CountMovieLikedResp": {
+      "type": "object",
+      "properties": {
+        "total_liked": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "CountMovieLikedResp",
+      "required": [
+        "total_liked"
+      ]
+    },
+    "CountMovieLikesReq": {
+      "type": "object",
+      "properties": {
+        "movie_id": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "CountMovieLikesReq",
+      "required": [
+        "movie_id"
+      ]
+    },
+    "CountPostCommentsReq": {
+      "type": "object",
+      "properties": {
+        "path_id": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "CountPostCommentsReq",
+      "required": [
+        "path_id"
+      ]
+    },
+    "CountPostCommentsResp": {
+      "type": "object",
+      "properties": {
+        "total_comment": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "CountPostCommentsResp",
+      "required": [
+        "total_comment"
+      ]
+    },
+    "CountPostLikedReq": {
+      "type": "object",
+      "properties": {
+        "post_id": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "CountPostLikedReq",
+      "required": [
+        "post_id"
+      ]
+    },
+    "CountPostLikedResp": {
+      "type": "object",
+      "properties": {
+        "total_liked": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "CountPostLikedResp",
+      "required": [
+        "total_liked"
+      ]
+    },
+    "CountPostLikesReq": {
+      "type": "object",
+      "properties": {
+        "post_id": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "CountPostLikesReq",
+      "required": [
+        "post_id"
+      ]
+    },
+    "CountPostLikesResp": {
+      "type": "object",
+      "properties": {
+        "total_likes": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "CountPostLikesResp",
+      "required": [
+        "total_likes"
+      ]
+    },
+    "CountUserPostsReq": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "CountUserPostsReq",
+      "required": [
+        "user_id"
+      ]
+    },
+    "CountUserPostsResp": {
+      "type": "object",
+      "properties": {
+        "total_posts": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "CountUserPostsResp",
+      "required": [
+        "total_posts"
+      ]
+    },
+    "CreateCommentLikesReq": {
+      "type": "object",
+      "properties": {
+        "comment_id": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "CreateCommentLikesReq",
+      "required": [
+        "comment_id"
+      ]
+    },
+    "CreateCommentLikesResp": {
+      "type": "object",
+      "title": "CreateCommentLikesResp"
+    },
+    "CreateCommentReq": {
+      "type": "object",
+      "properties": {
+        "post_id": {
+          "$ref": "#/definitions/uint"
+        },
+        "comment": {
+          "type": "string"
+        }
+      },
+      "title": "CreateCommentReq",
+      "required": [
+        "post_id",
+        "comment"
+      ]
+    },
+    "CreateCommentResp": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/uint"
+        },
+        "create_at": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "CreateCommentResp",
+      "required": [
+        "id",
+        "create_at"
+      ]
+    },
+    "CreateCustomListReq": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "intro": {
+          "type": "string"
+        }
+      },
+      "title": "CreateCustomListReq",
+      "required": [
+        "title",
+        "intro"
+      ]
+    },
+    "CreateCustomListResp": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/uint"
+        },
+        "title": {
+          "type": "string"
+        },
+        "intro": {
+          "type": "string"
+        }
+      },
+      "title": "CreateCustomListResp",
+      "required": [
+        "id",
+        "title",
+        "intro"
+      ]
+    },
+    "CreateNewFriendReq": {
+      "type": "object",
+      "properties": {
+        "friend_id": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "CreateNewFriendReq",
+      "required": [
+        "friend_id"
+      ]
+    },
+    "CreateNewFriendResp": {
+      "type": "object",
+      "title": "CreateNewFriendResp"
+    },
+    "CreatePostLikesReq": {
+      "type": "object",
+      "properties": {
+        "post_id": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "CreatePostLikesReq",
+      "required": [
+        "post_id"
+      ]
+    },
+    "CreatePostLikesResp": {
+      "type": "object",
+      "title": "CreatePostLikesResp"
+    },
+    "CreatePostReq": {
+      "type": "object",
+      "properties": {
+        "post_title": {
+          "type": "string"
+        },
+        "post_desc": {
+          "type": "string"
+        },
+        "movie_id": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "CreatePostReq",
+      "required": [
+        "post_title",
+        "post_desc",
+        "movie_id"
+      ]
+    },
+    "CreatePostResp": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/uint"
+        },
+        "create_time": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "CreatePostResp",
+      "required": [
+        "id",
+        "create_time"
+      ]
+    },
+    "CreateReplyCommentReq": {
+      "type": "object",
+      "properties": {
+        "post_id": {
+          "$ref": "#/definitions/uint"
+        },
+        "comment_id": {
+          "$ref": "#/definitions/uint"
+        },
+        "comment": {
+          "type": "string"
+        }
+      },
+      "title": "CreateReplyCommentReq",
+      "required": [
+        "post_id",
+        "comment_id",
+        "comment"
+      ]
+    },
+    "CreateReplyCommentResp": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/uint"
+        },
+        "create_at": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "CreateReplyCommentResp",
+      "required": [
+        "id",
+        "create_at"
+      ]
+    },
+    "DeleteCommentReq": {
+      "type": "object",
+      "properties": {
+        "comment_id": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "DeleteCommentReq",
+      "required": [
+        "comment_id"
+      ]
+    },
+    "DeleteCommentResp": {
+      "type": "object",
+      "title": "DeleteCommentResp"
+    },
+    "DeleteCustomListReq": {
+      "type": "object",
+      "properties": {
+        "list_id": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "DeleteCustomListReq",
+      "required": [
+        "list_id"
+      ]
+    },
+    "DeleteCustomListResp": {
+      "type": "object",
+      "title": "DeleteCustomListResp"
+    },
+    "DeletePostReq": {
+      "type": "object",
+      "properties": {
+        "post_id": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "DeletePostReq",
+      "required": [
+        "post_id"
+      ]
+    },
+    "DeletePostResp": {
+      "type": "object",
+      "title": "DeletePostResp"
+    },
+    "FollowPostsInfoReq": {
+      "type": "object",
+      "title": "FollowPostsInfoReq"
+    },
+    "FollowPostsInfoResp": {
+      "type": "object",
+      "properties": {
+        "post_info": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PostInfo"
+          }
+        }
+      },
+      "title": "FollowPostsInfoResp",
+      "required": [
+        "post_info"
+      ]
+    },
+    "GenreInfo": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/uint"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "title": "GenreInfo",
+      "required": [
+        "id",
+        "name"
+      ]
+    },
+    "GetFollowedListReq": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "GetFollowedListReq",
+      "required": [
+        "user_id"
+      ]
+    },
+    "GetFollowedListResp": {
+      "type": "object",
+      "properties": {
+        "followed": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UserInfo"
+          }
+        }
+      },
+      "title": "GetFollowedListResp",
+      "required": [
+        "followed"
+      ]
+    },
+    "GetFollowingListReq": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "GetFollowingListReq",
+      "required": [
+        "user_id"
+      ]
+    },
+    "GetFollowingListResp": {
+      "type": "object",
+      "properties": {
+        "following": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UserInfo"
+          }
+        }
+      },
+      "title": "GetFollowingListResp",
+      "required": [
+        "following"
+      ]
+    },
+    "GetOneFriendReq": {
+      "type": "object",
+      "properties": {
+        "friend_id": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "GetOneFriendReq",
+      "required": [
+        "friend_id"
+      ]
+    },
+    "GetOneFriendResp": {
+      "type": "object",
+      "properties": {
+        "is_friend": {
+          "type": "boolean",
+          "format": "boolean"
+        }
+      },
+      "title": "GetOneFriendResp",
+      "required": [
+        "is_friend"
+      ]
+    },
+    "GetOneMovieFromUserListReq": {
+      "type": "object",
+      "properties": {
+        "movie_id": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "GetOneMovieFromUserListReq",
+      "required": [
+        "movie_id"
+      ]
+    },
+    "GetOneMovieFromUserListResp": {
+      "type": "object",
+      "properties": {
+        "list_id": {
+          "$ref": "#/definitions/uint"
+        },
+        "is_movie_in_list": {
+          "type": "boolean",
+          "format": "boolean"
+        }
+      },
+      "title": "GetOneMovieFromUserListResp",
+      "required": [
+        "list_id",
+        "is_movie_in_list"
+      ]
+    },
+    "GetPostCommentsReq": {
+      "type": "object",
+      "properties": {
+        "post_id": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "GetPostCommentsReq",
+      "required": [
+        "post_id"
+      ]
+    },
+    "GetPostCommentsResp": {
+      "type": "object",
+      "properties": {
+        "comments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CommentInfo"
+          }
+        }
+      },
+      "title": "GetPostCommentsResp",
+      "required": [
+        "comments"
+      ]
+    },
+    "GetReplyCommentReq": {
+      "type": "object",
+      "properties": {
+        "comment_id": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "GetReplyCommentReq",
+      "required": [
+        "comment_id"
+      ]
+    },
+    "GetReplyCommentResp": {
+      "type": "object",
+      "properties": {
+        "reply": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CommentInfo"
+          }
+        }
+      },
+      "title": "GetReplyCommentResp",
+      "required": [
+        "reply"
+      ]
+    },
+    "GetUserGenreReq": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "GetUserGenreReq",
+      "required": [
+        "user_id"
+      ]
+    },
+    "GetUserGenreResp": {
+      "type": "object",
+      "properties": {
+        "user_genres": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GenreInfo"
+          }
+        }
+      },
+      "title": "GetUserGenreResp",
+      "required": [
+        "user_genres"
+      ]
+    },
+    "HealthCheckReq": {
+      "type": "object",
+      "title": "HealthCheckReq"
+    },
+    "HealthCheckResp": {
+      "type": "object",
+      "properties": {
+        "result": {
+          "type": "string"
+        }
+      },
+      "title": "HealthCheckResp",
+      "required": [
+        "result"
+      ]
+    },
+    "InsertMovieReq": {
+      "type": "object",
+      "properties": {
+        "list_id": {
+          "$ref": "#/definitions/uint"
+        },
+        "movie_id": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "InsertMovieReq",
+      "required": [
+        "list_id",
+        "movie_id"
+      ]
+    },
+    "InsertMovieResp": {
+      "type": "object",
+      "title": "InsertMovieResp"
+    },
+    "IsCommentLikedReq": {
+      "type": "object",
+      "properties": {
+        "comment_id": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "IsCommentLikedReq",
+      "required": [
+        "comment_id"
+      ]
+    },
+    "IsCommentLikedResp": {
+      "type": "object",
+      "properties": {
+        "is_liked": {
+          "type": "boolean",
+          "format": "boolean"
+        }
+      },
+      "title": "IsCommentLikedResp",
+      "required": [
+        "is_liked"
+      ]
+    },
+    "IsLikedMovieReq": {
+      "type": "object",
+      "properties": {
+        "movie_id": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "IsLikedMovieReq",
+      "required": [
+        "movie_id"
+      ]
+    },
+    "IsLikedMovieResp": {
+      "type": "object",
+      "properties": {
+        "is_liked_movie": {
+          "type": "boolean",
+          "format": "boolean"
+        }
+      },
+      "title": "IsLikedMovieResp",
+      "required": [
+        "is_liked_movie"
+      ]
+    },
+    "IsPostLikedReq": {
+      "type": "object",
+      "properties": {
+        "post_id": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "IsPostLikedReq",
+      "required": [
+        "post_id"
+      ]
+    },
+    "IsPostLikedResp": {
+      "type": "object",
+      "properties": {
+        "is_liked": {
+          "type": "boolean",
+          "format": "boolean"
+        }
+      },
+      "title": "IsPostLikedResp",
+      "required": [
+        "is_liked"
+      ]
+    },
+    "LikedMovieInfo": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/uint"
+        },
+        "movie_name": {
+          "type": "string"
+        },
+        "genres": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GenreInfo"
+          }
+        },
+        "movie_poster": {
+          "type": "string"
+        },
+        "vote_average": {
+          "type": "number",
+          "format": "double"
+        }
+      },
+      "title": "LikedMovieInfo",
+      "required": [
+        "id",
+        "movie_name",
+        "genres",
+        "movie_poster",
+        "vote_average"
+      ]
+    },
+    "LikedMovieReq": {
+      "type": "object",
+      "properties": {
+        "movie_id": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "LikedMovieReq",
+      "required": [
+        "movie_id"
+      ]
+    },
+    "LikedMovieResp": {
+      "type": "object",
+      "title": "LikedMovieResp"
+    },
+    "ListInfo": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/uint"
+        },
+        "title": {
+          "type": "string"
+        },
+        "intro": {
+          "type": "string"
+        },
+        "movie_list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MovieInfo"
+          }
+        }
+      },
+      "title": "ListInfo",
+      "required": [
+        "id",
+        "title",
+        "intro",
+        "movie_list"
+      ]
+    },
+    "MovieDetailInfo": {
+      "type": "object",
+      "properties": {
+        "adult": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "backdrop_path": {
+          "type": "string"
+        },
+        "movie_id": {
+          "$ref": "#/definitions/uint"
+        },
+        "original_language": {
+          "type": "string"
+        },
+        "original_title": {
+          "type": "string"
+        },
+        "overview": {
+          "type": "string"
+        },
+        "popularity": {
+          "type": "number",
+          "format": "double"
+        },
+        "poster_path": {
+          "type": "string"
+        },
+        "release_date": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "run_time": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "video": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "Vote_average": {
+          "type": "number",
+          "format": "double"
+        },
+        "vote_count": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "genres": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GenreInfo"
+          }
+        }
+      },
+      "title": "MovieDetailInfo",
+      "required": [
+        "adult",
+        "backdrop_path",
+        "movie_id",
+        "original_language",
+        "original_title",
+        "overview",
+        "popularity",
+        "poster_path",
+        "release_date",
+        "title",
+        "run_time",
+        "video",
+        "Vote_average",
+        "vote_count",
+        "genres"
+      ]
+    },
+    "MovieDetailReq": {
+      "type": "object",
+      "properties": {
+        "movie_id": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "MovieDetailReq",
+      "required": [
+        "movie_id"
+      ]
+    },
+    "MovieDetailResp": {
+      "type": "object",
+      "properties": {
+        "info": {
+          "$ref": "#/definitions/MovieDetailInfo"
+        }
+      },
+      "title": "MovieDetailResp",
+      "required": [
+        "info"
+      ]
+    },
+    "MovieGenresInfoReq": {
+      "type": "object",
+      "properties": {
+        "movie_id": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "MovieGenresInfoReq",
+      "required": [
+        "movie_id",
+        "numeric"
+      ]
+    },
+    "MovieGenresInfoResp": {
+      "type": "object",
+      "properties": {
+        "genres": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GenreInfo"
+          }
+        }
+      },
+      "title": "MovieGenresInfoResp",
+      "required": [
+        "genres"
+      ]
+    },
+    "MovieInfo": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/uint"
+        },
+        "poster": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "vote_average": {
+          "type": "number",
+          "format": "double"
+        }
+      },
+      "title": "MovieInfo",
+      "required": [
+        "id",
+        "poster",
+        "title",
+        "vote_average"
+      ]
+    },
+    "MoviePageListByGenreReq": {
+      "type": "object",
+      "properties": {
+        "genre_id": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "MoviePageListByGenreReq",
+      "required": [
+        "genre_id",
+        "numeric"
+      ]
+    },
+    "MoviePageListByGenreResp": {
+      "type": "object",
+      "properties": {
+        "movie_infos": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MovieInfo"
+          }
+        }
+      },
+      "title": "MoviePageListByGenreResp",
+      "required": [
+        "movie_infos"
+      ]
+    },
+    "PostInfo": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/uint"
+        },
+        "user_info": {
+          "$ref": "#/definitions/PostUserInfo"
+        },
+        "post_title": {
+          "type": "string"
+        },
+        "post_desc": {
+          "type": "string"
+        },
+        "post_movie_info": {
+          "$ref": "#/definitions/PostMovieInfo"
+        },
+        "post_like_count": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "post_comment_count": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "create_at": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "PostInfo",
+      "required": [
+        "id",
+        "user_info",
+        "post_title",
+        "post_desc",
+        "post_movie_info",
+        "post_like_count",
+        "post_comment_count",
+        "create_at"
+      ]
+    },
+    "PostInfoByIdReq": {
+      "type": "object",
+      "properties": {
+        "post_id": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "PostInfoByIdReq",
+      "required": [
+        "post_id"
+      ]
+    },
+    "PostInfoByIdResp": {
+      "type": "object",
+      "properties": {
+        "post_info": {
+          "$ref": "#/definitions/PostInfo"
+        }
+      },
+      "title": "PostInfoByIdResp",
+      "required": [
+        "post_info"
+      ]
+    },
+    "PostMovieInfo": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/uint"
+        },
+        "poster_path": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        }
+      },
+      "title": "PostMovieInfo",
+      "required": [
+        "id",
+        "poster_path",
+        "title"
+      ]
+    },
+    "PostUserInfo": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/uint"
+        },
+        "name": {
+          "type": "string"
+        },
+        "avatar": {
+          "type": "string"
+        }
+      },
+      "title": "PostUserInfo",
+      "required": [
+        "id",
+        "name",
+        "avatar"
+      ]
+    },
+    "PostsInfoReq": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "PostsInfoReq",
+      "required": [
+        "user_id"
+      ]
+    },
+    "PostsInfoResp": {
+      "type": "object",
+      "properties": {
+        "post_info": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PostInfo"
+          }
+        }
+      },
+      "title": "PostsInfoResp",
+      "required": [
+        "post_info"
+      ]
+    },
+    "RemoveCommentLikesReq": {
+      "type": "object",
+      "properties": {
+        "comment_id": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "RemoveCommentLikesReq",
+      "required": [
+        "comment_id"
+      ]
+    },
+    "RemoveCommentLikesResq": {
+      "type": "object",
+      "title": "RemoveCommentLikesResq"
+    },
+    "RemoveFriendReq": {
+      "type": "object",
+      "properties": {
+        "friend_id": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "RemoveFriendReq",
+      "required": [
+        "friend_id"
+      ]
+    },
+    "RemoveFriendResp": {
+      "type": "object",
+      "title": "RemoveFriendResp"
+    },
+    "RemoveLikedMovieReq": {
+      "type": "object",
+      "properties": {
+        "movie_id": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "RemoveLikedMovieReq",
+      "required": [
+        "movie_id"
+      ]
+    },
+    "RemoveLikedMovieResp": {
+      "type": "object",
+      "title": "RemoveLikedMovieResp"
+    },
+    "RemoveMovieReq": {
+      "type": "object",
+      "properties": {
+        "list_id": {
+          "$ref": "#/definitions/uint"
+        },
+        "movie_id": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "RemoveMovieReq",
+      "required": [
+        "list_id",
+        "movie_id"
+      ]
+    },
+    "RemoveMovieResp": {
+      "type": "object",
+      "title": "RemoveMovieResp"
+    },
+    "RemovePostLikesReq": {
+      "type": "object",
+      "properties": {
+        "post_id": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "RemovePostLikesReq",
+      "required": [
+        "post_id"
+      ]
+    },
+    "RemovePostLikesResq": {
+      "type": "object",
+      "title": "RemovePostLikesResq"
+    },
+    "UpdateCommentReq": {
+      "type": "object",
+      "properties": {
+        "comment_id": {
+          "$ref": "#/definitions/uint"
+        },
+        "comment": {
+          "type": "string"
+        }
+      },
+      "title": "UpdateCommentReq",
+      "required": [
+        "comment_id",
+        "comment"
+      ]
+    },
+    "UpdateCommentResp": {
+      "type": "object",
+      "properties": {
+        "update_at": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "UpdateCommentResp",
+      "required": [
+        "update_at"
+      ]
+    },
+    "UpdateCustomListReq": {
+      "type": "object",
+      "properties": {
+        "list_id": {
+          "$ref": "#/definitions/uint"
+        },
+        "title": {
+          "type": "string"
+        },
+        "intro": {
+          "type": "string"
+        }
+      },
+      "title": "UpdateCustomListReq",
+      "required": [
+        "list_id",
+        "title",
+        "intro"
+      ]
+    },
+    "UpdateCustomListResp": {
+      "type": "object",
+      "title": "UpdateCustomListResp"
+    },
+    "UpdatePostReq": {
+      "type": "object",
+      "properties": {
+        "post_id": {
+          "$ref": "#/definitions/uint"
+        },
+        "post_title": {
+          "type": "string"
+        },
+        "post_desc": {
+          "type": "string"
+        }
+      },
+      "title": "UpdatePostReq",
+      "required": [
+        "post_id",
+        "post_title",
+        "post_desc"
+      ]
+    },
+    "UpdatePostResp": {
+      "type": "object",
+      "title": "UpdatePostResp"
+    },
+    "UpdateProfileReq": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      },
+      "title": "UpdateProfileReq",
+      "required": [
+        "name"
+      ]
+    },
+    "UpdateProfileResp": {
+      "type": "object",
+      "title": "UpdateProfileResp"
+    },
+    "UpdateUserGenreReq": {
+      "type": "object",
+      "properties": {
+        "genre_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/uint"
+          }
+        }
+      },
+      "title": "UpdateUserGenreReq",
+      "required": [
+        "genre_ids"
+      ]
+    },
+    "UpdateUserGenreResp": {
+      "type": "object",
+      "title": "UpdateUserGenreResp"
+    },
+    "UpgradeToWebSocketReq": {
+      "type": "object",
+      "title": "UpgradeToWebSocketReq"
+    },
+    "UpgradeToWebSocketResp": {
+      "type": "object",
+      "title": "UpgradeToWebSocketResp"
+    },
+    "UploadImageReq": {
+      "type": "object",
+      "title": "UploadImageReq"
+    },
+    "UploadImageResp": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string"
+        }
+      },
+      "title": "UploadImageResp",
+      "required": [
+        "path"
+      ]
+    },
+    "UserInfo": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/uint"
+        },
+        "name": {
+          "type": "string"
+        },
+        "avatar": {
+          "type": "string"
+        }
+      },
+      "title": "UserInfo",
+      "required": [
+        "id",
+        "name",
+        "avatar"
+      ]
+    },
+    "UserInfoReq": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "UserInfoReq",
+      "required": [
+        "id"
+      ]
+    },
+    "UserInfoResp": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/uint"
+        },
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "avatar": {
+          "type": "string"
+        },
+        "cover": {
+          "type": "string"
+        }
+      },
+      "title": "UserInfoResp",
+      "required": [
+        "id",
+        "name",
+        "email",
+        "avatar",
+        "cover"
+      ]
+    },
+    "UserListReq": {
+      "type": "object",
+      "properties": {
+        "list_id": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "UserListReq",
+      "required": [
+        "list_id"
+      ]
+    },
+    "UserListResp": {
+      "type": "object",
+      "properties": {
+        "list": {
+          "$ref": "#/definitions/ListInfo"
+        }
+      },
+      "title": "UserListResp",
+      "required": [
+        "list"
+      ]
+    },
+    "UserLoginReq": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      },
+      "title": "UserLoginReq",
+      "required": [
+        "email",
+        "required",
+        "password"
+      ]
+    },
+    "UserLoginResp": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "expired": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "UserLoginResp",
+      "required": [
+        "token",
+        "expired"
+      ]
+    },
+    "UserProfileReq": {
+      "type": "object",
+      "title": "UserProfileReq"
+    },
+    "UserProfileResp": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/uint"
+        },
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "avatar": {
+          "type": "string"
+        },
+        "cover": {
+          "type": "string"
+        }
+      },
+      "title": "UserProfileResp",
+      "required": [
+        "id",
+        "name",
+        "email",
+        "avatar",
+        "cover"
+      ]
+    },
+    "UserSignUpReq": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      },
+      "title": "UserSignUpReq",
+      "required": [
+        "name",
+        "email",
+        "password",
+        "min=8"
+      ]
+    },
+    "UserSignUpResp": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/uint"
+        },
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        }
+      },
+      "title": "UserSignUpResp",
+      "required": [
+        "id",
+        "name",
+        "email"
+      ]
+    }
+  },
+  "securityDefinitions": {
+    "apiKey": {
+      "type": "apiKey",
+      "description": "Enter JWT Bearer token **_only_**",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "security": [
+    {
+      "apiKey": []
+    }
+  ]
+}

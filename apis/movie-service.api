@@ -1,12 +1,4 @@
 syntax = "v1"
-
-//info(
-//    title: "type title here"
-//    desc: "type desc here"
-//    author: "type author here"
-//    email: "type email here"
-//    version: "type version here"
-//)
 import "desc/user.api"
 import "desc/movie.api"
 import "desc/liked_movie.api"
@@ -15,6 +7,17 @@ import "desc/post.api"
 import "desc/comment.api"
 import "desc/websocket.api"
 import "desc/friend.api"
+import "desc/liked_comment.api"
+import "desc/liked_post.api"
+import "desc/user_genre.api"
+
+info(
+	title: "movie service api"
+	desc: "movie service api"
+	author: "Jackson.tmm"
+	email: "ryantokmanmokmtm"
+	version: "demo"
+)
 
 type (
 	HealthCheckReq  struct{}
@@ -29,7 +32,9 @@ type (
 	group : health
 )
 service MovieService {
-	@doc "server health check"
+	@doc (
+		summary : "server health check"
+	)
 	@handler HealthCheck
 	get /ping(HealthCheckReq) returns (HealthCheckResp);
 }

@@ -2,10 +2,10 @@ syntax = "v1"
 
 info(
     title: "Post Commnet API"
-    desc: "CRUD ABOUT COMMENT"
-    author: "type author here"
-    email: "type email here"
-    version: "type version here"
+    desc: "post comment API"
+    author: "Jackson.tmm"
+    email: "ryantokmanmokmtm"
+    version: "demo"
 )
 
 //Current User
@@ -50,6 +50,13 @@ type (
         Comments []CommentInfo `json:"comments"`
     }
 
+    GetReplyCommentReq {
+        CommentId uint `path:"comment_id"`
+    }
+    GetReplyCommentResp {
+        ReplyComments []CommentInfo `json:"reply"`
+    }
+
     CountPostCommentsReq {
         PostId uint `path:"path_id"`
     }
@@ -80,13 +87,10 @@ type (
 type (
     CommentInfo {
         CommentID uint `json:"id"`
-//        PostID uint `json:"post_id"`
         UserInfo CommentUser `json:"user_info"`
         Comment string `json:"comment"`
-//        CreateAt int64 `json:"create_at"`
         UpdateAt int64 `json:"update_at"`
-
-        ReplyComment []CommentInfo `json:"reply_comments"`
+        ReplyComment uint `json:"reply_comments"`
     }
 
     CommentUser {
@@ -102,19 +106,28 @@ type (
     jwt: Auth
 )
 service MovieService {
-    @doc "Create A New Comment"
+    @doc (
+        summary : "Create Comment"
+    )
     @handler CreateComment
     post /comments/:post_id(CreateCommentReq) returns (CreateCommentResp);
 
-    @doc "Create A New Reply Comment"
+    @doc (
+        summary : "Create A New Reply Comment"
+    )
     @handler CreateReplyComment
     post /comments/:post_id/reply/:comment_id(CreateReplyCommentReq) returns (CreateCommentResp);
 
-    @doc "Update Comment"
+    @doc (
+        summary : "Update Comment"
+    )
     @handler UpdateComment
     patch /comments/:comment_id(UpdateCommentReq) returns (UpdateCommentResp);
 
-    @doc "Delete Comment"
+
+    @doc (
+        summary : "Delete Comment"
+    )
     @handler DeleteComment
     delete /comments/:comment_id(DeleteCommentReq) returns (DeleteCommentResp);
 }
@@ -124,7 +137,15 @@ service MovieService {
     prefix : /api/v1
 )
 service MovieService {
-    @doc "Get Post Comments"
+    @doc (
+        summary : "Get Post Comments"
+    )
     @handler GetPostComment
     get /comments/:post_id(GetPostCommentsReq) returns (GetPostCommentsResp);
+
+    @doc (
+        summary : "Get Reply Comments by id"
+    )
+    @handler GetReplyComment
+    get /comments/reply/:comment_id(GetReplyCommentReq) returns (GetReplyCommentResp);
 }

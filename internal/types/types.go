@@ -83,6 +83,28 @@ type CountFollowedResp struct {
 	Total uint `json:"total"`
 }
 
+type GetFollowingListReq struct {
+	UserId uint `path:"user_id"`
+}
+
+type GetFollowingListResp struct {
+	Users []UserInfo `json:"following"`
+}
+
+type GetFollowedListReq struct {
+	UserId uint `path:"user_id"`
+}
+
+type GetFollowedListResp struct {
+	Users []UserInfo `json:"followed"`
+}
+
+type UserInfo struct {
+	ID     uint   `json:"id"`
+	Name   string `json:"name"`
+	Avatar string `json:"avatar"`
+}
+
 type MoviePageListByGenreReq struct {
 	Id uint `path:"genre_id" validate:"numeric"`
 }
@@ -407,6 +429,14 @@ type GetPostCommentsResp struct {
 	Comments []CommentInfo `json:"comments"`
 }
 
+type GetReplyCommentReq struct {
+	CommentId uint `path:"comment_id"`
+}
+
+type GetReplyCommentResp struct {
+	ReplyComments []CommentInfo `json:"reply"`
+}
+
 type CountPostCommentsReq struct {
 	PostId uint `path:"path_id"`
 }
@@ -416,11 +446,11 @@ type CountPostCommentsResp struct {
 }
 
 type CommentInfo struct {
-	CommentID    uint          `json:"id"`
-	UserInfo     CommentUser   `json:"user_info"`
-	Comment      string        `json:"comment"`
-	UpdateAt     int64         `json:"update_at"`
-	ReplyComment []CommentInfo `json:"reply_comments"`
+	CommentID    uint        `json:"id"`
+	UserInfo     CommentUser `json:"user_info"`
+	Comment      string      `json:"comment"`
+	UpdateAt     int64       `json:"update_at"`
+	ReplyComment uint        `json:"reply_comments"`
 }
 
 type CommentUser struct {
@@ -455,4 +485,79 @@ type GetOneFriendReq struct {
 
 type GetOneFriendResp struct {
 	IsFriend bool `json:"is_friend"`
+}
+
+type CreateCommentLikesReq struct {
+	CommentId uint `json:"comment_id"`
+}
+
+type CreateCommentLikesResp struct {
+}
+
+type RemoveCommentLikesReq struct {
+	CommentId uint `json:"comment_id"`
+}
+
+type RemoveCommentLikesResq struct {
+}
+
+type IsCommentLikedReq struct {
+	CommentId uint `path:"comment_id"`
+}
+
+type IsCommentLikedResp struct {
+	IsLiked bool `json:"is_liked"`
+}
+
+type CountCommentLikesReq struct {
+	CommentId uint `path:"comment_id"`
+}
+
+type CountCommentLikesResp struct {
+	TotalLikes uint `json:"total_likes"`
+}
+
+type CreatePostLikesReq struct {
+	PostId uint `json:"post_id"`
+}
+
+type CreatePostLikesResp struct {
+}
+
+type RemovePostLikesReq struct {
+	PostId uint `json:"post_id"`
+}
+
+type RemovePostLikesResq struct {
+}
+
+type IsPostLikedReq struct {
+	PostId uint `path:"post_id"`
+}
+
+type IsPostLikedResp struct {
+	IsLiked bool `json:"is_liked"`
+}
+
+type CountPostLikesReq struct {
+	PostId uint `path:"post_id"`
+}
+
+type CountPostLikesResp struct {
+	TotalLikes uint `json:"total_likes"`
+}
+
+type UpdateUserGenreReq struct {
+	GenreIds []uint `json:"genre_ids"`
+}
+
+type UpdateUserGenreResp struct {
+}
+
+type GetUserGenreReq struct {
+	UserId uint `path:"user_id"`
+}
+
+type GetUserGenreResp struct {
+	UserGenres []GenreInfo `json:"user_genres"`
 }

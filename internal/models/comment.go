@@ -45,12 +45,16 @@ func (m *Comment) FindOnePostComments(ctx context.Context, db *gorm.DB) ([]*Comm
 	return comments, nil
 }
 
-//func (m *Comment) FindCommentReply(ctx context.Context, db *gorm.DB) ([]*Comment, error) {
-//
-//}
+func (m *Comment) FindReplyComments(ctx context.Context, db *gorm.DB) ([]*Comment, error) {
+	var replyComments []*Comment
+	if err := db.Debug().WithContext(ctx).Where("reply_to = ?", m.ReplyTo).Preload("User").Find(&replyComments).Error; err != nil {
+		return nil, err
+	}
+	return replyComments, nil
+}
 
 func (m *Comment) FindOneComment(ctx context.Context, db *gorm.DB) error {
-	return db.Debug().WithContext(ctx).Where("comment_id = ?", m.CommentID).First(m).Error
+	return db.Debug().WithContext(ctx).Model(&m).First(&m).Error
 }
 
 //Upcoming Feature

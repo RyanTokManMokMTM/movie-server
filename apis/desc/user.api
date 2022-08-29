@@ -1,12 +1,13 @@
 syntax = "v1"
 
-//info(
-//    title: "User API"
-//    desc: "apis for users"
-//    author: "type author here"
-//    email: "type email here"
-//    version: "type version here"
-//)
+info(
+	title: "user api"
+	desc: "user api"
+	author: "Jackson.tmm"
+	email: "ryantokmanmokmtm"
+	version: "demo"
+)
+
 
 type (
 	UserLoginReq {
@@ -81,6 +82,27 @@ type (
 		Total uint `json:"total"`
 	}
 
+	GetFollowingListReq {
+		UserId uint `path:"user_id"`
+	}
+	GetFollowingListResp {
+		Users []UserInfo `json:"following"`
+	}
+
+	GetFollowedListReq {
+		UserId uint `path:"user_id"`
+	}
+	GetFollowedListResp {
+		Users []UserInfo `json:"followed"`
+	}
+)
+
+type (
+	UserInfo struct {
+		ID   uint `json:"id"`
+		Name string `json:"name"`
+		Avatar string `json:"avatar"`
+	}
 )
 
 
@@ -90,11 +112,15 @@ type (
 	prefix: /api/v1
 )
 service MovieService {
-	@doc "user_login"
+	@doc (
+		summary  : "user_login"
+	)
 	@handler UserLogin
 	post /user/login(UserLoginReq)  returns (UserLoginResp);
 
-	@doc "user_register"
+	@doc (
+		summary : "user_register"
+	)
 	@handler  UserSignUp
 	post /user/signup(UserSignUpReq) returns (UserSignUpResp);
 }
@@ -104,17 +130,35 @@ service MovieService {
 	prefix: /api/v1
 )
 service MovieService{
-	@doc "user_info"
+	@doc (
+		summary : "user_info"
+	)
 	@handler UserInfo
 	get /user/info/:id(UserInfoReq) returns (UserInfoResp);
 
-	@doc "Count how many users have been followed by user"
+	@doc (
+		summary : "Count how many users have been followed by user"
+	)
 	@handler CountFollowingUser
 	get /user/following/:user_id(CountFollowingReq) returns (CountFollowingResp);
 
-	@doc "Count how many users is following the user(owner)"
+	@doc (
+		summary : "Count how many users is following the user(owner)"
+	)
 	@handler CountFollowedUser
 	get /user/followed/:user_id(CountFollowedReq) returns (CountFollowedResp);
+
+	@doc (
+		summary : "Get Following List"
+	)
+	@handler  GetUserFollowingList
+	get /user/following/list/:user_id(GetFollowingListReq) returns (GetFollowingListResp);
+
+	@doc (
+		summary : "Get Followed List"
+	)
+	@handler  GetUserFollowedList
+	get /user/followed/list/:user_id(GetFollowedListReq) returns (GetFollowedListResp);
 }
 
 @server (
@@ -123,21 +167,29 @@ service MovieService{
 	jwt : Auth
 )
 service MovieService{
-	@doc "user_profile"
+	@doc (
+		summary : "user_profile"
+	)
 	@handler UserProfile
 	get /user/profile(UserProfileReq) returns (UserProfileResp);
 
-	@doc "update user profile"
+	@doc (
+		summary : "update user profile"
+	)
 	@handler UpdateUserProfile
 	patch /user/profile(UpdateProfileReq) returns (UpdateProfileResp);
 
 
-	@doc "update user avatar"
+	@doc (
+		summary : "update user avatar"
+	)
 	@handler UploadUserAvatar
 	patch /user/avatar(UploadImageReq) returns (UploadImageResp);
 
 
-	@doc "update user cover"
+	@doc (
+		summary : "update user cover"
+	)
 	@handler UploadUserCover
 	patch /user/cover(UploadImageReq) returns (UploadImageResp);
 }
