@@ -40,15 +40,6 @@ func (l *GetUserPostsLogic) GetUserPosts(req *types.PostsInfoReq) (resp *types.P
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
-	//find that user
-	_, err = l.svcCtx.DAO.FindUserByID(l.ctx, req.UserID)
-	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, errx.NewErrCode(errx.USER_NOT_EXIST)
-		}
-		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
-	}
-
 	//Get Post By User ID
 	res, err := l.svcCtx.DAO.FindUserPosts(l.ctx, req.UserID)
 	if err != nil {
@@ -84,7 +75,7 @@ func (l *GetUserPostsLogic) GetUserPosts(req *types.PostsInfoReq) (resp *types.P
 				UserName:   v.UserInfo.Name,
 				UserAvatar: v.UserInfo.Avatar,
 			},
-			IsPostLikedByUser: isPostLiked,
+			IsPostLikedByUser: isPostLiked != 0,
 			CreateAt:          v.CreatedAt.Unix(),
 		})
 	}

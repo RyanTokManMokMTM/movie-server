@@ -75,7 +75,7 @@ func (l *GetAllPostLogic) GetAllPost(req *types.AllPostsInfoReq) (resp *types.Al
 				UserAvatar: v.UserInfo.Avatar,
 			},
 			CreateAt:          v.CreatedAt.Unix(),
-			IsPostLikedByUser: isPostLiked,
+			IsPostLikedByUser: isPostLiked != 0,
 		})
 	}
 

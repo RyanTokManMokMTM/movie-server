@@ -37,7 +37,7 @@ func (m *Comment) DeletePostComment(ctx context.Context, db *gorm.DB) error {
 
 func (m *Comment) FindOnePostComments(ctx context.Context, db *gorm.DB) ([]*Comment, error) {
 	var comments []*Comment
-	if err := db.Debug().WithContext(ctx).Model(m).Where("post_id = ?", m.PostID).Preload("User").Preload("Comments", func(tx *gorm.DB) *gorm.DB {
+	if err := db.Debug().WithContext(ctx).Model(m).Where("post_id = ? AND reply_to IS NULL", m.PostID).Preload("User").Preload("Comments", func(tx *gorm.DB) *gorm.DB {
 		return db.Preload("User")
 	}).Find(&comments).Error; err != nil {
 		return nil, err

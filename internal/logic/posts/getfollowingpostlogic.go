@@ -74,7 +74,7 @@ func (l *GetFollowingPostLogic) GetFollowingPost(req *types.FollowPostsInfoReq) 
 				UserName:   v.UserInfo.Name,
 				UserAvatar: v.UserInfo.Avatar,
 			},
-			IsPostLikedByUser: isPostLiked,
+			IsPostLikedByUser: isPostLiked != 0,
 			CreateAt:          v.CreatedAt.Unix(),
 		})
 	}

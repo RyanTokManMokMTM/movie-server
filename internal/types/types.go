@@ -369,7 +369,7 @@ type PostInfo struct {
 	PostMovie         PostMovieInfo `json:"post_movie_info"`
 	PostLikeCount     int64         `json:"post_like_count"`
 	PostCommentCount  int64         `json:"post_comment_count"`
-	IsPostLikedByUser uint          `json:"is_post_liked"`
+	IsPostLikedByUser bool          `json:"is_post_liked"`
 	CreateAt          int64         `json:"create_at"`
 }
 

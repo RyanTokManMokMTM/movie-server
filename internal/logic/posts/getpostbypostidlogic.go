@@ -75,7 +75,7 @@ func (l *GetPostByPostIDLogic) GetPostByPostID(req *types.PostInfoByIdReq) (resp
 				UserName:   postInfo.UserInfo.Name,
 				UserAvatar: postInfo.UserInfo.Avatar,
 			},
-			IsPostLikedByUser: isPostLiked,
+			IsPostLikedByUser: isPostLiked != 0,
 			CreateAt:          postInfo.CreatedAt.Unix(),
 		},
 	}, nil
