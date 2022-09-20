@@ -98,3 +98,12 @@ func (d *DAO) RemoveMovieFromList(ctx context.Context, movieID, listID, userID u
 
 	return nil
 }
+
+func (d *DAO) RemoveMoviesFromList(ctx context.Context, movieIds []uint, listID, userID uint) error {
+	list := &models.List{
+		UserId: userID,
+		ListId: listID,
+	}
+
+	return list.RemoveMoviesFromList(ctx, d.engine, movieIds)
+}

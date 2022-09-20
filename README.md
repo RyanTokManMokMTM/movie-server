@@ -1,40 +1,45 @@
-# FYP Project - Rebuilt with Go-ZERO
+# FYP Project - Rebuilt by Go-ZERO
 
-### TODO LIST
+### Introduction
+This is my backend project using Go-zero framework, and this also is my **Final Year Project**. I'm trying to rebuild this project using Golang instead **Vapor Swift 3**.
 
+### Tech In Use
+* Go-Zero Framework
+* MySQL
+* GORM
+* Docker / Docker-compose
+* SwaggerAPI
+* Environment(.env)
+* Redis *(May use as DB cache in Future)*
 
-### Work in progress
-| Service | Method |      Api       |        Desc         |
-|:-------:|:------:|:--------------:|:-------------------:|
-|  User   |  POST  | /users/signup  |     Create User     |
-|  User   |  POST  | /users/signin  |        Login        |
-|  User   |  GET   | /users/profile |  GET USER PROFILE   |
-|  User   |  ———   |      ———       | Update User Profile |
-|  User   |  ———   |      ———       |  Update User Token  |
+### How to run
+clone the project 
+```
+git clone https://github.com/RyanTokManMokMTM/movie-server.git
+```
 
-| Service | Method |      Api       |                   Desc                   |
-|:-------:|:------:|:--------------:|:----------------------------------------:|
-|  POST   |  POST  |     /posts     |               Create Post                |
-|  POST   |  GET   |   /posts/all   | Get All Post(10 posts by recent created) |
-|  POST   | PATCH  |     /posts     |               UPDATE POST                |
-|  POST   | DELETE |     /posts     |               DELETE POST                |
-|  POST   |  GET   | /posts/:userID |             GET USER PROFILE             |
-|  POST   |  GET   |     /posts     |           GET USER RECENT POST           |
+run the server 
+```
+make run
+```
+or
+```
+go run movieservice.go 
+```
 
-| Service | Method |    Api     |                   Desc                   |
-|:-------:|:------:|:----------:|:----------------------------------------:|
-|  MOVIE  |  POST  |   /posts   |               Create Post                |
-|  MOVIE  |  GET   | /posts/all | Get All Post(10 posts by recent created) |
-|  MOVIE  |  ———   |    ———     |              ADD MOVIE INFO              |
-|  MOVIE  |  ———   |    ———     |            UPDATE MOVIE INFO             |
-|  MOVIE  |  ———   |    ———     |          GET upcoming etc MOVIE          |
-|  MOVIE  |  ———   |    ———     |              Movie Trailer               |
+If you want to run in docker
+```
+docker-compose -f docker-compose_env.yaml
+```
 
-
-| Service | Method |      Api       |                   Desc                   |
-|:-------:|:------:|:--------------:|:----------------------------------------:|
-|  LIST   |  POST  |     /lists     |               Create List                |
-|  LIST   | PATCH  |     /lists     |               UPDATE POST                |
-|  LIST   | DELETE |     /lists     |               DELETE POST                |
-|  LIST   |  GET   | /lists/:userID |             GET USER PROFILE             |
-|  LIST   |  GET   |     /lists     |           GET USER RECENT POST           |
+### Working API
+* User API
+* User Post API
+* Movie API
+* Genre API
+* Movie Likes API
+* Post Likes API
+* Movie List API
+* Post Comment API
+* Friend API
+* Instant message System(**In progress**)

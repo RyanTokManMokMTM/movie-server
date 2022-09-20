@@ -57,6 +57,19 @@ func (m *List) RemoveMovieFromList(ctx context.Context, db *gorm.DB, info *Movie
 	return db.Debug().WithContext(ctx).Model(&m).Association("MovieInfos").Delete(info)
 }
 
+func (m *List) RemoveMoviesFromList(ctx context.Context, db *gorm.DB, movieIds []uint) error {
+	l := List{}
+	var infos []*MovieInfo
+	for _, v := range movieIds {
+		infos = append(infos, &MovieInfo{
+			Id: v,
+		})
+	}
+
+	return db.Debug().WithContext(ctx).Model(&l).Association("MovieInfos").Delete(infos)
+
+}
+
 //TODO - Check Movie is already collected by user - return a list info
 func (m *List) FindOneMovieFromList(ctx context.Context, db *gorm.DB, info *MovieInfo) error {
 	return db.Debug().WithContext(ctx).Model(&m).Where("user_id = ?", m.ListId).Association("MovieInfos").Find(&info)

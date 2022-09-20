@@ -1,7 +1,6 @@
 package config
 
 import (
-	"github.com/zeromicro/go-zero/core/stores/cache"
 	"github.com/zeromicro/go-zero/rest"
 )
 
@@ -19,7 +18,7 @@ type Config struct {
 		MaxOpenConns int
 	}
 
-	CacheRedis cache.CacheConf
-	Salt       string
-	MaxBytes   int64
+	//CacheRedis cache.CacheConf
+	Salt     string
+	MaxBytes int64
 }

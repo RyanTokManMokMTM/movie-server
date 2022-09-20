@@ -2,51 +2,82 @@
 !theme  bluegray
 skinparam backgroundColor white
 * Movie API
-** Server Heath Check
-*** √Ping
-** User
-*** √Login
-*** √Register
-*** √Get UserProfile
-*** Update User Profile
-**** Modify User Name(planing)
-**** Upload User Avatar
-**** Upload User Cover
-**** Update User favorite movie genre type
-**** Change Password
+** 服務器健康檢查
+*** 獲取伺服器響應訊息 - 完成
+** 用戶API
+*** 登入
+*** 註冊
+*** 獲取用戶個人資料 - 完成
+*** 更新用戶個人資料 - 完成
+**** 更新用戶名稱
+**** 上傳以及更新用戶頭像 - 完成
+**** 上傳以及更新用戶背景 - 完成
+**** 更新用戶喜好項目(電影類別) - 完成
+**** 更新用戶密碼 - 未實現
+**** 獲取其他用戶之個人資料
+**** 獲取用戶關注數
+**** 獲取用戶粉絲數
+**** 獲取用戶關注列表
+**** 獲取用戶粉絲列表
 
-** Post
-*** √Create New Post
-*** √Update Post
-*** √Delete Post
-*** √Get All Posts
-*** √Get Following Post
-*** √Get Post By PostID
+** 文章API
+*** 新增文章  - 完成
+*** 更新文章內容 - 未實現
+*** 刪除文章 - 未實現
+*** 獲取所有文章資訊  - 完成
+*** 獲取追蹤用戶文章資訊  - 完成
+*** 獲取文章資訊  - 完成
 
-** Movie
-*** √Get Movie Detail
-*** √Get Movie Genre By MovieID
-*** √Get Movies By GenreID
+** 文章點讚API
+*** 獲取文章點讚數目 - 完成
+*** 新增文章點讚 - 完成
+*** 獲取用戶是否點讚文章 - 完成
+*** 移除用戶點讚文章 - 完成
 
-** Like Movie
-*** √Insert Liked Movie
-*** √Delete Liked Movie
-*** √Get User Liked Movies
+** 電影API
+*** 獲取用戶是否點讚 - 完成
+*** 獲取用戶是否收藏 - 完成
+*** 獲取電影詳細資料 - 完成
+*** 獲取單一電影類型 - 完成
+*** 獲取相同類型的電影 - 完成
 
-** List
-*** √Create User List
-*** √Delete User List
-*** √Get All User List
-*** √Get User List By ID
-*** √Get One Movie From List
-*** √Insert Movie To List
-*** √Remove Movie From List
-*** √pdate User List
+** 用戶電影類別API
+*** 獲取用戶設定之電影類型 - 完成
+*** 更新用戶設定之電影類型 - 完成
 
-** Comment
-*** √Create Post Comment
-*** √Delete Post Comment
-*** √Get All Post Comment
-*** √Update Post Comment
+** 喜愛/點讚電影API
+*** 獲取用戶點讚電影 - 完成
+*** 獲取用戶是否點讚 - 完成
+*** 新增用戶點讚電影 - 完成
+*** 移除用戶點讚電影 - 完成
+
+** 喜好列表API
+*** 新增電影喜好片單 - 完成
+*** 移除電影喜好片單 - 未實現
+*** 獲取用戶所有喜好電影喜好片單 - 完成
+*** 獲取單一用戶電影喜好片單 - 完成
+*** 從用戶電影喜好片單獲取單一電影 - 完成
+*** 新增電影至用戶電影喜好片單 - 完成
+*** 從用戶電影喜好片單中移除單一電影 - 完成
+*** 更新用戶電影喜好片單 - 未實現
+
+** 留言API
+*** 新增留言 - 完成
+*** 新增留言回復 - 完成
+*** 刪除留言 - 未實現
+*** 獲取所有文章留言 - 完成
+*** 獲取單一留言的所有回復內容 - 完成
+*** 更新留言內容 - 未實現
+
+** 留言點讚API
+*** 獲取留言點讚數 - 完成
+*** 新增留言點讚 - 完成
+*** 移除用戶點讚留言 - 完成
+*** 獲取用戶是否點讚留言 - 完成
+
+** 朋友API
+*** 新增朋友
+*** 獲取朋友
+*** 移除朋友
 
 @endmindmap

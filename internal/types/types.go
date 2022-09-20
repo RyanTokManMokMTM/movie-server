@@ -281,6 +281,14 @@ type GetOneMovieFromUserListResp struct {
 	IsMovieInList bool `json:"is_movie_in_list"`
 }
 
+type RemoveListMoviesReq struct {
+	ListId   uint   `path:"id"`
+	MovieIds []uint `json:"movie_ids"`
+}
+
+type RemoveListMoviesResp struct {
+}
+
 type ListInfo struct {
 	ID     uint        `json:"id"`
 	Title  string      `json:"title"`

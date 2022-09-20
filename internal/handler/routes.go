@@ -214,6 +214,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: custom_list.RemoveMovieFromListHandler(serverCtx),
 			},
 			{
+				Method:  http.MethodDelete,
+				Path:    "/list/movies/:id",
+				Handler: custom_list.RemoveListMoviesHandler(serverCtx),
+			},
+			{
 				Method:  http.MethodGet,
 				Path:    "/list/movie/:movie_id",
 				Handler: custom_list.GetOneMovieFromUserListHandler(serverCtx),
