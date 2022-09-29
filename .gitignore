@@ -1,2 +1,4 @@
 ./resources
 ./data/sqlData/*
+!./resources/defaultCover.jpeg
+!./resources/defaultAvatar.jpeg
