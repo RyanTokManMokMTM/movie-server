@@ -3,7 +3,7 @@ Host: 0.0.0.0
 Port: 8000
 
 MySQL:
-  DataSource: root:admin@tcp(mysql:3306)/movie?charset=utf8mb4&parseTime=true&loc=Asia%2FHong_Kong
+  DataSource: root:admin@tcp(127.0.0.1:3306)/movie?charset=utf8mb4&parseTime=true&loc=Asia%2FHong_Kong
   MaxIdleConns: 100
   MaxOpenConns: 100
 
