@@ -1,4 +1,4 @@
-package friend
+package room
 
 import (
 	"github.com/go-playground/locales/en"
@@ -9,14 +9,14 @@ import (
 	"github.com/zeromicro/go-zero/rest/httpx"
 	"net/http"
 
-	"github.com/ryantokmanmokmtm/movie-server/internal/logic/friend"
+	"github.com/ryantokmanmokmtm/movie-server/internal/logic/room"
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
 	"github.com/ryantokmanmokmtm/movie-server/internal/types"
 )
 
-func GetOneFriendHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func CreateRoomHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.GetOneFriendReq
+		var req types.CreateRoomReq
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.Error(w, err)
 			return
@@ -34,8 +34,8 @@ func GetOneFriendHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
-		l := friend.NewGetOneFriendLogic(r.Context(), svcCtx)
-		resp, err := l.GetOneFriend(&req)
+		l := room.NewCreateRoomLogic(r.Context(), svcCtx)
+		resp, err := l.CreateRoom(&req)
 		if err != nil {
 			httpx.Error(w, err)
 		} else {

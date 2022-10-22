@@ -59,15 +59,26 @@ func (m *Post) GetPostInfo(ctx context.Context, db *gorm.DB) error {
 //Get All PostInfo - 10 record by recent 10
 func (m *Post) GetAllPostInfoByCreateTimeDesc(ctx context.Context, db *gorm.DB, userID uint) ([]*Post, error) {
 	//exclude following user
-	var followingIds []uint
-	if err := db.Debug().WithContext(ctx).Model(&Friend{}).Select("friend_id").Where("user_id = ?", userID).Find(&followingIds).Error; err != nil {
+	var friends []uint
+	//if err := db.Debug().WithContext(ctx).Model(&Friend{UserID: userID}).Select("user_id").Association("Friend").Find(&followingIds); err != nil {
+	//	return nil, err
+	//}
+	//
+	//followingIds = append(followingIds, userID)
+
+	//get friend list
+	fd := &Friend{UserID: userID}
+	list, err := fd.GetFriendsList(db, ctx)
+	if err != nil {
 		return nil, err
 	}
 
-	followingIds = append(followingIds, userID)
+	for _, info := range list {
+		friends = append(friends, info.ID)
+	}
 
 	var resp []*Post
-	if err := db.Debug().WithContext(ctx).Model(&m).Preload("MovieInfo").Preload("UserInfo").Preload("Comments").Preload("PostsLiked").Where("user_id NOT IN(?)", followingIds).Order("created_at desc").Limit(10).Omit("state").Find(&resp).Error; err != nil {
+	if err := db.Debug().WithContext(ctx).Model(&m).Preload("MovieInfo").Preload("UserInfo").Preload("Comments").Preload("PostsLiked").Where("user_id NOT IN(?)", friends).Order("created_at desc").Limit(10).Omit("state").Find(&resp).Error; err != nil {
 		return nil, err
 	}
 	return resp, nil
@@ -77,14 +88,26 @@ func (m *Post) GetFollowPostInfoByCreateTimeDesc(ctx context.Context, db *gorm.D
 	var resp []*Post
 
 	//Following User Ids
-	var followingIds []uint
-	if err := db.Debug().WithContext(ctx).Model(&Friend{}).Select("friend_id").Where("user_id = ?", userID).Find(&followingIds).Error; err != nil {
+	//var followingIds []uint
+	//if err := db.Debug().WithContext(ctx).Model(&FriendTemp{}).Select("friend_id").Where("user_id = ?", userID).Find(&followingIds).Error; err != nil {
+	//	return nil, err
+	//}
+
+	//followingIds = append(followingIds, userID) //including owner
+	var friends []uint
+	fd := &Friend{UserID: userID}
+	list, err := fd.GetFriendsList(db, ctx)
+	if err != nil {
 		return nil, err
 	}
 
-	followingIds = append(followingIds, userID) //including owner
+	for _, info := range list {
+		friends = append(friends, info.ID)
+	}
 
-	if err := db.Debug().WithContext(ctx).Model(&m).Preload("MovieInfo").Preload("UserInfo").Preload("Comments").Preload("PostsLiked").Where("user_id IN (?)", followingIds).Order("created_at desc").Limit(10).Find(&resp).Error; err != nil {
+	friends = append(friends, userID)
+
+	if err := db.Debug().WithContext(ctx).Model(&m).Preload("MovieInfo").Preload("UserInfo").Preload("Comments").Preload("PostsLiked").Where("user_id IN (?)", friends).Order("created_at desc").Limit(10).Find(&resp).Error; err != nil {
 		return nil, err
 	}
 	return resp, nil

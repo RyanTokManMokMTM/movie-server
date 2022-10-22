@@ -11,21 +11,21 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type GetUserFollowedListLogic struct {
+type GetFriendListLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
-func NewGetUserFollowedListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetUserFollowedListLogic {
-	return &GetUserFollowedListLogic{
+func NewGetFriendListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetFriendListLogic {
+	return &GetFriendListLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
 	}
 }
 
-func (l *GetUserFollowedListLogic) GetUserFollowedList(req *types.GetFollowedListReq) (resp *types.GetFollowedListResp, err error) {
+func (l *GetFriendListLogic) GetFriendList(req *types.GetFriendListReq) (resp *types.GetFriendListResp, err error) {
 	// todo: add your logic here and delete this line
 	_, err = l.svcCtx.DAO.FindUserByID(l.ctx, req.UserId)
 	if err != nil {
@@ -35,20 +35,26 @@ func (l *GetUserFollowedListLogic) GetUserFollowedList(req *types.GetFollowedLis
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
-	followed, err := l.svcCtx.DAO.FindUserFollowedList(l.ctx, req.UserId)
+	//TODO: User Friend Record
+	f, err := l.svcCtx.DAO.GetUserFriendRecord(l.ctx, req.UserId)
 	if err != nil {
-		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
+		return nil, err
 	}
 
-	var users []types.UserInfo
-	for _, user := range followed {
-		users = append(users, types.UserInfo{
-			ID:     user.Id,
-			Name:   user.Name,
-			Avatar: user.Avatar,
+	list, err := l.svcCtx.DAO.GetFriendsList(l.ctx, f.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	var friendList []types.UserInfo
+	for _, info := range list {
+		friendList = append(friendList, types.UserInfo{
+			ID:     info.ID,
+			Name:   info.Name,
+			Avatar: info.Avatar,
 		})
 	}
-	return &types.GetFollowedListResp{
-		Users: users,
+	return &types.GetFriendListResp{
+		Friends: friendList,
 	}, nil
 }

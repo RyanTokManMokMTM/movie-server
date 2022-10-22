@@ -45,9 +45,9 @@ func (l *MovieGenreByMovieIDLogic) MovieGenreByMovieID(req *types.MovieGenresInf
 //
 //func (l *MovieGenreByMovieIDLogic) MovieGenreByMovieID(req *types.MovieGenresInfoRequest) (resp *types.MovieGenresInfoResponse, err error) {
 //	// todo: add your logic here and delete this line
-//	list, err := l.svcCtx.Genre.FindMovieGenresByMovieID(l.ctx, req.Id)
+//	list, err := l.svcCtx.Genre.FindMovieGenresByMovieID(l.ctx, req.ID)
 //	if err != nil && err != sqlx.ErrNotFound {
-//		//return nil, errors.Wrap(errx.NewErrCode(errx.DB_ERROR), fmt.Sprintf("MovieGenreByMovieID - genre db FIND err: %v, movieID: %v", err, req.Id))
+//		//return nil, errors.Wrap(errx.NewErrCode(errx.DB_ERROR), fmt.Sprintf("MovieGenreByMovieID - genre db FIND err: %v, movieID: %v", err, req.ID))
 //		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 //	}
 //
@@ -58,7 +58,7 @@ func (l *MovieGenreByMovieIDLogic) MovieGenreByMovieID(req *types.MovieGenresInf
 //	var res []*types.GenreInfo
 //	for _, v := range list {
 //		res = append(res, &types.GenreInfo{
-//			Id:   v.GenreId,
+//			ID:   v.GenreId,
 //			Name: v.Name,
 //		})
 //	}

@@ -8,7 +8,7 @@ import (
 )
 
 type User struct {
-	Id       uint   `gorm:"primaryKey;not null;autoIncrement"`
+	ID       uint   `gorm:"primaryKey;not null;autoIncrement"`
 	Name     string `gorm:"not null;type:varchar(64)"`
 	Email    string `gorm:"not null;type:varchar(64)"`
 	Password string `gorm:"not null;type:varchar(64)"`
@@ -20,13 +20,14 @@ type User struct {
 	MovieInfos []MovieInfo `gorm:"many2many:users_movies;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 
 	//this relationship for following and follower?
-	Friends []User `gorm:"many2many:friends;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+	//Friends []User `gorm:"many2many:friends;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 	//Genres []GenreInfo `gorm` //one u
 	//use may have a lot of post
 	Posts           []Post      `gorm:"foreignKey:UserId;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 	PostsLiked      []Post      `gorm:"many2many:post_liked;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 	CommentLiked    []Comment   `gorm:"many2many:comment_liked;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 	InterestedGenre []GenreInfo `gorm:"many2many:users_genres;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+	Rooms           []Room      `gorm:"many2many:users_rooms;"`
 	DefaultModel
 }
 
@@ -36,15 +37,27 @@ func (m *User) TableName() string {
 
 func (m *User) Insert(ctx context.Context, db *gorm.DB) error {
 	logx.Infof("UserDB - Create User:%+v \n", m)
-	if err := db.WithContext(ctx).Create(&m).Error; err != nil {
-		return err
-	}
-	return nil
+	return db.WithContext(ctx).Debug().Transaction(func(tx *gorm.DB) error {
+		if err := tx.WithContext(ctx).Debug().Create(&m).Error; err != nil {
+			logx.Error(err)
+			return err
+		}
+
+		logx.Infof("User created %d", m.ID)
+
+		if err := tx.WithContext(ctx).Debug().Create(&Friend{
+			UserID: m.ID,
+		}).Error; err != nil {
+			logx.Error(err)
+			return err
+		}
+		return nil
+	})
 }
 
 func (m *User) FindOneByID(ctx context.Context, db *gorm.DB) error {
 	logx.Infof("UserDB - Find One By ID:%+v \n", m)
-	if err := db.WithContext(ctx).Model(&m).Where("id = ?", m.Id).First(&m).Error; err != nil {
+	if err := db.WithContext(ctx).Model(&m).Where("id = ?", m.ID).First(&m).Error; err != nil {
 		return err
 	}
 	return nil
@@ -60,7 +73,7 @@ func (m *User) FindOneByEmail(ctx context.Context, db *gorm.DB) error {
 
 func (m *User) UpdateInfo(ctx context.Context, db *gorm.DB) error {
 	logx.Infof("UserDB - Update Info:%+v \n", m)
-	if err := db.WithContext(ctx).Model(&m).Where("id = ?", m.Id).Updates(m).Error; err != nil {
+	if err := db.WithContext(ctx).Model(&m).Where("id = ?", m.ID).Updates(m).Error; err != nil {
 		return err
 	}
 	return nil
@@ -81,44 +94,45 @@ func (m *User) GetUserLikedMovies(ctx context.Context, db *gorm.DB) error {
 	logx.Infof("UserDB - User Liked Movies:%+v \n", m)
 	if err := db.Debug().WithContext(ctx).Preload("MovieInfos", func(db *gorm.DB) *gorm.DB {
 		return db.Select("movie_infos.*").Joins("left join users_movies on users_movies.movie_info_id = movie_infos.id").Where("users_movies.state = ?", 1)
-	}).Preload("MovieInfos.GenreInfo").Where("id = ?", m.Id).Find(&m).Error; err != nil {
+	}).Preload("MovieInfos.GenreInfo").Where("id = ?", m.ID).Find(&m).Error; err != nil {
 		return err
 	}
 	return nil
 }
 
-//RETURN A LIST OF USERINFO
-func (m *User) GetFollowingList(ctx context.Context, db *gorm.DB) ([]*User, error) {
-
-	//get friend list id
-	var userId []uint
-	if err := db.Debug().WithContext(ctx).Model(&Friend{}).Select("friend_id").Where("user_id = ?", m.Id).Find(&userId).Error; err != nil {
-		return nil, err
-	}
-
-	var users []*User
-	if err := db.Debug().WithContext(ctx).Model(&m).Where("id IN (?)", userId).Find(&users).Error; err != nil {
-		return nil, err
-	}
-
-	return users, nil
-}
-
-//RETURN A LIST OF USERINFO
-func (m *User) GetFollowedList(ctx context.Context, db *gorm.DB) ([]*User, error) {
-
-	//get friend list id
-	var userId []uint
-	if err := db.Debug().WithContext(ctx).Model(&Friend{}).Select("user_id").Where("friend_id = ?", m.Id).Find(&userId).Error; err != nil {
-		return nil, err
-	}
-
-	var users []*User
-	if err := db.Debug().WithContext(ctx).Model(&m).Where("id IN (?)", userId).Find(&users).Error; err != nil {
-		return nil, err
-	}
-	return users, nil
-}
+//
+////RETURN A LIST OF USERINFO
+//func (m *User) GetFollowingList(ctx context.Context, db *gorm.DB) ([]*User, error) {
+//
+//	//get friend list id
+//	var userId []uint
+//	if err := db.Debug().WithContext(ctx).Model(&FriendTemp{}).Select("friend_id").Where("user_id = ?", m.ID).Find(&userId).Error; err != nil {
+//		return nil, err
+//	}
+//
+//	var users []*User
+//	if err := db.Debug().WithContext(ctx).Model(&m).Where("id IN (?)", userId).Find(&users).Error; err != nil {
+//		return nil, err
+//	}
+//
+//	return users, nil
+//}
+//
+////RETURN A LIST OF USERINFO
+//func (m *User) GetFollowedList(ctx context.Context, db *gorm.DB) ([]*User, error) {
+//
+//	//get friend list id
+//	var userId []uint
+//	if err := db.Debug().WithContext(ctx).Model(&FriendTemp{}).Select("user_id").Where("friend_id = ?", m.ID).Find(&userId).Error; err != nil {
+//		return nil, err
+//	}
+//
+//	var users []*User
+//	if err := db.Debug().WithContext(ctx).Model(&m).Where("id IN (?)", userId).Find(&users).Error; err != nil {
+//		return nil, err
+//	}
+//	return users, nil
+//}
 
 //PostLiked
 func (m *User) CreateUserPostLiked(ctx context.Context, db *gorm.DB, post *Post) error {
@@ -143,7 +157,7 @@ func (m *User) UpdateUserGenreTrans(ctx context.Context, db *gorm.DB, ids []uint
 		logx.Infof("transaction begin...")
 
 		//getting all existing genre
-		if err := tx.Debug().WithContext(ctx).Preload("InterestedGenre").Take(&user, m.Id).Error; err != nil {
+		if err := tx.Debug().WithContext(ctx).Preload("InterestedGenre").Take(&user, m.ID).Error; err != nil {
 			return err
 		}
 
@@ -172,7 +186,7 @@ func (m *User) UpdateUserGenreTrans(ctx context.Context, db *gorm.DB, ids []uint
 
 		//now we need to update
 		//getting new user Genres ->
-		if err := tx.Debug().WithContext(ctx).Preload("InterestedGenre").Take(&user, m.Id).Error; err != nil {
+		if err := tx.Debug().WithContext(ctx).Preload("InterestedGenre").Take(&user, m.ID).Error; err != nil {
 			return err
 		}
 

@@ -6,8 +6,8 @@ import (
 )
 
 type PostLiked struct {
-	UserId     uint `gorm:"primaryKey"` // User is following Friend
-	PostPostId uint `gorm:"primaryKey"` // Friend is followed by User
+	UserId     uint `gorm:"primaryKey"` // User is following FriendTemp
+	PostPostId uint `gorm:"primaryKey"` // FriendTemp is followed by User
 	//State      uint `gorm:"not null;unsigned;type:tinyint(1)"`
 	//DefaultModel
 }

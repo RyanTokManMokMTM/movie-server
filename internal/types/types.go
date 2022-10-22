@@ -25,9 +25,8 @@ type UserSignUpReq struct {
 }
 
 type UserSignUpResp struct {
-	ID    uint   `json:"id"`
-	Name  string `json:"name"`
-	Email string `json:"email"`
+	Token       string `json:"token"`
+	ExpiredTime uint   `json:"expired_time"`
 }
 
 type UserInfoReq struct {
@@ -67,36 +66,20 @@ type UploadImageResp struct {
 	Path string `json:"path"`
 }
 
-type CountFollowingReq struct {
+type CountFriendReq struct {
 	UserId uint `path:"user_id"`
 }
 
-type CountFollowingResp struct {
+type CountFriendResp struct {
 	Total uint `json:"total"`
 }
 
-type CountFollowedReq struct {
+type GetFriendListReq struct {
 	UserId uint `path:"user_id"`
 }
 
-type CountFollowedResp struct {
-	Total uint `json:"total"`
-}
-
-type GetFollowingListReq struct {
-	UserId uint `path:"user_id"`
-}
-
-type GetFollowingListResp struct {
-	Users []UserInfo `json:"following"`
-}
-
-type GetFollowedListReq struct {
-	UserId uint `path:"user_id"`
-}
-
-type GetFollowedListResp struct {
-	Users []UserInfo `json:"followed"`
+type GetFriendListResp struct {
+	Friends []UserInfo `json:"Friends"`
 }
 
 type UserInfo struct {
@@ -468,32 +451,56 @@ type CommentUser struct {
 	UserAvatar string `json:"avatar"`
 }
 
-type UpgradeToWebSocketReq struct {
+type AddFriendReq struct {
+	UserID uint `json:"user_id"`
 }
 
-type UpgradeToWebSocketResp struct {
-}
-
-type CreateNewFriendReq struct {
-	FriendId uint `json:"friend_id"`
-}
-
-type CreateNewFriendResp struct {
+type AddFriendResp struct {
+	Message string `json:"message"`
 }
 
 type RemoveFriendReq struct {
-	FriendId uint `json:"friend_id"`
+	FriendID uint `json:"user_id"`
 }
 
 type RemoveFriendResp struct {
 }
 
-type GetOneFriendReq struct {
-	FriendId uint `path:"friend_id"`
+type AcceptFriendNotificationReq struct {
+	RequestID uint `json:"request_id"`
 }
 
-type GetOneFriendResp struct {
-	IsFriend bool `json:"is_friend"`
+type AcceptFriendNotificationResp struct {
+	Message string `json:"message"`
+}
+
+type DeclineFriendNotificationReq struct {
+	RequestID uint `json:"request_id"`
+}
+
+type DeclineFriendNotificationResp struct {
+	Message string `json:"message"`
+}
+
+type CancelFriendNotificationReq struct {
+	RequestID uint `json:"request_id"`
+}
+
+type CancelFriendNotificationResp struct {
+	Message string `json:"message"`
+}
+
+type GetFriendRequestReq struct {
+}
+
+type GetFriendRequestResp struct {
+	Requests []FriendRequest `json:"requests"`
+}
+
+type FriendRequest struct {
+	RequestID uint     `json:"request_id"`
+	Sender    UserInfo `json:"sender"`
+	SentTime  int64    `json:"send_time"`
 }
 
 type CreateCommentLikesReq struct {
@@ -569,4 +576,59 @@ type GetUserGenreReq struct {
 
 type GetUserGenreResp struct {
 	UserGenres []GenreInfo `json:"user_genres"`
+}
+
+type CreateRoomReq struct {
+	Name string `json:"name"`
+	Info string `json:"info"`
+}
+
+type CreateRoomResp struct {
+	RoomID uint   `json:"room_id"`
+	Name   string `json:"room_name"`
+	Info   string `json:"room_info"`
+}
+
+type DeleteRoomReq struct {
+	ID uint `json:"room_id"`
+}
+
+type DeleteRoomResp struct {
+}
+
+type JoinRoomReq struct {
+	RoomID uint `path:"room_id"`
+}
+
+type JoinRoomResp struct {
+}
+
+type LeaveRoomReq struct {
+	RoomID uint `path:"room_id"`
+}
+
+type LeaveRoomResp struct {
+}
+
+type GetRoomMembersReq struct {
+	RoomID uint `path:"room_id"`
+}
+
+type GetRoomMembersResp struct {
+	Members []UserInfo `json:"members"`
+}
+
+type GetRoomMessageReq struct {
+	RoomID uint `path:"room_id"`
+}
+
+type GetRoomMessageResp struct {
+	Messagees []MessageData `json:"messages"`
+}
+
+type MessageData struct {
+	MessageID uint     `json:"msg_id"`
+	UserInfo  UserInfo `json:"user_info"`
+	Content   string   `json:"content"`
+	SendTime  int64    `json:"send_time"`
 }

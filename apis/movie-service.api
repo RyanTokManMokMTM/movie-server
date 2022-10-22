@@ -5,11 +5,12 @@ import "desc/liked_movie.api"
 import "desc/custom_list.api"
 import "desc/post.api"
 import "desc/comment.api"
-import "desc/websocket.api"
 import "desc/friend.api"
 import "desc/liked_comment.api"
 import "desc/liked_post.api"
 import "desc/user_genre.api"
+import "desc/room.api"
+import "desc/message.api"
 
 info(
 	title: "movie service api"

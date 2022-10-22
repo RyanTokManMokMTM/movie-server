@@ -2,9 +2,9 @@ package friend
 
 import (
 	"context"
+	"fmt"
 	"github.com/pkg/errors"
 	"github.com/ryantokmanmokmtm/movie-server/common/ctxtool"
-	"github.com/ryantokmanmokmtm/movie-server/common/errx"
 	"gorm.io/gorm"
 
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
@@ -29,25 +29,34 @@ func NewRemoveFriendLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Remo
 
 func (l *RemoveFriendLogic) RemoveFriend(req *types.RemoveFriendReq) (resp *types.RemoveFriendResp, err error) {
 	// todo: add your logic here and delete this line
-	userID := ctxtool.GetUserIDFromCTX(l.ctx)
+	userId := ctxtool.GetUserIDFromCTX(l.ctx)
+	if userId == 0 {
+		return nil, fmt.Errorf("user_id is missing")
+	}
 
-	//find that user
-	_, err = l.svcCtx.DAO.FindUserByID(l.ctx, userID)
+	//find that user.
+	_, err = l.svcCtx.DAO.FindUserByID(l.ctx, userId)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, errx.NewErrCode(errx.USER_NOT_EXIST)
+			return nil, fmt.Errorf("user not exist")
 		}
-		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
+		return nil, err
 	}
 
-	friend, err := l.svcCtx.DAO.FindOneFriend(l.ctx, userID, req.FriendId)
+	//TODO: Has a friendship?
+	f, err := l.svcCtx.DAO.HasFriendShip(l.ctx, userId, req.FriendID)
 	if err != nil {
-		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
+		return nil, err
 	}
 
-	friend.State = 0
-	if err := l.svcCtx.DAO.UpdateFriendState(l.ctx, friend); err != nil {
-		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
+	if f.ID == 0 {
+		return nil, fmt.Errorf("both of you are not friend")
 	}
+
+	//TODO: Remove the friendship
+	if err := l.svcCtx.DAO.RemoveFriend(l.ctx, userId, req.FriendID); err != nil {
+		return nil, err
+	}
+
 	return &types.RemoveFriendResp{}, nil
 }

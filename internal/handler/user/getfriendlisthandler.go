@@ -14,9 +14,9 @@ import (
 	"github.com/ryantokmanmokmtm/movie-server/internal/types"
 )
 
-func CountFollowedUserHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func GetFriendListHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.CountFollowedReq
+		var req types.GetFriendListReq
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.Error(w, err)
 			return
@@ -34,8 +34,8 @@ func CountFollowedUserHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
-		l := user.NewCountFollowedUserLogic(r.Context(), svcCtx)
-		resp, err := l.CountFollowedUser(&req)
+		l := user.NewGetFriendListLogic(r.Context(), svcCtx)
+		resp, err := l.GetFriendList(&req)
 		if err != nil {
 			httpx.Error(w, err)
 		} else {

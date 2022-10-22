@@ -3,12 +3,15 @@ package user
 import (
 	"context"
 	"github.com/ryantokmanmokmtm/movie-server/common/crytox"
+	"github.com/ryantokmanmokmtm/movie-server/common/ctxtool"
 	"github.com/ryantokmanmokmtm/movie-server/common/errx"
+	"github.com/ryantokmanmokmtm/movie-server/common/jwtx"
 	"github.com/ryantokmanmokmtm/movie-server/internal/models"
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
 	"github.com/ryantokmanmokmtm/movie-server/internal/types"
 	"github.com/zeromicro/go-zero/core/logx"
 	"gorm.io/gorm"
+	"time"
 )
 
 type UserSignUpLogic struct {
@@ -31,7 +34,7 @@ func (l *UserSignUpLogic) UserSignUp(req *types.UserSignUpReq) (resp *types.User
 	//Check User
 
 	user, err := l.svcCtx.DAO.FindUserByEmail(l.ctx, req.Email)
-	if user != nil && user.Id != 0 {
+	if user != nil && user.ID != 0 {
 		logx.Info(user)
 		return nil, errx.NewErrCode(errx.EMAIL_HAS_BEEN_REGISTERED)
 	}
@@ -50,10 +53,21 @@ func (l *UserSignUpLogic) UserSignUp(req *types.UserSignUpReq) (resp *types.User
 			return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 		}
 
+		now := time.Now().Unix()
+		expiredTime := now + l.svcCtx.Config.Auth.AccessExpire
+		payLoad := map[string]any{
+			ctxtool.CTXJWTUserID: user.ID,
+		}
+
+		logx.Infof("%+v", user)
+		token, err := jwtx.GetToken(now, expiredTime, l.svcCtx.Config.Auth.AccessSecret, payLoad)
+		if err != nil {
+			return nil, err
+		}
+
 		return &types.UserSignUpResp{
-			ID:    user.Id,
-			Name:  user.Name,
-			Email: user.Email,
+			Token:       token,
+			ExpiredTime: uint(expiredTime),
 		}, nil
 	}
 	logx.Info(err.Error())
@@ -89,14 +103,14 @@ func (l *UserSignUpLogic) UserSignUp(req *types.UserSignUpReq) (resp *types.User
 //		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 //	}
 //
-//	newUser.Id, err = res.LastInsertId()
+//	newUser.ID, err = res.LastInsertId()
 //	if err != nil {
 //		//return nil, errors.Wrap(errx.NewErrCode(errx.DB_AFFECTED_ZERO_ERROR), fmt.Sprintf("UserSignUp - user db Insert.LastInsertID err:%v, req:%+v", err, req))
 //		return nil, errx.NewErrCode(errx.DB_AFFECTED_ZERO_ERROR)
 //	}
 //
 //	return &types.UserSignUpResponse{
-//		ID:    newUser.Id,
+//		ID:    newUser.ID,
 //		Name:  newUser.Name,
 //		Email: lowEmail,
 //	}, nil

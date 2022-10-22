@@ -7,7 +7,7 @@ import (
 
 func (d *DAO) UpdateUserGenres(ctx context.Context, ids []uint, userId uint) error {
 	u := models.User{
-		Id: userId,
+		ID: userId,
 	}
 
 	return u.UpdateUserGenreTrans(ctx, d.engine, ids)
@@ -15,7 +15,7 @@ func (d *DAO) UpdateUserGenres(ctx context.Context, ids []uint, userId uint) err
 
 func (d *DAO) FindUserGenres(ctx context.Context, userId uint) (*[]models.GenreInfo, error) {
 	u := models.User{
-		Id: userId,
+		ID: userId,
 	}
 
 	return u.FindUserGenres(ctx, d.engine)

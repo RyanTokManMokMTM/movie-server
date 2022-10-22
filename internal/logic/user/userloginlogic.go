@@ -44,7 +44,7 @@ func (l *UserLoginLogic) UserLogin(req *types.UserLoginReq) (resp *types.UserLog
 	}
 
 	payload := map[string]interface{}{
-		ctxtool.CTXJWTUserID: user.Id,
+		ctxtool.CTXJWTUserID: user.ID,
 	}
 
 	now := time.Now().Unix()
@@ -84,7 +84,7 @@ func (l *UserLoginLogic) UserLogin(req *types.UserLoginReq) (resp *types.UserLog
 //	}
 //
 //	payload := map[string]interface{}{
-//		ctxtool.CTXJWTUserID: res.Id,
+//		ctxtool.CTXJWTUserID: res.ID,
 //	}
 //
 //	now := time.Now().Unix()

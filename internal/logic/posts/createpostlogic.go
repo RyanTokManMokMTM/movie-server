@@ -77,7 +77,7 @@ func (l *CreatePostLogic) CreatePost(req *types.CreatePostReq) (resp *types.Crea
 //	//newPost := post.Posts{
 //	//	PostTitle:  req.PostTitle,
 //	//	PostDesc:   req.PostDesc,
-//	//	Id:    req.MovieID,
+//	//	ID:    req.MovieID,
 //	//	UserId:     userID,
 //	//	PostLike:   0,
 //	//	CreateTime: postCreateTime,

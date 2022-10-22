@@ -33,13 +33,19 @@ func NewEngine(c config.Config) *gorm.DB {
 		panic(err.(any))
 	}
 
+	err = sql.Ping()
+	if err != nil {
+		sql.Close()
+		panic(err)
+	}
+
 	sql.SetMaxIdleConns(c.MySQL.MaxIdleConns)
 	sql.SetMaxOpenConns(c.MySQL.MaxOpenConns)
 	db.AutoMigrate(&GenreInfo{})
 	db.AutoMigrate(&MovieInfo{})
 	db.AutoMigrate(&User{})
 	db.AutoMigrate(&UserMovie{})
-	db.AutoMigrate(&Friend{})
+	//db.AutoMigrate(&FriendTemp{})
 	db.AutoMigrate(&PostLiked{})
 	db.AutoMigrate(&CommentLiked{})
 
@@ -50,13 +56,20 @@ func NewEngine(c config.Config) *gorm.DB {
 	}
 	db.AutoMigrate(&Post{})
 	db.AutoMigrate(&Comment{})
+
+	db.AutoMigrate(&Room{})
+	db.AutoMigrate(&UsersRooms{})
+	db.AutoMigrate(&Message{})
+	db.AutoMigrate(&Friend{})
+	db.AutoMigrate(&FriendNotification{})
+
 	//db.AutoMigrate(&UserInterestedGenre{})
 	if err := db.SetupJoinTable(&User{}, "MovieInfos", &UserMovie{}); err != nil {
 		panic(err.(any))
 	}
-	if err := db.SetupJoinTable(&User{}, "Friends", &Friend{}); err != nil {
-		panic(err.(any))
-	}
+	//if err := db.SetupJoinTable(&User{}, "Friends", &FriendTemp{}); err != nil {
+	//	panic(err.(any))
+	//}
 	if err := db.SetupJoinTable(&User{}, "PostsLiked", &PostLiked{}); err != nil {
 		panic(err.(any))
 	}
@@ -67,9 +80,15 @@ func NewEngine(c config.Config) *gorm.DB {
 	if err := db.SetupJoinTable(&User{}, "CommentLiked", &CommentLiked{}); err != nil {
 		panic(err.(any))
 	}
-	//if err := db.SetupJoinTable(&User{}, "InterestedGenre", &UserInterestedGenre{}); err != nil {
-	//	panic(err.(any))
-	//}
+
+	err = db.SetupJoinTable(&User{}, "Rooms", &UsersRooms{})
+	if err != nil {
+		logx.Info(err)
+	}
+	err = db.SetupJoinTable(&Room{}, "Users", &UsersRooms{})
+	if err != nil {
+		logx.Info(err)
+	}
 
 	return db
 }

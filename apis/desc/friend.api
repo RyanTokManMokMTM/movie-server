@@ -7,62 +7,167 @@ info(
     email: "ryantokmanmokmtm"
     version: "demo"
 )
-
-type (
-    CreateNewFriendReq {
-        FriendId uint `json:"friend_id"`
-    }
-    CreateNewFriendResp {}
-
-    RemoveFriendReq {
-        FriendId uint `json:"friend_id"`
-    }
-    RemoveFriendResp {}
-
-    GetOneFriendReq {
-        FriendId uint `path:"friend_id"`
-    }
-    GetOneFriendResp {
-        IsFriend bool `json:"is_friend"`
-    }
-
-//    CountFollowingReq {
-//        UserId uint `path:"user_id"`
+//
+//type (
+//    CreateNewFriendReq {
+//        FriendId uint `json:"friend_id"`
 //    }
-//    CountFollowingResp {
-//        Total uint `json:"total"`
+//    CreateNewFriendResp {}
+//
+//    RemoveFriendReq {
+//        FriendId uint `json:"friend_id"`
+//    }
+//    RemoveFriendResp {}
+//
+//    GetOneFriendReq {
+//        FriendId uint `path:"friend_id"`
+//    }
+//    GetOneFriendResp {
+//        IsFriend bool `json:"is_friend"`
 //    }
 //
-//    CountFollowedReq {
-//        UserId uint `path:"user_id"`
+//    //NEW-------------------------------
+//    AcceptFriendNotificationReq struct{
+//        RequestID uint `json:"request_id"`
 //    }
-//    CountFollowedResp {
-//        Total uint `json:"total"`
+//    AcceptFriendNotificationResp struct{
+//        Message string  `json:"message"`
 //    }
+//
+//    DeclineFriendNotificationReq struct{
+//        RequestID uint `json:"request_id"`
+//    }
+//    DeclineFriendNotificationResp struct{
+//        Message string  `json:"message"`
+//    }
+//
+//    CancelFriendNotificationReq struct{
+//        RequestID uint `json:"request_id"`
+//    }
+//    CancelFriendNotificationResp struct{
+//        Message string  `json:"message"`
+//    }
+//
+//    GetFriendRequestReq struct {}
+//    GetFriendRequestResp struct {
+//        Requests []FriendRequest `json:"requests"`
+//    }
+//)
+//
+//type FriendRequest struct {
+//    RequestID uint `json:"request_id"`
+//    Sender UserInfo `json:"sender"`
+//    SentTime int64 `json:"send_time"`
+//}
+//
+//
+//@server (
+//    group : friend
+//    prefix : /api/v1
+//    jwt : Auth
+//)
+//service MovieService {
+//    @doc (
+//        summary : "Add New Friend to user following list"
+//    )
+//    @handler CreateNewFriend
+//    post /friend(CreateNewFriendReq) returns (CreateNewFriendResp);
+//
+//    @doc (
+//        summary : "Remote a followed friend from following list"
+//    )
+//    @handler RemoveFriend
+//    patch /friend(RemoveFriendReq) returns (RemoveFriendResp);
+//
+//    @doc (
+//        summary : "get user is followed by user"
+//    )
+//    @handler GetOneFriend
+//    get /friend/:friend_id(GetOneFriendReq) returns (GetOneFriendResp);
+//
+//    @handler AcceptFriendRequest
+//    post /friend/request/accept(AcceptFriendNotificationReq) returns (AcceptFriendNotificationResp);
+//
+//    @handler CancelFriendRequest
+//    patch /friend/request/cancel(CancelFriendNotificationReq) returns (CancelFriendNotificationResp);
+//
+//    @handler DeclineFriendRequest
+//    patch /friend/request/decline(DeclineFriendNotificationReq) returns (DeclineFriendNotificationResp);
+//
+//    @handler GetFriendRequest
+//    get /friend/requests(GetFriendRequestReq) returns (GetFriendRequestResp);
+//
+//}
+
+
+type (
+    AddFriendReq struct{
+        UserID uint `json:"user_id"`
+    }
+    AddFriendResp struct{
+        Message string  `json:"message"`
+    }
+
+    RemoveFriendReq struct {
+        FriendID uint `json:"user_id"`
+    }
+    RemoveFriendResp struct {}
+
+    AcceptFriendNotificationReq struct{
+        RequestID uint `json:"request_id"`
+    }
+    AcceptFriendNotificationResp struct{
+        Message string  `json:"message"`
+    }
+
+    DeclineFriendNotificationReq struct{
+        RequestID uint `json:"request_id"`
+    }
+    DeclineFriendNotificationResp struct{
+        Message string  `json:"message"`
+    }
+
+    CancelFriendNotificationReq struct{
+        RequestID uint `json:"request_id"`
+    }
+    CancelFriendNotificationResp struct{
+        Message string  `json:"message"`
+    }
+
+    GetFriendRequestReq struct {}
+    GetFriendRequestResp struct {
+        Requests []FriendRequest `json:"requests"`
+    }
 )
+
+type FriendRequest struct {
+    RequestID uint `json:"request_id"`
+    Sender UserInfo `json:"sender"`
+    SentTime int64 `json:"send_time"`
+}
 
 @server (
     group : friend
-    prefix : /api/v1
     jwt : Auth
+    prefix: /api/v1
 )
 service MovieService {
-    @doc (
-        summary : "Add New Friend to user following list"
-    )
-    @handler CreateNewFriend
-    post /friend(CreateNewFriendReq) returns (CreateNewFriendResp);
+    @handler AddFriend
+    post /friend(AddFriendReq) returns (AddFriendResp);
 
-    @doc (
-        summary : "Remote a followed friend from following list"
-    )
+    @handler GetFriendRequest
+    get /friend/requests(GetFriendRequestReq) returns (GetFriendRequestResp);
+
+
     @handler RemoveFriend
-    patch /friend(RemoveFriendReq) returns (RemoveFriendResp);
+    delete /friend(RemoveFriendReq) returns (RemoveFriendResp);
 
-    @doc (
-        summary : "get user is followed by user"
-    )
-    @handler GetOneFriend
-    get /friend/:friend_id(GetOneFriendReq) returns (GetOneFriendResp);
+    @handler AcceptFriendRequest
+    post /friend/request/accept(AcceptFriendNotificationReq) returns (AcceptFriendNotificationResp);
 
+    @handler CancelFriendRequest
+    patch /friend/request/cancel(CancelFriendNotificationReq) returns (CancelFriendNotificationResp);
+
+    @handler DeclineFriendRequest
+    patch /friend/request/decline(DeclineFriendNotificationReq) returns (DeclineFriendNotificationResp);
 }

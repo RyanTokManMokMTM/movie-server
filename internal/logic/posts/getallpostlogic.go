@@ -70,7 +70,7 @@ func (l *GetAllPostLogic) GetAllPost(req *types.AllPostsInfoReq) (resp *types.Al
 			},
 			PostLikeCount: int64(len(v.PostsLiked)),
 			PostUser: types.PostUserInfo{
-				UserID:     v.UserInfo.Id,
+				UserID:     v.UserInfo.ID,
 				UserName:   v.UserInfo.Name,
 				UserAvatar: v.UserInfo.Avatar,
 			},
@@ -104,7 +104,7 @@ func (l *GetAllPostLogic) GetAllPost(req *types.AllPostsInfoReq) (resp *types.Al
 //	//		CreateAt:         v.CreateTime.Unix(),
 //	//		//UpdateTime:       v.UpdateTime.Unix(),
 //	//		PostMovie: types.PostMovieInfo{
-//	//			MovieID:    v.Id,
+//	//			MovieID:    v.ID,
 //	//			Title:      v.MovieTitle,
 //	//			PosterPath: v.MoviePoster,
 //	//		},

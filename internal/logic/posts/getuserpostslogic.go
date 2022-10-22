@@ -71,7 +71,7 @@ func (l *GetUserPostsLogic) GetUserPosts(req *types.PostsInfoReq) (resp *types.P
 			},
 			PostLikeCount: int64(len(v.PostsLiked)),
 			PostUser: types.PostUserInfo{
-				UserID:     v.UserInfo.Id,
+				UserID:     v.UserInfo.ID,
 				UserName:   v.UserInfo.Name,
 				UserAvatar: v.UserInfo.Avatar,
 			},

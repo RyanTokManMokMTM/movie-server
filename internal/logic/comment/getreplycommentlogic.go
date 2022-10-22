@@ -49,7 +49,7 @@ func (l *GetReplyCommentLogic) GetReplyComment(req *types.GetReplyCommentReq) (r
 		replyComments = append(replyComments, types.CommentInfo{
 			CommentID: reply.CommentID,
 			UserInfo: types.CommentUser{
-				UserID:     reply.User.Id,
+				UserID:     reply.User.ID,
 				UserName:   reply.User.Name,
 				UserAvatar: reply.User.Avatar,
 			},

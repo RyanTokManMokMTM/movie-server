@@ -37,7 +37,7 @@ func (l *UserInfoLogic) UserInfo(req *types.UserInfoReq) (resp *types.UserInfoRe
 	}
 
 	return &types.UserInfoResp{
-		ID:     user.Id,
+		ID:     user.ID,
 		Name:   user.Name,
 		Email:  user.Email,
 		Avatar: user.Avatar,

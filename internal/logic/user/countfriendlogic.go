@@ -11,21 +11,21 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type CountFollowedUserLogic struct {
+type CountFriendLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
-func NewCountFollowedUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CountFollowedUserLogic {
-	return &CountFollowedUserLogic{
+func NewCountFriendLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CountFriendLogic {
+	return &CountFriendLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
 	}
 }
 
-func (l *CountFollowedUserLogic) CountFollowedUser(req *types.CountFollowedReq) (resp *types.CountFollowedResp, err error) {
+func (l *CountFriendLogic) CountFriend(req *types.CountFriendReq) (resp *types.CountFriendResp, err error) {
 	// todo: add your logic here and delete this line
 	_, err = l.svcCtx.DAO.FindUserByID(l.ctx, req.UserId)
 	if err != nil {
@@ -35,11 +35,17 @@ func (l *CountFollowedUserLogic) CountFollowedUser(req *types.CountFollowedReq) 
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
-	count, err := l.svcCtx.DAO.CountFollowedUser(l.ctx, req.UserId)
+	//TODO: Get User Friend
+	f, err := l.svcCtx.DAO.GetUserFriendRecord(l.ctx, req.UserId)
 	if err != nil {
-		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
+		return nil, err
 	}
-	return &types.CountFollowedResp{
+
+	count := l.svcCtx.DAO.CountFriends(l.ctx, f.ID)
+	//if err != nil {
+	//	return nil, err
+	//}
+	return &types.CountFriendResp{
 		Total: uint(count),
 	}, nil
 }

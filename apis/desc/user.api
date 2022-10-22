@@ -27,9 +27,8 @@ type (
 		Password string `json:"password" validate:"min=8,max=32"`
 	}
 	UserSignUpResp {
-		ID   uint  `json:"id"`
-		Name string `json:"name"`
-		Email string `json:"email"`
+		Token string `json:"token"`
+		ExpiredTime uint `json:"expired_time"`
 	}
 
 	UserInfoReq {
@@ -68,33 +67,47 @@ type (
 		Path string `json:"path"`
 	}
 
-	CountFollowingReq {
+	CountFriendReq{
 		UserId uint `path:"user_id"`
 	}
-	CountFollowingResp {
+	CountFriendResp{
 		Total uint `json:"total"`
 	}
 
-	CountFollowedReq {
+	GetFriendListReq{
 		UserId uint `path:"user_id"`
 	}
-	CountFollowedResp {
-		Total uint `json:"total"`
+	GetFriendListResp{
+		Friends []UserInfo `json:"Friends"`
 	}
-
-	GetFollowingListReq {
-		UserId uint `path:"user_id"`
-	}
-	GetFollowingListResp {
-		Users []UserInfo `json:"following"`
-	}
-
-	GetFollowedListReq {
-		UserId uint `path:"user_id"`
-	}
-	GetFollowedListResp {
-		Users []UserInfo `json:"followed"`
-	}
+//
+//	CountFollowingReq {
+//		UserId uint `path:"user_id"`
+//	}
+//	CountFollowingResp {
+//		Total uint `json:"total"`
+//	}
+//
+//	CountFollowedReq {
+//		UserId uint `path:"user_id"`
+//	}
+//	CountFollowedResp {
+//		Total uint `json:"total"`
+//	}
+//
+//	GetFollowingListReq {
+//		UserId uint `path:"user_id"`
+//	}
+//	GetFollowingListResp {
+//		Users []UserInfo `json:"following"`
+//	}
+//
+//	GetFollowedListReq {
+//		UserId uint `path:"user_id"`
+//	}
+//	GetFollowedListResp {
+//		Users []UserInfo `json:"followed"`
+//	}
 )
 
 type (
@@ -136,29 +149,41 @@ service MovieService{
 	@handler UserInfo
 	get /user/info/:id(UserInfoReq) returns (UserInfoResp);
 
-	@doc (
-		summary : "Count how many users have been followed by user"
-	)
-	@handler CountFollowingUser
-	get /user/following/:user_id(CountFollowingReq) returns (CountFollowingResp);
 
 	@doc (
-		summary : "Count how many users is following the user(owner)"
+		summary : "Count how many friend of the user"
 	)
-	@handler CountFollowedUser
-	get /user/followed/:user_id(CountFollowedReq) returns (CountFollowedResp);
+	@handler CountFriend
+	get /user/friends/count/:user_id(CountFriendReq) returns (CountFriendResp);
 
 	@doc (
-		summary : "Get Following List"
+		summary : "Get friend List"
 	)
-	@handler  GetUserFollowingList
-	get /user/following/list/:user_id(GetFollowingListReq) returns (GetFollowingListResp);
-
-	@doc (
-		summary : "Get Followed List"
-	)
-	@handler  GetUserFollowedList
-	get /user/followed/list/:user_id(GetFollowedListReq) returns (GetFollowedListResp);
+	@handler  GetFriendList
+	get /user/friends/list/:user_id(GetFriendListReq) returns (GetFriendListResp);
+//	@doc (
+//		summary : "Count how many users have been followed by user"
+//	)
+//	@handler CountFollowingUser
+//	get /user/following/:user_id(CountFollowingReq) returns (CountFollowingResp);
+//
+//	@doc (
+//		summary : "Count how many users is following the user(owner)"
+//	)
+//	@handler CountFollowedUser
+//	get /user/followed/:user_id(CountFollowedReq) returns (CountFollowedResp);
+//
+//	@doc (
+//		summary : "Get Following List"
+//	)
+//	@handler  GetUserFollowingList
+//	get /user/following/list/:user_id(GetFollowingListReq) returns (GetFollowingListResp);
+//
+//	@doc (
+//		summary : "Get Followed List"
+//	)
+//	@handler  GetUserFollowedList
+//	get /user/followed/list/:user_id(GetFollowedListReq) returns (GetFollowedListResp);
 }
 
 @server (

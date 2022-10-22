@@ -48,7 +48,7 @@ func (l *GetPostCommentLogic) GetPostComment(req *types.GetPostCommentsReq) (res
 		comments = append(comments, types.CommentInfo{
 			CommentID: v.CommentID,
 			UserInfo: types.CommentUser{
-				UserID:     v.User.Id,
+				UserID:     v.User.ID,
 				UserName:   v.User.Name,
 				UserAvatar: v.User.Avatar,
 			},

@@ -1,4 +1,4 @@
-package websocket
+package friend
 
 import (
 	"github.com/go-playground/locales/en"
@@ -9,14 +9,14 @@ import (
 	"github.com/zeromicro/go-zero/rest/httpx"
 	"net/http"
 
-	"github.com/ryantokmanmokmtm/movie-server/internal/logic/websocket"
+	"github.com/ryantokmanmokmtm/movie-server/internal/logic/friend"
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
 	"github.com/ryantokmanmokmtm/movie-server/internal/types"
 )
 
-func UpgradeToWebSocketHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func AcceptFriendRequestHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.UpgradeToWebSocketReq
+		var req types.AcceptFriendNotificationReq
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.Error(w, err)
 			return
@@ -34,8 +34,8 @@ func UpgradeToWebSocketHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
-		l := websocket.NewUpgradeToWebSocketLogic(r.Context(), svcCtx, r, w)
-		resp, err := l.UpgradeToWebSocket(&req)
+		l := friend.NewAcceptFriendRequestLogic(r.Context(), svcCtx)
+		resp, err := l.AcceptFriendRequest(&req)
 		if err != nil {
 			httpx.Error(w, err)
 		} else {

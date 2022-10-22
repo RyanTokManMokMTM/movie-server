@@ -1,4 +1,4 @@
-package user
+package room
 
 import (
 	"github.com/go-playground/locales/en"
@@ -9,14 +9,14 @@ import (
 	"github.com/zeromicro/go-zero/rest/httpx"
 	"net/http"
 
-	"github.com/ryantokmanmokmtm/movie-server/internal/logic/user"
+	"github.com/ryantokmanmokmtm/movie-server/internal/logic/room"
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
 	"github.com/ryantokmanmokmtm/movie-server/internal/types"
 )
 
-func CountFollowingUserHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func LeaveRoomHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.CountFollowingReq
+		var req types.LeaveRoomReq
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.Error(w, err)
 			return
@@ -34,8 +34,8 @@ func CountFollowingUserHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
-		l := user.NewCountFollowingUserLogic(r.Context(), svcCtx)
-		resp, err := l.CountFollowingUser(&req)
+		l := room.NewLeaveRoomLogic(r.Context(), svcCtx)
+		resp, err := l.LeaveRoom(&req)
 		if err != nil {
 			httpx.Error(w, err)
 		} else {

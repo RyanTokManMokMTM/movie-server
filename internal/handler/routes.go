@@ -10,12 +10,13 @@ import (
 	friend "github.com/ryantokmanmokmtm/movie-server/internal/handler/friend"
 	health "github.com/ryantokmanmokmtm/movie-server/internal/handler/health"
 	likedMovie "github.com/ryantokmanmokmtm/movie-server/internal/handler/likedMovie"
+	message "github.com/ryantokmanmokmtm/movie-server/internal/handler/message"
 	movie "github.com/ryantokmanmokmtm/movie-server/internal/handler/movie"
 	post_likes "github.com/ryantokmanmokmtm/movie-server/internal/handler/post_likes"
 	posts "github.com/ryantokmanmokmtm/movie-server/internal/handler/posts"
+	room "github.com/ryantokmanmokmtm/movie-server/internal/handler/room"
 	user "github.com/ryantokmanmokmtm/movie-server/internal/handler/user"
 	user_genre "github.com/ryantokmanmokmtm/movie-server/internal/handler/user_genre"
-	websocket "github.com/ryantokmanmokmtm/movie-server/internal/handler/websocket"
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
@@ -57,23 +58,13 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 			{
 				Method:  http.MethodGet,
-				Path:    "/user/following/:user_id",
-				Handler: user.CountFollowingUserHandler(serverCtx),
+				Path:    "/user/friends/count/:user_id",
+				Handler: user.CountFriendHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodGet,
-				Path:    "/user/followed/:user_id",
-				Handler: user.CountFollowedUserHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/user/following/list/:user_id",
-				Handler: user.GetUserFollowingListHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/user/followed/list/:user_id",
-				Handler: user.GetUserFollowedListHandler(serverCtx),
+				Path:    "/user/friends/list/:user_id",
+				Handler: user.GetFriendListHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/api/v1"),
@@ -334,29 +325,34 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		[]rest.Route{
 			{
-				Method:  http.MethodGet,
-				Path:    "/ws",
-				Handler: websocket.UpgradeToWebSocketHandler(serverCtx),
-			},
-		},
-	)
-
-	server.AddRoutes(
-		[]rest.Route{
-			{
 				Method:  http.MethodPost,
 				Path:    "/friend",
-				Handler: friend.CreateNewFriendHandler(serverCtx),
+				Handler: friend.AddFriendHandler(serverCtx),
 			},
 			{
-				Method:  http.MethodPatch,
+				Method:  http.MethodGet,
+				Path:    "/friend/requests",
+				Handler: friend.GetFriendRequestHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodDelete,
 				Path:    "/friend",
 				Handler: friend.RemoveFriendHandler(serverCtx),
 			},
 			{
-				Method:  http.MethodGet,
-				Path:    "/friend/:friend_id",
-				Handler: friend.GetOneFriendHandler(serverCtx),
+				Method:  http.MethodPost,
+				Path:    "/friend/request/accept",
+				Handler: friend.AcceptFriendRequestHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPatch,
+				Path:    "/friend/request/cancel",
+				Handler: friend.CancelFriendRequestHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPatch,
+				Path:    "/friend/request/decline",
+				Handler: friend.DeclineFriendRequestHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
@@ -449,6 +445,50 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: user_genre.GetUserGenreHandler(serverCtx),
 			},
 		},
+		rest.WithPrefix("/api/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodPost,
+				Path:    "/room",
+				Handler: room.CreateRoomHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodDelete,
+				Path:    "/room",
+				Handler: room.DeleteRoomHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/room/join/:room_id",
+				Handler: room.JoinRoomHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/room/leave/:room_id",
+				Handler: room.LeaveRoomHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/room/members/:room_id",
+				Handler: room.RoomMembersHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/api/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/message/:room_id",
+				Handler: message.GetRoomMessageHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 		rest.WithPrefix("/api/v1"),
 	)
 }

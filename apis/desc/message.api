@@ -1,0 +1,36 @@
+syntax = "v1"
+
+//info(
+//    title: "type title here"
+//    desc: "type desc here"
+//    author: "type author here"
+//    email: "type email here"
+//    version: "type version here"
+//)
+
+type (
+    GetRoomMessageReq {
+        RoomID uint `path:"room_id"`
+    }
+    GetRoomMessageResp {
+        Messagees []MessageData `json:"messages"`
+    }
+)
+
+type MessageData struct {
+    MessageID uint `json:"msg_id"`
+    UserInfo UserInfo `json:"user_info"`
+    Content string `json:"content"`
+    SendTime int64 `json:"send_time"`
+
+}
+
+@server (
+    jwt : Auth
+    group : message
+    prefix : /api/v1
+)
+service MovieService {
+    @handler GetRoomMessage
+    get /message/:room_id(GetRoomMessageReq) returns (GetRoomMessageResp);
+}

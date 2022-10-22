@@ -38,7 +38,7 @@ func (l *UserProfileLogic) UserProfile(req *types.UserProfileReq) (resp *types.U
 	}
 
 	return &types.UserProfileResp{
-		ID:     user.Id,
+		ID:     user.ID,
 		Name:   user.Name,
 		Email:  user.Email,
 		Avatar: user.Avatar,
@@ -73,7 +73,7 @@ func (l *UserProfileLogic) UserProfile(req *types.UserProfileReq) (resp *types.U
 //	//	json.Unmarshal(v.Genres, &genres)
 //	//	likedMovieList = append(likedMovieList, &types.LikedMovieInfo{
 //	//		Genres:       genres,
-//	//		Id:      v.Id,
+//	//		ID:      v.ID,
 //	//		MovieName:    v.MovieTitle,
 //	//		MoviePoster:  v.MoviePoster,
 //	//		MovieVoteAvg: v.MovieVoteAvg,
@@ -81,7 +81,7 @@ func (l *UserProfileLogic) UserProfile(req *types.UserProfileReq) (resp *types.U
 //	//}
 //
 //	return &types.UserProfileResp{
-//		ID:     user.Id,
+//		ID:     user.ID,
 //		Name:   user.Name,
 //		Email:  user.Email,
 //		Avatar: user.Avatar,
