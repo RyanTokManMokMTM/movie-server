@@ -36,12 +36,12 @@ func (l *GetFriendListLogic) GetFriendList(req *types.GetFriendListReq) (resp *t
 	}
 
 	//TODO: User Friend Record
-	f, err := l.svcCtx.DAO.GetUserFriendRecord(l.ctx, req.UserId)
-	if err != nil {
-		return nil, err
-	}
+	//f, err := l.svcCtx.DAO.GetUserFriendRecord(l.ctx, req.UserId)
+	//if err != nil {
+	//	return nil, err
+	//}
 
-	list, err := l.svcCtx.DAO.GetFriendsList(l.ctx, f.ID)
+	list, err := l.svcCtx.DAO.GetFriendsList(l.ctx, req.UserId)
 	if err != nil {
 		return nil, err
 	}

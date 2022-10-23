@@ -47,29 +47,29 @@ import (
 //}
 
 func (d *DAO) CountFriends(ctx context.Context, friendID uint) int64 {
-	f := &models.Friend{
+	f := &models.User{
 		ID: friendID,
 	}
 	return f.CountFriend(d.engine, ctx)
 }
 
-func (d *DAO) GetFriendsList(ctx context.Context, friendID uint) ([]*models.User, error) {
-	f := &models.Friend{
-		ID: friendID,
+func (d *DAO) GetFriendsList(ctx context.Context, UserID uint) ([]*models.User, error) {
+	f := &models.User{
+		ID: UserID,
 	}
 	return f.GetFriendsList(d.engine, ctx)
 }
 
-func (d *DAO) GetUserFriendRecord(ctx context.Context, userId uint) (*models.Friend, error) {
-	f := &models.Friend{
-		UserID: userId,
-	}
-	if err := f.GetUserFriend(d.engine, ctx); err != nil {
-		return nil, err
-	}
-
-	return f, nil
-}
+//func (d *DAO) GetUserFriendRecord(ctx context.Context, userId uint) (*models.Friend, error) {
+//	f := &models.User{
+//		ID: userId,
+//	}
+//	if err := f.GetUserFriend(d.engine, ctx); err != nil {
+//		return nil, err
+//	}
+//
+//	return f, nil
+//}
 
 func (d *DAO) InsertOneFriendNotification(ctx context.Context, sender, receiver uint) error {
 	fr := &models.FriendNotification{
@@ -126,23 +126,23 @@ func (d *DAO) DeclineFriendNotification(ctx context.Context, requestID uint) err
 }
 
 func (d *DAO) HasFriendShip(ctx context.Context, userID, friendID uint) (*models.User, error) {
-	f := &models.Friend{
-		UserID: userID,
+	f := &models.User{
+		ID: userID,
 	}
 
 	return f.FindOneFriend(d.engine, ctx, friendID)
 }
 
-func (d *DAO) InsertOneFriendInstance(ctx context.Context, userID uint) error {
-	f := &models.Friend{
-		UserID: userID,
-	}
-
-	return f.InsertOne(d.engine, ctx)
-}
+//func (d *DAO) InsertOneFriendInstance(ctx context.Context, userID uint) error {
+//	f := &models.Friend{
+//		UserID: userID,
+//	}
+//
+//	return f.InsertOne(d.engine, ctx)
+//}
 
 func (d *DAO) RemoveFriend(ctx context.Context, userID, friendID uint) error {
-	f := &models.Friend{}
+	f := &models.User{}
 
 	return f.RemoveOne(d.engine, ctx, userID, friendID)
 }
@@ -157,8 +157,8 @@ func (d *DAO) GetFriendRequest(ctx context.Context, userID uint) ([]*models.Frie
 }
 
 func (d *DAO) IsFriend(ctx context.Context, userID, friendID uint) (bool, error) {
-	f := &models.Friend{
-		UserID: userID,
+	f := &models.User{
+		ID: userID,
 	}
 
 	return f.IsFriend(d.engine, ctx, friendID)

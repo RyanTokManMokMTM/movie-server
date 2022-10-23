@@ -16,18 +16,14 @@ type User struct {
 	Cover    string `gorm:"not null;type:varchar(255)"`
 
 	//can have a lot of list
-	List       []List      `gorm:"foreignKey:UserId;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
-	MovieInfos []MovieInfo `gorm:"many2many:users_movies;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
-
-	//this relationship for following and follower?
-	//Friends []User `gorm:"many2many:friends;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
-	//Genres []GenreInfo `gorm` //one u
-	//use may have a lot of post
+	List            []List      `gorm:"foreignKey:UserId;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+	MovieInfos      []MovieInfo `gorm:"many2many:users_movies;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 	Posts           []Post      `gorm:"foreignKey:UserId;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 	PostsLiked      []Post      `gorm:"many2many:post_liked;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 	CommentLiked    []Comment   `gorm:"many2many:comment_liked;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 	InterestedGenre []GenreInfo `gorm:"many2many:users_genres;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 	Rooms           []Room      `gorm:"many2many:users_rooms;"`
+	Friends         []User      `gorm:"many2many:friendship"`
 	DefaultModel
 }
 
@@ -44,13 +40,13 @@ func (m *User) Insert(ctx context.Context, db *gorm.DB) error {
 		}
 
 		logx.Infof("User created %d", m.ID)
-
-		if err := tx.WithContext(ctx).Debug().Create(&Friend{
-			UserID: m.ID,
-		}).Error; err != nil {
-			logx.Error(err)
-			return err
-		}
+		//
+		//if err := tx.WithContext(ctx).Debug().Create(&Friend{
+		//	UserID: m.ID,
+		//}).Error; err != nil {
+		//	logx.Error(err)
+		//	return err
+		//}
 		return nil
 	})
 }
@@ -98,6 +94,66 @@ func (m *User) GetUserLikedMovies(ctx context.Context, db *gorm.DB) error {
 		return err
 	}
 	return nil
+}
+
+//Friend data
+
+func (m *User) FindOneFriend(db *gorm.DB, ctx context.Context, friendID uint) (*User, error) {
+	var friend User
+	if err := db.WithContext(ctx).Debug().Model(&m).Where(User{
+		ID: friendID,
+	}).Association("Friends").Find(&friend); err != nil {
+		return nil, err
+	}
+
+	return &friend, nil
+}
+
+//
+//func (fd *Friend) GetUserFriend(db *gorm.DB, ctx context.Context) error {
+//	return db.WithContext(ctx).Debug().Where("user_id = ?", fd.UserID).Find(&fd).Error
+//}
+
+func (m *User) CountFriend(db *gorm.DB, ctx context.Context) int64 {
+	return db.WithContext(ctx).Debug().Model(&m).Association("Friends").Count()
+}
+
+func (m *User) GetFriendsList(db *gorm.DB, ctx context.Context) ([]*User, error) {
+	var friends []*User
+	if err := db.WithContext(ctx).Debug().Model(&m).Association("Friends").Find(&friends); err != nil {
+		return nil, err
+	}
+	return friends, nil
+}
+
+func (m *User) RemoveOne(db *gorm.DB, ctx context.Context, userID, friendID uint) error {
+	//Remove an existing Friend
+	return db.WithContext(ctx).Debug().Transaction(func(tx *gorm.DB) error {
+		//Friendship : A -> B
+		if err := tx.WithContext(ctx).Debug().Model(&User{ID: userID}).Association("Friends").Delete(&User{ID: friendID}); err != nil {
+			return err
+		}
+
+		//Friendship : B -> A
+		if err := tx.WithContext(ctx).Debug().Model(&User{ID: friendID}).Association("Friends").Delete(&User{ID: userID}); err != nil {
+			return err
+		}
+		return nil
+	})
+}
+
+func (m *User) IsFriend(db *gorm.DB, ctx context.Context, friendID uint) (bool, error) {
+	var friend User
+	err := db.WithContext(ctx).Debug().Model(&m).Where("user_id = ?", friendID).Association("Friends").Find(&friend)
+	if err != nil {
+		return false, err
+	}
+
+	if friend.ID == 0 {
+		return false, nil
+	}
+
+	return true, nil
 }
 
 //

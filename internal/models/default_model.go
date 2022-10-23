@@ -36,7 +36,7 @@ func NewEngine(c config.Config) *gorm.DB {
 	err = sql.Ping()
 	if err != nil {
 		sql.Close()
-		panic(err)
+		panic(err.(any))
 	}
 
 	sql.SetMaxIdleConns(c.MySQL.MaxIdleConns)
@@ -60,7 +60,7 @@ func NewEngine(c config.Config) *gorm.DB {
 	db.AutoMigrate(&Room{})
 	db.AutoMigrate(&UsersRooms{})
 	db.AutoMigrate(&Message{})
-	db.AutoMigrate(&Friend{})
+	//db.AutoMigrate(&Friend{})
 	db.AutoMigrate(&FriendNotification{})
 
 	//db.AutoMigrate(&UserInterestedGenre{})

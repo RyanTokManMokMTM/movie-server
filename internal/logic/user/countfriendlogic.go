@@ -36,12 +36,12 @@ func (l *CountFriendLogic) CountFriend(req *types.CountFriendReq) (resp *types.C
 	}
 
 	//TODO: Get User Friend
-	f, err := l.svcCtx.DAO.GetUserFriendRecord(l.ctx, req.UserId)
-	if err != nil {
-		return nil, err
-	}
+	//f, err := l.svcCtx.DAO.GetUserFriendRecord(l.ctx, req.UserId)
+	//if err != nil {
+	//	return nil, err
+	//}
 
-	count := l.svcCtx.DAO.CountFriends(l.ctx, f.ID)
+	count := l.svcCtx.DAO.CountFriends(l.ctx, req.UserId)
 	//if err != nil {
 	//	return nil, err
 	//}

@@ -67,7 +67,7 @@ func (m *Post) GetAllPostInfoByCreateTimeDesc(ctx context.Context, db *gorm.DB, 
 	//followingIds = append(followingIds, userID)
 
 	//get friend list
-	fd := &Friend{UserID: userID}
+	fd := &User{ID: userID}
 	list, err := fd.GetFriendsList(db, ctx)
 	if err != nil {
 		return nil, err
@@ -95,7 +95,7 @@ func (m *Post) GetFollowPostInfoByCreateTimeDesc(ctx context.Context, db *gorm.D
 
 	//followingIds = append(followingIds, userID) //including owner
 	var friends []uint
-	fd := &Friend{UserID: userID}
+	fd := &User{ID: userID}
 	list, err := fd.GetFriendsList(db, ctx)
 	if err != nil {
 		return nil, err
