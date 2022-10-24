@@ -354,6 +354,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/friend/request/decline",
 				Handler: friend.DeclineFriendRequestHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/friend/:user_id",
+				Handler: friend.IsFriendHandler(serverCtx),
+			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 		rest.WithPrefix("/api/v1"),
@@ -474,6 +479,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodGet,
 				Path:    "/room/members/:room_id",
 				Handler: room.RoomMembersHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/room/rooms",
+				Handler: room.GetUserRoomsHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),

@@ -83,3 +83,20 @@ func (d *DAO) CreateCommentLiked(ctx context.Context, userId uint, comment *mode
 
 	return u.CreateUserCommentLiked(ctx, d.engine, comment)
 }
+
+func (d *DAO) GetUserRooms(ctx context.Context, userID uint) ([]*models.Room, error) {
+	u := &models.User{
+		ID: userID,
+	}
+	return u.GetUserRooms(ctx, d.engine)
+}
+
+func (d *DAO) GetUserRoomsWithMembers(ctx context.Context, userID uint) (*models.User, error) {
+	u := &models.User{
+		ID: userID,
+	}
+	if err := u.GetUserRoomsWithMembers(ctx, d.engine); err != nil {
+		return nil, err
+	}
+	return u, nil
+}

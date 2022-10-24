@@ -497,6 +497,21 @@ type GetFriendRequestResp struct {
 	Requests []FriendRequest `json:"requests"`
 }
 
+type IsFriendReq struct {
+	UserID uint `path:"user_id"`
+}
+
+type IsFriendResp struct {
+	IsFriend      bool             `json:"is_friend"`
+	IsSentRequest bool             `json:"is_sent_request"`
+	RequestInfo   BasicRequestInfo `json:"request"`
+}
+
+type BasicRequestInfo struct {
+	RequestID uint `json:"request_id"`
+	SenderID  uint `json:"sender_id"`
+}
+
 type FriendRequest struct {
 	RequestID uint     `json:"request_id"`
 	Sender    UserInfo `json:"sender"`
@@ -616,6 +631,18 @@ type GetRoomMembersReq struct {
 
 type GetRoomMembersResp struct {
 	Members []UserInfo `json:"members"`
+}
+
+type GetUserRoomsReq struct {
+}
+
+type GetUserRoomsResp struct {
+	Rooms []RoomInfo `json:"rooms"`
+}
+
+type RoomInfo struct {
+	RoomID   uint       `json:"room_id"`
+	RoomUser []UserInfo `json:"room_user"`
 }
 
 type GetRoomMessageReq struct {

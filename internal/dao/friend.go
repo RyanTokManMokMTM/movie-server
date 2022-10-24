@@ -86,7 +86,7 @@ func (d *DAO) FindOneFriendNotification(ctx context.Context, sender, receiver ui
 		Receiver: receiver,
 		State:    true,
 	}
-	err := fr.FineOne(d.engine, ctx)
+	err := fr.FineOneBySenderAndReceiver(d.engine, ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -99,7 +99,7 @@ func (d *DAO) FindOneFriendNotificationByID(ctx context.Context, requestID uint)
 		State: true,
 	}
 
-	err := fr.FineOne(d.engine, ctx)
+	err := fr.FineOneByID(d.engine, ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -125,7 +125,7 @@ func (d *DAO) DeclineFriendNotification(ctx context.Context, requestID uint) err
 	return f.Decline(d.engine, ctx)
 }
 
-func (d *DAO) HasFriendShip(ctx context.Context, userID, friendID uint) (*models.User, error) {
+func (d *DAO) FindOneFriend(ctx context.Context, userID, friendID uint) (*models.User, error) {
 	f := &models.User{
 		ID: userID,
 	}

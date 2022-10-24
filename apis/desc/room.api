@@ -9,38 +9,50 @@ syntax = "v1"
 //)
 
 type (
-    CreateRoomReq struct{
+    CreateRoomReq {
         Name string `json:"name"`
         Info string `json:"info"`
     }
-    CreateRoomResp struct{
+    CreateRoomResp {
         RoomID uint `json:"room_id"`
         Name string `json:"room_name"`
         Info string `json:"room_info"`
     }
 
-    DeleteRoomReq struct {
+    DeleteRoomReq  {
         ID uint `json:"room_id"`
     }
-    DeleteRoomResp struct {}
+    DeleteRoomResp  {}
 
-    JoinRoomReq struct {
+    JoinRoomReq  {
         RoomID uint `path:"room_id"`
     }
-    JoinRoomResp struct {}
+    JoinRoomResp  {}
 
-    LeaveRoomReq struct {
+    LeaveRoomReq  {
         RoomID uint `path:"room_id"`
     }
-    LeaveRoomResp struct {}
+    LeaveRoomResp  {}
 
-    GetRoomMembersReq struct {
+    GetRoomMembersReq  {
         RoomID uint `path:"room_id"`
     }
-    GetRoomMembersResp struct {
+    GetRoomMembersResp  {
         Members []UserInfo `json:"members"`
     }
+
+    GetUserRoomsReq {}
+    GetUserRoomsResp {
+        Rooms []RoomInfo `json:"rooms"`
+    }
 )
+
+type RoomInfo {
+    RoomID uint `json:"room_id"`
+    RoomUser []UserInfo `json:"room_user"`
+//    RoomName string `json:"room_name"`
+//    RoomInfo string `json:"room_info"`
+}
 
 @server (
     jwt :  Auth
@@ -62,4 +74,7 @@ service MovieService {
 
     @handler RoomMembers
     get /room/members/:room_id(GetRoomMembersReq) returns (GetRoomMembersResp);
+
+    @handler GetUserRooms
+    get /room/rooms(GetUserRoomsReq) returns (GetUserRoomsResp);
 }

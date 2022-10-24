@@ -1,4 +1,4 @@
-package friend
+package room
 
 import (
 	"context"
@@ -13,28 +13,28 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type RemoveFriendLogic struct {
+type GetUserRoomsLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
-func NewRemoveFriendLogic(ctx context.Context, svcCtx *svc.ServiceContext) *RemoveFriendLogic {
-	return &RemoveFriendLogic{
+func NewGetUserRoomsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetUserRoomsLogic {
+	return &GetUserRoomsLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
 	}
 }
 
-func (l *RemoveFriendLogic) RemoveFriend(req *types.RemoveFriendReq) (resp *types.RemoveFriendResp, err error) {
+func (l *GetUserRoomsLogic) GetUserRooms(req *types.GetUserRoomsReq) (resp *types.GetUserRoomsResp, err error) {
 	// todo: add your logic here and delete this line
 	userId := ctxtool.GetUserIDFromCTX(l.ctx)
 	if userId == 0 {
 		return nil, fmt.Errorf("user_id is missing")
 	}
 
-	//find that user.
+	//find that user
 	_, err = l.svcCtx.DAO.FindUserByID(l.ctx, userId)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -43,20 +43,29 @@ func (l *RemoveFriendLogic) RemoveFriend(req *types.RemoveFriendReq) (resp *type
 		return nil, err
 	}
 
-	//TODO: Has a friendship?
-	f, err := l.svcCtx.DAO.FindOneFriend(l.ctx, userId, req.FriendID)
+	userRooms, err := l.svcCtx.DAO.GetUserRoomsWithMembers(l.ctx, userId)
 	if err != nil {
 		return nil, err
 	}
 
-	if f.ID == 0 {
-		return nil, fmt.Errorf("both of you are not friend")
+	roomInfos := make([]types.RoomInfo, 0)
+	for _, v := range userRooms.Rooms {
+		roomMembers := make([]types.UserInfo, 0)
+		for _, mem := range v.Users {
+			roomMembers = append(roomMembers, types.UserInfo{
+				ID:     mem.ID,
+				Name:   mem.Name,
+				Avatar: mem.Avatar,
+			})
+		}
+
+		roomInfos = append(roomInfos, types.RoomInfo{
+			RoomID:   v.ID,
+			RoomUser: roomMembers,
+		})
 	}
 
-	//TODO: Remove the friendship
-	if err := l.svcCtx.DAO.RemoveFriend(l.ctx, userId, req.FriendID); err != nil {
-		return nil, err
-	}
-
-	return &types.RemoveFriendResp{}, nil
+	return &types.GetUserRoomsResp{
+		Rooms: roomInfos,
+	}, nil
 }

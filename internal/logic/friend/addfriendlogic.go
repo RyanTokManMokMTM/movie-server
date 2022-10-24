@@ -72,7 +72,6 @@ func (l *AddFriendLogic) AddFriend(req *types.AddFriendReq) (resp *types.AddFrie
 	//TODO:Add to the notification if it hasn't sent a request.
 	_, err = l.svcCtx.DAO.FindOneFriendNotification(l.ctx, userId, req.UserID)
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
-		logx.Error(err)
 		return nil, err
 	}
 

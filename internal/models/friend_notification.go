@@ -25,8 +25,12 @@ func (f *FriendNotification) InsertOne(db *gorm.DB, ctx context.Context) error {
 	return db.WithContext(ctx).Debug().Create(&f).Error
 }
 
-func (f *FriendNotification) FineOne(db *gorm.DB, ctx context.Context) error {
+func (f *FriendNotification) FineOneByID(db *gorm.DB, ctx context.Context) error {
 	return db.WithContext(ctx).Debug().Where("ID = ? AND State = ?", f.ID, f.State).First(&f).Error
+}
+
+func (f *FriendNotification) FineOneBySenderAndReceiver(db *gorm.DB, ctx context.Context) error {
+	return db.WithContext(ctx).Debug().Where("(Sender = ? AND Receiver = ?) OR (Sender = ? AND Receiver = ?) AND State = ?", f.Sender, f.Receiver, f.Receiver, f.Sender, f.State).First(&f).Error
 }
 
 func (f *FriendNotification) Accept(db *gorm.DB, ctx context.Context) error {

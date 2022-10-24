@@ -101,46 +101,60 @@ info(
 
 
 type (
-    AddFriendReq struct{
+    AddFriendReq {
         UserID uint `json:"user_id"`
     }
-    AddFriendResp struct{
+    AddFriendResp {
         Message string  `json:"message"`
     }
 
-    RemoveFriendReq struct {
+    RemoveFriendReq  {
         FriendID uint `json:"user_id"`
     }
-    RemoveFriendResp struct {}
+    RemoveFriendResp  {}
 
-    AcceptFriendNotificationReq struct{
+    AcceptFriendNotificationReq {
         RequestID uint `json:"request_id"`
     }
-    AcceptFriendNotificationResp struct{
+    AcceptFriendNotificationResp {
         Message string  `json:"message"`
     }
 
-    DeclineFriendNotificationReq struct{
+    DeclineFriendNotificationReq {
         RequestID uint `json:"request_id"`
     }
-    DeclineFriendNotificationResp struct{
+    DeclineFriendNotificationResp {
         Message string  `json:"message"`
     }
 
-    CancelFriendNotificationReq struct{
+    CancelFriendNotificationReq {
         RequestID uint `json:"request_id"`
     }
-    CancelFriendNotificationResp struct{
+    CancelFriendNotificationResp {
         Message string  `json:"message"`
     }
 
-    GetFriendRequestReq struct {}
-    GetFriendRequestResp struct {
+    GetFriendRequestReq  {}
+    GetFriendRequestResp  {
         Requests []FriendRequest `json:"requests"`
+    }
+
+    IsFriendReq {
+        UserID uint `path:"user_id"`
+    }
+    IsFriendResp {
+        IsFriend bool `json:"is_friend"`
+        IsSentRequest bool `json:"is_sent_request"`
+        RequestInfo BasicRequestInfo `json:"request"`
     }
 )
 
-type FriendRequest struct {
+type BasicRequestInfo {
+    RequestID uint `json:"request_id"`
+    SenderID uint `json:"sender_id"`
+}
+
+type FriendRequest  {
     RequestID uint `json:"request_id"`
     Sender UserInfo `json:"sender"`
     SentTime int64 `json:"send_time"`
@@ -170,4 +184,7 @@ service MovieService {
 
     @handler DeclineFriendRequest
     patch /friend/request/decline(DeclineFriendNotificationReq) returns (DeclineFriendNotificationResp);
+
+    @handler IsFriend
+    get /friend/:user_id(IsFriendReq) returns (IsFriendResp);
 }

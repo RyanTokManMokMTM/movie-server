@@ -143,12 +143,13 @@ func (m *User) RemoveOne(db *gorm.DB, ctx context.Context, userID, friendID uint
 }
 
 func (m *User) IsFriend(db *gorm.DB, ctx context.Context, friendID uint) (bool, error) {
-	var friend User
-	err := db.WithContext(ctx).Debug().Model(&m).Where("user_id = ?", friendID).Association("Friends").Find(&friend)
+	var friend *User
+	err := db.WithContext(ctx).Debug().Model(&m).Where("id = ?", friendID).Association("Friends").Find(&friend)
 	if err != nil {
 		return false, err
 	}
 
+	logx.Infof("%+v", friend)
 	if friend.ID == 0 {
 		return false, nil
 	}
@@ -278,6 +279,21 @@ func (m *User) FindUserGenres(ctx context.Context, db *gorm.DB) (*[]GenreInfo, e
 	}
 
 	return &genreInfos, nil
+}
+
+func (m *User) GetUserRooms(ctx context.Context, db *gorm.DB) ([]*Room, error) {
+	var rooms []*Room
+	if err := db.WithContext(ctx).Debug().Model(&m).Association("Rooms").Find(&rooms); err != nil {
+		return nil, err
+	}
+	return rooms, nil
+}
+
+func (m *User) GetUserRoomsWithMembers(ctx context.Context, db *gorm.DB) error {
+	return db.WithContext(ctx).Debug().Model(&m).Preload("Rooms").Preload("Rooms.Users", func(tx *gorm.DB) *gorm.DB {
+		return tx.Where("id != ?", m.ID)
+	}).First(&m).Error
+
 }
 
 //Util tool
