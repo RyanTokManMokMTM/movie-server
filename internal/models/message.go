@@ -35,7 +35,7 @@ func (m *Message) InsertOne(db *gorm.DB, ctx context.Context) error {
 
 func (m *Message) GetRoomMessages(db *gorm.DB, ctx context.Context) ([]*Message, error) {
 	var record []*Message
-	if err := db.WithContext(ctx).Debug().Model(&m).Where("room_id = ?", m.RoomID).Preload("SendUser").Order("ID desc").Limit(10).Find(&record).Error; err != nil {
+	if err := db.WithContext(ctx).Debug().Model(&m).Where("room_id = ?", m.RoomID).Preload("SendUser").Limit(10).Find(&record).Error; err != nil {
 		return nil, err
 	}
 	return record, nil

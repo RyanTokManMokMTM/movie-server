@@ -59,7 +59,7 @@ func (l *GetRoomMessageLogic) GetRoomMessage(req *types.GetRoomMessageReq) (resp
 		return nil, err
 	}
 
-	var record []types.MessageData
+	record := make([]types.MessageData,0)
 	for _, data := range msgs {
 		record = append(record, types.MessageData{
 			MessageID: data.ID,
