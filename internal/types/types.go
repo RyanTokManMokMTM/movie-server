@@ -641,7 +641,7 @@ type GetUserRoomsResp struct {
 }
 
 type ChatRoomData struct {
-	ID       uint          `json:""id"`
+	ID       uint          `json:"id"`
 	Users    []UserInfo    `json:"users"`
 	Messages []MessageInfo `json:"messages"`
 }
