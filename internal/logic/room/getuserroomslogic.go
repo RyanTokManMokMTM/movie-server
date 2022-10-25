@@ -48,21 +48,36 @@ func (l *GetUserRoomsLogic) GetUserRooms(req *types.GetUserRoomsReq) (resp *type
 		return nil, err
 	}
 
-	roomInfos := make([]types.RoomInfo, 0)
+	roomInfos := make([]types.ChatRoomData, 0)
 	for _, v := range userRooms.Rooms {
-		roomMembers := make([]types.UserInfo, 0)
-		for _, mem := range v.Users {
-			roomMembers = append(roomMembers, types.UserInfo{
-				ID:     mem.ID,
-				Name:   mem.Name,
-				Avatar: mem.Avatar,
+		user := make([]types.UserInfo, 0)
+		for _, u := range v.Users {
+			if u.ID == userId {
+				continue
+			}
+			user = append(user, types.UserInfo{
+				ID:     u.ID,
+				Name:   u.Name,
+				Avatar: u.Avatar,
 			})
 		}
 
-		roomInfos = append(roomInfos, types.RoomInfo{
-			RoomID:   v.ID,
-			RoomUser: roomMembers,
+		//The latest 10th messages in asc order
+		messages := make([]types.MessageInfo, 0)
+		for i := len(v.Messages) - 1; i >= 0; i-- {
+			messages = append(messages, types.MessageInfo{
+				ID:       v.Messages[i].MessageID,
+				Message:  v.Messages[i].Content,
+				Sender:   v.Messages[i].SendUser.ID,
+				SentTime: v.Messages[i].SentTime.Unix(),
+			})
+		}
+		roomInfos = append(roomInfos, types.ChatRoomData{
+			ID:       v.ID,
+			Users:    user,
+			Messages: messages,
 		})
+
 	}
 
 	return &types.GetUserRoomsResp{

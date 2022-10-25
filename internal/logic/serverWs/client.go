@@ -95,7 +95,7 @@ func (c *ClientConn) ReadLoop() {
 		}
 		//TODO: Check User
 		//TODO: Store Message
-		if err := c.svcCtx.DAO.InsertOneMessage(context.TODO(), req.GroupID, c.UserID, req.Message); err != nil {
+		if err := c.svcCtx.DAO.InsertOneMessage(context.TODO(), req.GroupID, c.UserID, req.Message, req.MessageID, req.SentTime); err != nil {
 			logx.Error()
 			continue
 		}
@@ -107,16 +107,18 @@ func (c *ClientConn) ReadLoop() {
 		}
 
 		message := &Message{
-			Type:    MESSAGE,
-			GroupID: req.GroupID,
-			ToUser:  0,
-			UserID:  c.UserID,
+			OpCode:    req.OpCode,
+			Type:      MESSAGE,
+			GroupID:   req.GroupID,
+			MessageID: req.MessageID,
+			ToUser:    0,
+			UserID:    c.UserID,
 			UserDetail: SenderData{
 				UserID:   u.ID,
 				UserName: u.Name,
 			},
 			Content:      req.Message,
-			SendTime:     time.Now().Unix(),
+			SendTime:     req.SentTime,
 			GroupMembers: allUser,
 		}
 
@@ -139,7 +141,7 @@ func (c *ClientConn) WriteLoop() {
 				Response:
 				1. Type of data - system or message
 				2. UserSent
-				3. Data ： message
+				3. Content ： message
 
 			*/
 

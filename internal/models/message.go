@@ -3,13 +3,16 @@ package models
 import (
 	"context"
 	"gorm.io/gorm"
+	"time"
 )
 
 type Message struct {
-	ID     uint `gorm:"primaryKey"`
-	RoomID uint
-	Sender uint
-	Data   string
+	ID        uint   `gorm:"primaryKey"`
+	MessageID string `gorm:"uniqueIndex"` //From Client
+	RoomID    uint
+	Sender    uint
+	Content   string
+	SentTime  time.Time `gorm:"type:timestamp"` //FromClient
 	DefaultModel
 
 	RoomInfo Room `gorm:"foreignKey:RoomID;references:ID"`

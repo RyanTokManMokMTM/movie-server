@@ -637,12 +637,20 @@ type GetUserRoomsReq struct {
 }
 
 type GetUserRoomsResp struct {
-	Rooms []RoomInfo `json:"rooms"`
+	Rooms []ChatRoomData `json:"rooms"`
 }
 
-type RoomInfo struct {
-	RoomID   uint       `json:"room_id"`
-	RoomUser []UserInfo `json:"room_user"`
+type ChatRoomData struct {
+	ID       uint          `json:""id"`
+	Users    []UserInfo    `json:"users"`
+	Messages []MessageInfo `json:"messages"`
+}
+
+type MessageInfo struct {
+	ID       string `json:"id"`
+	Message  string `json:"message"`
+	Sender   uint   `json:"sender_id"`
+	SentTime int64  `json:"sent_time"`
 }
 
 type GetRoomMessageReq struct {
@@ -654,8 +662,8 @@ type GetRoomMessageResp struct {
 }
 
 type MessageData struct {
-	MessageID uint     `json:"msg_id"`
-	UserInfo  UserInfo `json:"user_info"`
+	MessageID string   `json:"id"`
+	UserInfo  UserInfo `json:"users"`
 	Content   string   `json:"content"`
 	SendTime  int64    `json:"send_time"`
 }

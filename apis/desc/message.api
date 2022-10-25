@@ -18,8 +18,8 @@ type (
 )
 
 type MessageData struct {
-    MessageID uint `json:"msg_id"`
-    UserInfo UserInfo `json:"user_info"`
+    MessageID string `json:"id"`
+    UserInfo UserInfo `json:"users"`
     Content string `json:"content"`
     SendTime int64 `json:"send_time"`
 

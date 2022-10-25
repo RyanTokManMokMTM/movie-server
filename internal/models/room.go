@@ -13,6 +13,7 @@ type Room struct {
 	OwnerRef uint
 	Owner    User   `gorm:"foreignKey:OwnerRef"`
 	Users    []User `gorm:"many2many:users_rooms;"`
+	Messages []Message
 	DefaultModel
 }
 

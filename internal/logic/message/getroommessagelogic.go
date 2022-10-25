@@ -59,17 +59,17 @@ func (l *GetRoomMessageLogic) GetRoomMessage(req *types.GetRoomMessageReq) (resp
 		return nil, err
 	}
 
-	record := make([]types.MessageData,0)
+	record := make([]types.MessageData, 0)
 	for _, data := range msgs {
 		record = append(record, types.MessageData{
-			MessageID: data.ID,
+			MessageID: data.MessageID,
 			UserInfo: types.UserInfo{
 				ID:     data.SendUser.ID,
 				Name:   data.SendUser.Name,
 				Avatar: data.SendUser.Avatar,
 			},
-			Content:  data.Data,
-			SendTime: data.CreatedAt.Unix(),
+			Content:  data.Content,
+			SendTime: data.SentTime.Unix(),
 		})
 	}
 

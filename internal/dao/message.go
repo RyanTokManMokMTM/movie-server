@@ -3,13 +3,17 @@ package dao
 import (
 	"context"
 	"github.com/ryantokmanmokmtm/movie-server/internal/models"
+	"time"
 )
 
-func (d *DAO) InsertOneMessage(ctx context.Context, roomID, userId uint, message string) error {
+func (d *DAO) InsertOneMessage(ctx context.Context, roomID, userId uint, message, messageID string, sentTime int64) error {
+
 	msg := &models.Message{
-		RoomID: roomID,
-		Sender: userId,
-		Data:   message,
+		RoomID:    roomID,
+		Sender:    userId,
+		Content:   message,
+		MessageID: messageID,
+		SentTime:  time.Unix(sentTime, 0),
 	}
 
 	return msg.InsertOne(d.engine, ctx)

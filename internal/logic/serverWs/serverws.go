@@ -32,21 +32,24 @@ type SenderData struct {
 }
 
 type MessageReq struct {
-	OpCode  OpCode `json:"opcode"`
-	GroupID uint   `json:"group_id"`
-	Message string `json:"message"`
+	OpCode    OpCode `json:"opcode"`
+	GroupID   uint   `json:"group_id"`
+	MessageID string `json:"message_id"`
+	Message   string `json:"message"`
+	SentTime  int64  `json:"sent_time"`
 }
 
 type Message struct {
 	OpCode       OpCode     `json:"opcode"`
 	Type         uint       `json:"message_type"` //system , message , ping ,pong
+	MessageID    string     `json:"message_id"`   //same as sender
 	GroupID      uint       `json:"group_id"`     //for chat
 	GroupMembers []uint     `json:"-"`
 	ToUser       uint       `json:"to_user"` //for notification
 	UserID       uint       `json:"user_id"`
 	UserDetail   SenderData `json:"sender_info"`
 	Content      string     `json:"content"`
-	SendTime     int64      `json:"send_time"`
+	SendTime     int64      `json:"send_time"` //same as sender
 }
 
 const (

@@ -43,15 +43,22 @@ type (
 
     GetUserRoomsReq {}
     GetUserRoomsResp {
-        Rooms []RoomInfo `json:"rooms"`
+        Rooms []ChatRoomData `json:"rooms"`
     }
 )
 
-type RoomInfo {
-    RoomID uint `json:"room_id"`
-    RoomUser []UserInfo `json:"room_user"`
-//    RoomName string `json:"room_name"`
-//    RoomInfo string `json:"room_info"`
+
+type ChatRoomData {
+    ID uint `json:""id"`
+    Users []UserInfo `json:"users"`
+    Messages []MessageInfo `json:"messages"`
+}
+
+type MessageInfo {
+    ID string `json:"id"`
+    Message string `json:"message"`
+    Sender uint `json:"sender_id"`
+    SentTime int64 `json:"sent_time"`
 }
 
 @server (
