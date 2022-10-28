@@ -83,7 +83,7 @@ func (c *ClientConn) ReadLoop() {
 			continue
 		}
 
-		u, err := c.svcCtx.DAO.FindUserByID(context.TODO(), c.UserID)
+		_, err = c.svcCtx.DAO.FindUserByID(context.TODO(), c.UserID)
 		if err != nil {
 			logx.Error(err)
 			continue
@@ -111,12 +111,13 @@ func (c *ClientConn) ReadLoop() {
 			Type:      MESSAGE,
 			GroupID:   req.GroupID,
 			MessageID: req.MessageID,
-			ToUser:    0,
-			UserID:    c.UserID,
-			UserDetail: SenderData{
-				UserID:   u.ID,
-				UserName: u.Name,
-			},
+			ToUser:    0,        //send the message to this user . currently this message is for group chat...
+			UserID:    c.UserID, //message is from this user
+			//UserDetail: SenderData{ //TOOD: do we need this data???
+			//	UserID:     u.ID,
+			//	UserName:   u.Name,
+			//	UserAvatar: u.Avatar,
+			//},
 			Content:      req.Message,
 			SendTime:     req.SentTime,
 			GroupMembers: allUser,
@@ -178,6 +179,8 @@ func (c *ClientConn) WriteLoop() {
 			//send a ping message
 			pingMessage := Message{
 				OpCode: OpPing,
+				Type:   SYSTEM,
+				ToUser: c.UserID, //send a ping to this user
 			}
 
 			data, _ := json.Marshal(pingMessage)

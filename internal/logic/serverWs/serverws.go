@@ -27,8 +27,9 @@ const (
 )
 
 type SenderData struct {
-	UserID   uint   `json:"user_id"`
-	UserName string `json:"user_name"`
+	UserID     uint   `json:"id"`
+	UserName   string `json:"name"`
+	UserAvatar string `json:"avatar"`
 }
 
 type MessageReq struct {

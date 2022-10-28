@@ -41,6 +41,7 @@ func (d *DAO) FindAllPosts(ctx context.Context, userID uint) ([]*models.Post, er
 	if err != nil {
 		return nil, err
 	}
+
 	return resp, err
 }
 

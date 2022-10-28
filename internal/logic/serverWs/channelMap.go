@@ -72,7 +72,8 @@ func (ch *ChannelMap) Run() {
 			send, _ := json.Marshal(message)
 			if message.ToUser > 0 {
 				//Send to User
-				if client, ok := ch.channels[message.UserID]; ok {
+				logx.Infof("send to a user")
+				if client, ok := ch.channels[message.ToUser]; ok {
 					client.send <- send
 				}
 			} else if message.GroupMembers != nil && message.GroupID > 0 {

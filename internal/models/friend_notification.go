@@ -10,7 +10,7 @@ type FriendNotification struct {
 	ID       uint `gorm:"primary_key"`
 	Sender   uint
 	Receiver uint
-	State    bool //0: accepted/declined/canceled 1:waiting/sent
+	State    uint //there are 3 start . 0 represent decline and cancel ,1 represent send a request and 2 represent accepted
 	DefaultModel
 
 	SenderInfo   User `gorm:"foreignKey:Sender;references:ID"`
@@ -30,7 +30,7 @@ func (f *FriendNotification) FineOneByID(db *gorm.DB, ctx context.Context) error
 }
 
 func (f *FriendNotification) FineOneBySenderAndReceiver(db *gorm.DB, ctx context.Context) error {
-	return db.WithContext(ctx).Debug().Where("(Sender = ? AND Receiver = ?) OR (Sender = ? AND Receiver = ?) AND State = ?", f.Sender, f.Receiver, f.Receiver, f.Sender, f.State).First(&f).Error
+	return db.WithContext(ctx).Debug().Where("(Sender = ? AND Receiver = ? AND State = ?) OR (Sender = ? AND Receiver = ? AND State = ? )", f.Sender, f.Receiver, f.State, f.Receiver, f.Sender, f.State).First(&f).Error
 }
 
 func (f *FriendNotification) Accept(db *gorm.DB, ctx context.Context) error {
@@ -42,7 +42,7 @@ func (f *FriendNotification) Accept(db *gorm.DB, ctx context.Context) error {
 			TODO: Add FriendTemp to Friendship of both of them
 		*/
 
-		if err := tx.WithContext(ctx).Debug().Model(&f).Update("State", false).Error; err != nil {
+		if err := tx.WithContext(ctx).Debug().Model(&f).Update("State", 2).Error; err != nil {
 			logx.Error(err)
 			return err
 		}
@@ -84,15 +84,15 @@ func (f *FriendNotification) Accept(db *gorm.DB, ctx context.Context) error {
 }
 
 func (f *FriendNotification) Cancel(db *gorm.DB, ctx context.Context) error {
-	return db.WithContext(ctx).Debug().Model(&f).Update("state", false).Error
+	return db.WithContext(ctx).Debug().Model(&f).Update("state", 0).Error
 }
 func (f *FriendNotification) Decline(db *gorm.DB, ctx context.Context) error {
-	return db.WithContext(ctx).Debug().Model(&f).Update("state", false).Error
+	return db.WithContext(ctx).Debug().Model(&f).Update("state", 0).Error
 }
 
 func (f *FriendNotification) GetNotifications(db *gorm.DB, ctx context.Context) ([]*FriendNotification, error) {
 	var resp []*FriendNotification
-	if err := db.WithContext(ctx).Debug().Model(&f).Preload("SenderInfo").Where("Receiver = ? AND State = ?", f.Receiver, f.State).Find(&resp).Error; err != nil {
+	if err := db.WithContext(ctx).Debug().Model(&f).Preload("SenderInfo").Where("Receiver = ? AND State between ? and ?", f.Receiver, 1, 2).Find(&resp).Error; err != nil {
 		return nil, err
 	}
 	return resp, nil

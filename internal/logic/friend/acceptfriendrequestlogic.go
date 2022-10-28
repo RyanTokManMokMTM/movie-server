@@ -61,7 +61,8 @@ func (l *AcceptFriendRequestLogic) AcceptFriendRequest(req *types.AcceptFriendNo
 
 	go func() {
 		//Send the notification via websocket
-		_ = serverWs.SendNotificationToUser(notification.Receiver, notification.Sender, fmt.Sprintf("[SYSTEM MESSAGE] %s accecpted your friend request.", u.Name))
+		//
+		_ = serverWs.SendNotificationToUserWithUserInfo(notification.Sender, u, fmt.Sprintf("%s接受了您的交友請求", u.Name))
 	}()
 
 	return &types.AcceptFriendNotificationResp{

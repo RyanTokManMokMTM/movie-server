@@ -77,6 +77,10 @@ func (m *Post) GetAllPostInfoByCreateTimeDesc(ctx context.Context, db *gorm.DB, 
 		friends = append(friends, info.ID)
 	}
 
+	friends = append(friends, userID) //include itself???
+
+	//logx.Info("friend ids", list)
+
 	var resp []*Post
 	if err := db.Debug().WithContext(ctx).Model(&m).Preload("MovieInfo").Preload("UserInfo").Preload("Comments").Preload("PostsLiked").Where("user_id NOT IN(?)", friends).Order("created_at desc").Limit(10).Omit("state").Find(&resp).Error; err != nil {
 		return nil, err

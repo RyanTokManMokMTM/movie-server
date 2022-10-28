@@ -48,9 +48,9 @@ func (l *GetFriendRequestLogic) GetFriendRequest(req *types.GetFriendRequestReq)
 		return nil, err
 	}
 
-	var request []types.FriendRequest
+	requests := make([]types.FriendRequest, 0)
 	for _, req := range list {
-		request = append(request, types.FriendRequest{
+		requests = append(requests, types.FriendRequest{
 			RequestID: req.ID,
 			Sender: types.UserInfo{
 				ID:     req.SenderInfo.ID,
@@ -58,9 +58,10 @@ func (l *GetFriendRequestLogic) GetFriendRequest(req *types.GetFriendRequestReq)
 				Avatar: req.SenderInfo.Avatar,
 			},
 			SentTime: req.CreatedAt.Unix(),
+			State:    req.State,
 		})
 	}
 	return &types.GetFriendRequestResp{
-		Requests: request,
+		Requests: requests,
 	}, nil
 }

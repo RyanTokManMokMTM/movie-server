@@ -456,7 +456,8 @@ type AddFriendReq struct {
 }
 
 type AddFriendResp struct {
-	Message string `json:"message"`
+	SenderID  uint `json:"sender"`
+	RequestID uint `json:"request_id"`
 }
 
 type RemoveFriendReq struct {
@@ -516,6 +517,7 @@ type FriendRequest struct {
 	RequestID uint     `json:"request_id"`
 	Sender    UserInfo `json:"sender"`
 	SentTime  int64    `json:"send_time"`
+	State     uint     `json:"state"`
 }
 
 type CreateCommentLikesReq struct {

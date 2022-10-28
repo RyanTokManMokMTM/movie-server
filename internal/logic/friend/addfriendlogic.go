@@ -66,7 +66,8 @@ func (l *AddFriendLogic) AddFriend(req *types.AddFriendReq) (resp *types.AddFrie
 
 	if isFriend {
 		return &types.AddFriendResp{
-			Message: fmt.Sprintf("both of your already in friendship."),
+			SenderID:  0,
+			RequestID: 0,
 		}, nil
 	}
 	//TODO:Add to the notification if it hasn't sent a request.
@@ -76,16 +77,19 @@ func (l *AddFriendLogic) AddFriend(req *types.AddFriendReq) (resp *types.AddFrie
 	}
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		if err := l.svcCtx.DAO.InsertOneFriendNotification(l.ctx, userId, req.UserID); err != nil {
+		id, err := l.svcCtx.DAO.InsertOneFriendNotification(l.ctx, userId, req.UserID)
+		if err != nil {
 			return nil, err
 		}
 		go func() {
 			//Send the notification via websocket
-			_ = serverWs.SendNotificationToUser(u.ID, req.UserID, fmt.Sprintf("[SYSTEM MESSAGE] %s sent you a friend request", u.Name))
+			_ = serverWs.SendNotificationToUserWithUserInfo(req.UserID, u, fmt.Sprintf("%s傳送了好友邀請給您", u.Name))
+			//_ = serverWs.SendNotificationToUser(u.ID, req.UserID, fmt.Sprintf("%s傳送了好友邀請給您", u.Name))
 		}()
 
 		return &types.AddFriendResp{
-			Message: fmt.Sprintf("friend request sent"),
+			SenderID:  userId,
+			RequestID: id,
 		}, nil
 	}
 

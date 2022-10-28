@@ -8,7 +8,7 @@ import (
 
 type Message struct {
 	ID        uint   `gorm:"primaryKey"`
-	MessageID string `gorm:"uniqueIndex"` //From Client
+	MessageID string //From Client
 	RoomID    uint
 	Sender    uint
 	Content   string

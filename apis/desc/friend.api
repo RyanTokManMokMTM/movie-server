@@ -105,7 +105,9 @@ type (
         UserID uint `json:"user_id"`
     }
     AddFriendResp {
-        Message string  `json:"message"`
+//        Message string  `json:"message"`
+        SenderID uint `json:"sender"`
+        RequestID uint `json:"request_id"`
     }
 
     RemoveFriendReq  {
@@ -158,6 +160,7 @@ type FriendRequest  {
     RequestID uint `json:"request_id"`
     Sender UserInfo `json:"sender"`
     SentTime int64 `json:"send_time"`
+    State uint `json:"state"`
 }
 
 @server (

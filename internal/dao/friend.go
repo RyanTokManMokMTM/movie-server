@@ -71,20 +71,24 @@ func (d *DAO) GetFriendsList(ctx context.Context, UserID uint) ([]*models.User, 
 //	return f, nil
 //}
 
-func (d *DAO) InsertOneFriendNotification(ctx context.Context, sender, receiver uint) error {
+func (d *DAO) InsertOneFriendNotification(ctx context.Context, sender, receiver uint) (uint, error) {
 	fr := &models.FriendNotification{
 		Sender:   sender,
 		Receiver: receiver,
-		State:    true,
+		State:    1,
 	}
 
-	return fr.InsertOne(d.engine, ctx)
+	if err := fr.InsertOne(d.engine, ctx); err != nil {
+		return 0, err
+	}
+
+	return fr.ID, nil
 }
 func (d *DAO) FindOneFriendNotification(ctx context.Context, sender, receiver uint) (*models.FriendNotification, error) {
 	fr := &models.FriendNotification{
 		Sender:   sender,
 		Receiver: receiver,
-		State:    true,
+		State:    1, //sent
 	}
 	err := fr.FineOneBySenderAndReceiver(d.engine, ctx)
 	if err != nil {
@@ -96,7 +100,7 @@ func (d *DAO) FindOneFriendNotification(ctx context.Context, sender, receiver ui
 func (d *DAO) FindOneFriendNotificationByID(ctx context.Context, requestID uint) (*models.FriendNotification, error) {
 	fr := &models.FriendNotification{
 		ID:    requestID,
-		State: true,
+		State: 1,
 	}
 
 	err := fr.FineOneByID(d.engine, ctx)
@@ -150,7 +154,6 @@ func (d *DAO) RemoveFriend(ctx context.Context, userID, friendID uint) error {
 func (d *DAO) GetFriendRequest(ctx context.Context, userID uint) ([]*models.FriendNotification, error) {
 	notification := &models.FriendNotification{
 		Receiver: userID,
-		State:    true,
 	}
 
 	return notification.GetNotifications(d.engine, ctx)
