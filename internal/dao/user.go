@@ -91,6 +91,13 @@ func (d *DAO) GetUserRooms(ctx context.Context, userID uint) ([]*models.Room, er
 	return u.GetUserRooms(ctx, d.engine)
 }
 
+func (d *DAO) GetUserActiveRooms(ctx context.Context, userID uint) ([]models.Room, error) {
+	u := &models.User{
+		ID: userID,
+	}
+	return u.GetUserActiveRooms(ctx, d.engine)
+}
+
 func (d *DAO) GetUserRoomsWithMembers(ctx context.Context, userID uint) (*models.User, error) {
 	u := &models.User{
 		ID: userID,

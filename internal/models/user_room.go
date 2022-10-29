@@ -6,8 +6,9 @@ import (
 )
 
 type UsersRooms struct {
-	RoomID uint `gorm:"primaryKey"`
-	UserID uint `gorm:"primaryKey"`
+	RoomID   uint `gorm:"primaryKey"`
+	UserID   uint `gorm:"primaryKey"`
+	IsActive bool `gorm:"is_active;default:false"`
 }
 
 //There may a lot of user inside the same room
@@ -39,3 +40,26 @@ func (ur *UsersRooms) GetRoomUsers(db *gorm.DB, ctx context.Context) ([]uint, er
 func (ur *UsersRooms) FindOne(db *gorm.DB, ctx context.Context) error {
 	return db.WithContext(ctx).Debug().First(&ur).Error
 }
+
+func (ur *UsersRooms) SetActiveState(db *gorm.DB, ctx context.Context) error {
+	//only update is not the same state
+	return db.WithContext(ctx).Debug().Model(&ur).Where("is_active = ?", !ur.IsActive).Update("IsActive", ur.IsActive).Error
+}
+
+func (ur *UsersRooms) GetUserActiveRoom(db *gorm.DB, ctx context.Context) ([]*UsersRooms, error) {
+	var activeRooms []*UsersRooms
+	if err := db.WithContext(ctx).Debug().Model(&UsersRooms{}).Where("user_id = ? AND is_active = ? ", ur.UserID, true).Find(&activeRooms).Error; err != nil {
+		return nil, err
+	}
+
+	return activeRooms, nil
+}
+
+//
+//func (ur *UsersRooms) GetUserRoomState(db *gorm.DB, ctx context.Context) (bool, error) {
+//	if err := db.WithContext(ctx).Debug().First(&ur).Error; err != nil {
+//		return false, err
+//	}
+//
+//	return ur.IsActive, nil
+//}

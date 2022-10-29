@@ -6,7 +6,7 @@ import (
 )
 
 func (d *DAO) ExistInTheRoom(ctx context.Context, userID, roomID uint) error {
-	ur := models.UsersRooms{
+	ur := &models.UsersRooms{
 		RoomID: roomID,
 		UserID: userID,
 	}
@@ -14,8 +14,27 @@ func (d *DAO) ExistInTheRoom(ctx context.Context, userID, roomID uint) error {
 }
 
 func (d *DAO) GetRoomUsers(ctx context.Context, roomID uint) ([]uint, error) {
-	ur := models.UsersRooms{
+	ur := &models.UsersRooms{
 		RoomID: roomID,
 	}
 	return ur.GetRoomUsers(d.engine, ctx)
 }
+
+func (d *DAO) UpdateRoomActiveState(ctx context.Context, roomID uint, userID uint, state bool) error {
+	ur := &models.UsersRooms{
+		RoomID:   roomID,
+		UserID:   userID,
+		IsActive: state,
+	}
+
+	return ur.SetActiveState(d.engine, ctx)
+}
+
+//func (d *DAO) GetUserRoomState(ctx context.Context, roomID uint, userID uint) (bool, error) {
+//	ur := &models.UsersRooms{
+//		RoomID: roomID,
+//		UserID: userID,
+//	}
+//
+//	return ur.GetUserRoomState(d.engine, ctx)
+//}

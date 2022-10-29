@@ -22,7 +22,7 @@ type User struct {
 	PostsLiked      []Post      `gorm:"many2many:post_liked;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 	CommentLiked    []Comment   `gorm:"many2many:comment_liked;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 	InterestedGenre []GenreInfo `gorm:"many2many:users_genres;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
-	Rooms           []Room      `gorm:"many2many:users_rooms;"`
+	Rooms           []Room      `gorm:"many2many:users_rooms;"` //for all available room of that user
 	Friends         []User      `gorm:"many2many:friendship"`
 	DefaultModel
 }
@@ -289,8 +289,57 @@ func (m *User) GetUserRooms(ctx context.Context, db *gorm.DB) ([]*Room, error) {
 	return rooms, nil
 }
 
+func (m *User) GetUserActiveRooms(ctx context.Context, db *gorm.DB) ([]Room, error) {
+	//var rooms []*Room
+	//if err := db.WithContext(ctx).Debug().Model(&m).Preload("Rooms").Preload("")
+
+	//get all user active room list
+	ur := &UsersRooms{
+		UserID: m.ID,
+	}
+
+	var roomsIDs []uint
+	rooms, err := ur.GetUserActiveRoom(db, ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, v := range rooms {
+		roomsIDs = append(roomsIDs, v.RoomID)
+	}
+
+	logx.Infof("active room ids %v", roomsIDs)
+
+	if err := db.WithContext(ctx).Debug().Model(&m).Preload("Rooms", func(tx *gorm.DB) *gorm.DB {
+		return tx.Where("ID IN (?)", roomsIDs)
+	}).First(&m).Error; err != nil {
+		return nil, err
+	}
+
+	return m.Rooms, nil
+}
+
 func (m *User) GetUserRoomsWithMembers(ctx context.Context, db *gorm.DB) error {
-	return db.WithContext(ctx).Debug().Model(&m).Preload("Rooms").Preload("Rooms.Users").Preload("Rooms.Messages", func(tx *gorm.DB) *gorm.DB {
+	//get all user active room list
+	ur := &UsersRooms{
+		UserID: m.ID,
+	}
+
+	var roomsIDs []uint
+	rooms, err := ur.GetUserActiveRoom(db, ctx)
+	if err != nil {
+		return nil
+	}
+
+	for _, v := range rooms {
+		roomsIDs = append(roomsIDs, v.RoomID)
+	}
+
+	logx.Infof("active room ids %v", roomsIDs)
+
+	return db.WithContext(ctx).Debug().Model(&m).Preload("Rooms", func(tx *gorm.DB) *gorm.DB {
+		return tx.Where("ID IN (?)", roomsIDs)
+	}).Preload("Rooms.Users").Preload("Rooms.Messages", func(tx *gorm.DB) *gorm.DB {
 		return tx.Order("sent_time desc").Limit(10)
 	}).Preload("Rooms.Messages.SendUser").First(&m).Error
 

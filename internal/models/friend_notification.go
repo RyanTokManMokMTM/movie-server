@@ -18,7 +18,7 @@ type FriendNotification struct {
 }
 
 func (f *FriendNotification) TableName() string {
-	return "friend_notification"
+	return "friend_notifications"
 }
 
 func (f *FriendNotification) InsertOne(db *gorm.DB, ctx context.Context) error {

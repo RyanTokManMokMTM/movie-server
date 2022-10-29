@@ -2,6 +2,7 @@ package models
 
 import (
 	"context"
+	"database/sql"
 	"github.com/zeromicro/go-zero/core/logx"
 	"gorm.io/gorm"
 )
@@ -13,7 +14,12 @@ type Room struct {
 	OwnerRef uint
 	Owner    User   `gorm:"foreignKey:OwnerRef"`
 	Users    []User `gorm:"many2many:users_rooms;"`
-	Messages []Message
+
+	LastSender sql.NullInt64 `gorm:"null"` // if the field is null,it means no sender in this room
+	Sender     User          `gorm:"foreignKey:LastSender;constraint:OnUpdate:CASCADE,OnDelete:set null"`
+	Messages   []Message
+
+	IsRead bool // is receiver read the message? - default is false
 	DefaultModel
 }
 
@@ -23,7 +29,7 @@ Single Chat(Peer to Peer)
 */
 
 func (r *Room) TableName() string {
-	return "room"
+	return "rooms"
 }
 
 func (r *Room) InsertOne(db *gorm.DB, ctx context.Context) error {
@@ -74,4 +80,12 @@ func (r *Room) FindOneRoomMember(db *gorm.DB, ctx context.Context, userID uint) 
 		return nil, err
 	}
 	return members, nil
+}
+
+func (r *Room) UpdateLastSender(db *gorm.DB, ctx context.Context) error {
+	return db.WithContext(ctx).Debug().Model(&r).Update("LastSender", r.LastSender).Error
+}
+
+func (r *Room) UpdateIsReadState(db *gorm.DB, ctx context.Context) error {
+	return db.WithContext(ctx).Debug().Model(&r).Where("is_read != ?", r.IsRead).Update("IsRead", r.IsRead).Error
 }

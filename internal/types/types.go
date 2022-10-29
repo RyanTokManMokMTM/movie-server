@@ -642,10 +642,19 @@ type GetUserRoomsResp struct {
 	Rooms []ChatRoomData `json:"rooms"`
 }
 
+type SetIsReadReq struct {
+	RoomID uint `path:"room_id"`
+}
+
+type SetIsReadResp struct {
+}
+
 type ChatRoomData struct {
-	ID       uint          `json:"id"`
-	Users    []UserInfo    `json:"users"`
-	Messages []MessageInfo `json:"messages"`
+	ID           uint          `json:"id"`
+	Users        []UserInfo    `json:"users"`
+	Messages     []MessageInfo `json:"messages"`
+	LastSenderID uint          `json:"last_sender_id"`
+	IsRead       bool          `json:"is_reads"`
 }
 
 type MessageInfo struct {

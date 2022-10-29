@@ -73,9 +73,11 @@ func (l *GetUserRoomsLogic) GetUserRooms(req *types.GetUserRoomsReq) (resp *type
 			})
 		}
 		roomInfos = append(roomInfos, types.ChatRoomData{
-			ID:       v.ID,
-			Users:    user,
-			Messages: messages,
+			ID:           v.ID,
+			Users:        user,
+			Messages:     messages,
+			IsRead:       v.IsRead, //read by other user rather than the sender
+			LastSenderID: uint(v.LastSender.Int64),
 		})
 
 	}

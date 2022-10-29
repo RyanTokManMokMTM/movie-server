@@ -29,7 +29,7 @@ sorting by time
 */
 
 func (m *Message) TableName() string {
-	return "message"
+	return "messages"
 }
 
 func (m *Message) InsertOne(db *gorm.DB, ctx context.Context) error {

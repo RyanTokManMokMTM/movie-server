@@ -45,6 +45,13 @@ type (
     GetUserRoomsResp {
         Rooms []ChatRoomData `json:"rooms"`
     }
+
+    SetIsReadReq{
+        RoomID uint `path:"room_id"`
+    }
+    SetIsReadResp {
+//        IsRead  bool `json:"is_read"`
+    }
 )
 
 
@@ -52,6 +59,8 @@ type ChatRoomData {
     ID uint `json:"id"`
     Users []UserInfo `json:"users"`
     Messages []MessageInfo `json:"messages"`
+    LastSenderID uint `json:"last_sender_id"`
+    IsRead  bool `json:"is_reads"`
 }
 
 type MessageInfo {
@@ -84,4 +93,7 @@ service MovieService {
 
     @handler GetUserRooms
     get /room/rooms(GetUserRoomsReq) returns (GetUserRoomsResp);
+
+    @handler UpdateIsRead
+    patch /room/:room_id/read(SetIsReadReq) returns (SetIsReadResp);
 }

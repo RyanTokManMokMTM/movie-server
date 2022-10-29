@@ -485,6 +485,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/room/rooms",
 				Handler: room.GetUserRoomsHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodPatch,
+				Path:    "/room/:room_id/read",
+				Handler: room.UpdateIsReadHandler(serverCtx),
+			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 		rest.WithPrefix("/api/v1"),

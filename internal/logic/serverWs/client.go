@@ -51,6 +51,7 @@ func (c *ClientConn) ReadLoop() {
 		//get data from connection
 		//c.conn.SetReadDeadline(time.Now().Add(time.Second * ReadWait))
 		_, msg, err := c.conn.ReadMessage()
+		ctx := context.Background()
 		if err != nil {
 			logx.Error(err)
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
@@ -83,27 +84,51 @@ func (c *ClientConn) ReadLoop() {
 			continue
 		}
 
-		u, err := c.svcCtx.DAO.FindUserByID(context.TODO(), c.UserID)
+		u, err := c.svcCtx.DAO.FindUserByID(ctx, c.UserID)
 		if err != nil {
 			logx.Error(err)
 			continue
 		}
 		//TODO: Get Room ID From JSON
-		if err := c.svcCtx.DAO.ExistInTheRoom(context.TODO(), c.UserID, req.GroupID); err != nil {
+		if err := c.svcCtx.DAO.ExistInTheRoom(ctx, c.UserID, req.GroupID); err != nil {
 			logx.Error(err)
 			continue
 		}
 		//TODO: Check User
 		//TODO: Store Message
-		if err := c.svcCtx.DAO.InsertOneMessage(context.TODO(), req.GroupID, c.UserID, req.Message, req.MessageID, req.SentTime); err != nil {
-			logx.Error()
+		if err := c.svcCtx.DAO.InsertOneMessage(ctx, req.GroupID, c.UserID, req.Message, req.MessageID, req.SentTime); err != nil {
+			logx.Error(err)
 			continue
 		}
+
+		if err := c.svcCtx.DAO.UpdateIsRead(ctx, req.GroupID, false); err != nil {
+			logx.Error(err)
+			continue
+		}
+
+		//TODO: Update the last_sender
+		if err := c.svcCtx.DAO.UpdateLastSender(ctx, req.GroupID, c.UserID); err != nil {
+			logx.Error(err)
+			continue
+		}
+
 		//TODO: send the message to all user to all room user who is online
-		allUser, err := c.svcCtx.DAO.GetRoomUsers(context.TODO(), req.GroupID)
+		allUser, err := c.svcCtx.DAO.GetRoomUsers(ctx, req.GroupID)
 		if err != nil {
 			logx.Error(err)
 			continue
+		}
+
+		//TODO: Update user active room state - if user room is not active
+		//Set both user to active
+		//for now just one user there
+
+		//update all user's room state
+		for _, urs := range allUser { //set all user to active for now...including sender itself
+			if err := c.svcCtx.DAO.UpdateRoomActiveState(ctx, req.GroupID, urs, true); err != nil {
+				logx.Error(err)
+				continue
+			}
 		}
 
 		message := &Message{
