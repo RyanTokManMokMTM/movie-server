@@ -149,7 +149,17 @@ type (
         IsSentRequest bool `json:"is_sent_request"`
         RequestInfo BasicRequestInfo `json:"request"`
     }
+
+//    GetFriendListReq {}
+//    GetFriendListResp {
+//        Friends []FriendInfo `json:"friends"`
+//    }
 )
+
+//type FriendInfo {
+//    RoomID uint `json:"id"`
+//    Info UserInfo `json:"friend_info"`
+//}
 
 type BasicRequestInfo {
     RequestID uint `json:"request_id"`
@@ -190,4 +200,7 @@ service MovieService {
 
     @handler IsFriend
     get /friend/:user_id(IsFriendReq) returns (IsFriendResp);
+
+//    @handler GetFriendList
+//    get /friends(GetFriendList) returns (GetFriendListResp)
 }

@@ -82,6 +82,18 @@ type GetFriendListResp struct {
 	Friends []UserInfo `json:"Friends"`
 }
 
+type GetUserFriendRoomListReq struct {
+}
+
+type GetUserFriendRoomListResp struct {
+	Lists []FriendRoomInfo `json:"lists"`
+}
+
+type FriendRoomInfo struct {
+	RoomID uint     `json:"id"`
+	Info   UserInfo `json:"info"`
+}
+
 type UserInfo struct {
 	ID     uint   `json:"id"`
 	Name   string `json:"name"`
@@ -654,7 +666,7 @@ type ChatRoomData struct {
 	Users        []UserInfo    `json:"users"`
 	Messages     []MessageInfo `json:"messages"`
 	LastSenderID uint          `json:"last_sender_id"`
-	IsRead       bool          `json:"is_reads"`
+	IsRead       bool          `json:"is_read"`
 }
 
 type MessageInfo struct {

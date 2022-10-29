@@ -60,6 +60,17 @@ func (d *DAO) GetFriendsList(ctx context.Context, UserID uint) ([]*models.User, 
 	return f.GetFriendsList(d.engine, ctx)
 }
 
+//Friend with roomID
+func (d *DAO) GetFriendRoomList(ctx context.Context, UserID uint) (*models.User, error) {
+	u := &models.User{
+		ID: UserID,
+	}
+	if err := u.GetFriendsRoomList(d.engine, ctx); err != nil {
+		return nil, err
+	}
+	return u, nil
+}
+
 //func (d *DAO) GetUserFriendRecord(ctx context.Context, userId uint) (*models.Friend, error) {
 //	f := &models.User{
 //		ID: userId,

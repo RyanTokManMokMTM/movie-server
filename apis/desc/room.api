@@ -60,7 +60,7 @@ type ChatRoomData {
     Users []UserInfo `json:"users"`
     Messages []MessageInfo `json:"messages"`
     LastSenderID uint `json:"last_sender_id"`
-    IsRead  bool `json:"is_reads"`
+    IsRead  bool `json:"is_read"`
 }
 
 type MessageInfo {

@@ -126,6 +126,13 @@ func (m *User) GetFriendsList(db *gorm.DB, ctx context.Context) ([]*User, error)
 	return friends, nil
 }
 
+func (m *User) GetFriendsRoomList(db *gorm.DB, ctx context.Context) error {
+	//var friends []*User
+	return db.WithContext(ctx).Debug().Model(&m).Preload("Rooms").Preload("Rooms.Users", func(tx *gorm.DB) *gorm.DB {
+		return tx.Where("id NOT IN (?)", []uint{m.ID})
+	}).First(&m).Error
+}
+
 func (m *User) RemoveOne(db *gorm.DB, ctx context.Context, userID, friendID uint) error {
 	//Remove an existing Friend
 	return db.WithContext(ctx).Debug().Transaction(func(tx *gorm.DB) error {

@@ -92,6 +92,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/user/cover",
 				Handler: user.UploadUserCoverHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/user/friends/room",
+				Handler: user.GetFriendRoomListHandler(serverCtx),
+			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 		rest.WithPrefix("/api/v1"),
