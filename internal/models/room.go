@@ -56,6 +56,12 @@ func (r *Room) FindOne(db *gorm.DB, ctx context.Context) error {
 	return db.WithContext(ctx).Debug().First(&r).Error
 }
 
+func (r *Room) FindOneWithInfo(db *gorm.DB, ctx context.Context) error {
+	return db.WithContext(ctx).Debug().Model(&r).Preload("Users").Preload("Messages", func(tx *gorm.DB) *gorm.DB {
+		return tx.Order("sent_time desc").Limit(10)
+	}).Preload("Messages.SendUser").First(&r).Error
+}
+
 func (r *Room) InsertOneUser(db *gorm.DB, ctx context.Context, user *User) error {
 	return db.WithContext(ctx).Debug().Model(&r).Association("Users").Append(user)
 }

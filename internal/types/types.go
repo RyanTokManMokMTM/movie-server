@@ -654,6 +654,14 @@ type GetUserRoomsResp struct {
 	Rooms []ChatRoomData `json:"rooms"`
 }
 
+type GetRoomInfoReq struct {
+	RoomID uint `path:"room_id"`
+}
+
+type GetRoomInfoResp struct {
+	Info ChatRoomData `json:"info"`
+}
+
 type SetIsReadReq struct {
 	RoomID uint `path:"room_id"`
 }

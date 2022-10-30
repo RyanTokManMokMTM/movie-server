@@ -491,6 +491,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: room.GetUserRoomsHandler(serverCtx),
 			},
 			{
+				Method:  http.MethodGet,
+				Path:    "/room/:room_id",
+				Handler: room.GetRoomINfoHandler(serverCtx),
+			},
+			{
 				Method:  http.MethodPatch,
 				Path:    "/room/:room_id/read",
 				Handler: room.UpdateIsReadHandler(serverCtx),

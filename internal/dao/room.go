@@ -54,6 +54,18 @@ func (d *DAO) FindOneByRoomID(ctx context.Context, roomID uint) (*models.Room, e
 	return r, nil
 }
 
+func (d *DAO) FindOneByRoomIDWithInfo(ctx context.Context, roomID uint) (*models.Room, error) {
+	r := &models.Room{
+		ID: roomID,
+	}
+
+	if err := r.FindOneWithInfo(d.engine, ctx); err != nil {
+		return nil, err
+	}
+
+	return r, nil
+}
+
 func (d *DAO) JoinOneRoom(ctx context.Context, roomID uint, u *models.User) error {
 	r := &models.Room{
 		ID: roomID,

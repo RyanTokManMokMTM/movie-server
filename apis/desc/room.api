@@ -46,6 +46,13 @@ type (
         Rooms []ChatRoomData `json:"rooms"`
     }
 
+    GetRoomInfoReq {
+        RoomID uint `path:"room_id"`
+    }
+    GetRoomInfoResp {
+        Info ChatRoomData `json:"info"`
+    }
+
     SetIsReadReq{
         RoomID uint `path:"room_id"`
     }
@@ -93,6 +100,9 @@ service MovieService {
 
     @handler GetUserRooms
     get /room/rooms(GetUserRoomsReq) returns (GetUserRoomsResp);
+
+    @handler GetRoomINfo
+    get /room/:room_id(GetRoomInfoReq) returns (GetRoomInfoResp);
 
     @handler UpdateIsRead
     patch /room/:room_id/read(SetIsReadReq) returns (SetIsReadResp);
