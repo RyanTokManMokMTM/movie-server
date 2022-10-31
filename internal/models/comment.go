@@ -15,7 +15,7 @@ type Comment struct {
 
 	User     User      `gorm:"foreignKey:UserID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 	Comments []Comment `gorm:"foreignKey:ReplyTo;references:CommentID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"` // a list of reply comment
-
+	PostInfo Post      `gorm:"foreignKey:PostID;references:PostId ;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 	DefaultModel
 }
 
@@ -54,7 +54,7 @@ func (m *Comment) FindReplyComments(ctx context.Context, db *gorm.DB) ([]*Commen
 }
 
 func (m *Comment) FindOneComment(ctx context.Context, db *gorm.DB) error {
-	return db.Debug().WithContext(ctx).Model(&m).First(&m).Error
+	return db.Debug().WithContext(ctx).Model(&m).Preload("PostInfo").First(&m).Error
 }
 
 //Upcoming Feature

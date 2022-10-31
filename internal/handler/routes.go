@@ -12,6 +12,7 @@ import (
 	likedMovie "github.com/ryantokmanmokmtm/movie-server/internal/handler/likedMovie"
 	message "github.com/ryantokmanmokmtm/movie-server/internal/handler/message"
 	movie "github.com/ryantokmanmokmtm/movie-server/internal/handler/movie"
+	notification "github.com/ryantokmanmokmtm/movie-server/internal/handler/notification"
 	post_likes "github.com/ryantokmanmokmtm/movie-server/internal/handler/post_likes"
 	posts "github.com/ryantokmanmokmtm/movie-server/internal/handler/posts"
 	room "github.com/ryantokmanmokmtm/movie-server/internal/handler/room"
@@ -511,6 +512,18 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodGet,
 				Path:    "/message/:room_id",
 				Handler: message.GetRoomMessageHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/api/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/notification/likes",
+				Handler: notification.GetlikenotificationHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),

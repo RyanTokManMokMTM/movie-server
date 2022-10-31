@@ -62,6 +62,8 @@ func NewEngine(c config.Config) *gorm.DB {
 	db.AutoMigrate(&Message{})
 	//db.AutoMigrate(&Friend{})
 	db.AutoMigrate(&FriendNotification{})
+	db.AutoMigrate(&LikeNotification{})
+	db.AutoMigrate(&CommentNotification{})
 
 	//db.AutoMigrate(&UserInterestedGenre{})
 	if err := db.SetupJoinTable(&User{}, "MovieInfos", &UserMovie{}); err != nil {

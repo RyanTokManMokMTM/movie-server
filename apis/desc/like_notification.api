@@ -1,0 +1,45 @@
+syntax = "v1"
+
+//info(
+//    title: "type title here"
+//    desc: "type desc here"
+//    author: "type author here"
+//    email: "type email here"
+//    version: "type version here"
+//)
+
+type (
+    GetLikeNotificationReq{}
+    GetLikeNotificationResp {
+        LikedNotificationList []LikedNotification `json:"notification"`
+    }
+)
+
+type LikedNotification {
+    ID uint `json:"id"`
+    LikedBy UserInfo `json:"liked_by"`
+    PostInfo SimplePostInfo `json:"post_info"`
+    CommentInfo SimpleCommentInfo `json:"comment_info"`
+    Type uint `json:"type"`
+    LikedAt uint `json:"liked_at"`
+}
+
+type SimplePostInfo {
+    PostID uint `json:"id"`
+    PostMovie PostMovieInfo `json:"post_movie_info"`
+}
+type SimpleCommentInfo {
+    CommentID uint `json:"id"`
+    Comment string `json:"comment"`
+}
+
+
+@server (
+    group : notification
+    jwt : Auth
+    prefix: /api/v1
+)
+service MovieService {
+    @handler getlikenotification
+    get /notification/likes(GetLikeNotificationReq) returns (GetLikeNotificationResp)
+}

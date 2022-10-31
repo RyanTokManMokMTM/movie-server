@@ -698,3 +698,29 @@ type MessageData struct {
 	Content   string   `json:"content"`
 	SendTime  int64    `json:"send_time"`
 }
+
+type GetLikeNotificationReq struct {
+}
+
+type GetLikeNotificationResp struct {
+	LikedNotificationList []LikedNotification `json:"notification"`
+}
+
+type LikedNotification struct {
+	ID          uint              `json:"id"`
+	LikedBy     UserInfo          `json:"liked_by"`
+	PostInfo    SimplePostInfo    `json:"post_info"`
+	CommentInfo SimpleCommentInfo `json:"comment_info"`
+	Type        uint              `json:"type"`
+	LikedAt     uint              `json:"liked_at"`
+}
+
+type SimplePostInfo struct {
+	PostID    uint          `json:"id"`
+	PostMovie PostMovieInfo `json:"post_movie_info"`
+}
+
+type SimpleCommentInfo struct {
+	CommentID uint   `json:"id"`
+	Comment   string `json:"comment"`
+}

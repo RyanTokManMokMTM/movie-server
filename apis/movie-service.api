@@ -11,6 +11,7 @@ import "desc/liked_post.api"
 import "desc/user_genre.api"
 import "desc/room.api"
 import "desc/message.api"
+import "desc/like_notification.api"
 
 info(
 	title: "movie service api"

@@ -5,12 +5,11 @@ import (
 	"github.com/pkg/errors"
 	"github.com/ryantokmanmokmtm/movie-server/common/ctxtool"
 	"github.com/ryantokmanmokmtm/movie-server/common/errx"
-	"gorm.io/gorm"
-
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
 	"github.com/ryantokmanmokmtm/movie-server/internal/types"
-
 	"github.com/zeromicro/go-zero/core/logx"
+	"gorm.io/gorm"
+	"time"
 )
 
 type CreatePostLikesLogic struct {
@@ -55,6 +54,25 @@ func (l *CreatePostLikesLogic) CreatePostLikes(req *types.CreatePostLikesReq) (r
 			//Create a new record
 			if err := l.svcCtx.DAO.CreatePostLiked(l.ctx, userID, post); err != nil {
 				return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
+			}
+			//TODO:add a notification record
+			//TODO:liked by itself - ignored
+			if userID != post.UserId {
+				//TODO: is notification exist?
+				err = l.svcCtx.DAO.FindOneLikePostNotification(l.ctx, post.UserId, userID, post.PostId)
+				if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
+					logx.Info("Notification not found...")
+
+					//TODO: add a new one
+					if err := l.svcCtx.DAO.InsertOnePostLikeNotification(l.ctx, req.PostId, userID, post.UserId, time.Now()); err != nil {
+						return nil, err
+					}
+					//TODO: send the notification
+					go func() {
+						logx.Info("TODO: Send a liked post notification")
+					}()
+				}
+
 			}
 
 			return &types.CreatePostLikesResp{}, nil
