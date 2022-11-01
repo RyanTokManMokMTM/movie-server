@@ -40,7 +40,7 @@ func (l *RemoveCommentLikesLogic) RemoveCommentLikes(req *types.RemoveCommentLik
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
-	_, err = l.svcCtx.DAO.FindOneComment(l.ctx, req.CommentId)
+	comment, err := l.svcCtx.DAO.FindOneComment(l.ctx, req.CommentId)
 	if err != nil {
 		//Create a new record
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -60,7 +60,7 @@ func (l *RemoveCommentLikesLogic) RemoveCommentLikes(req *types.RemoveCommentLik
 
 	commentLikes.State = 0 //always false
 
-	if err := l.svcCtx.DAO.UpdateCommentLiked(l.ctx, commentLikes); err != nil {
+	if err := l.svcCtx.DAO.UpdateCommentLiked(l.ctx, commentLikes, comment); err != nil {
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 

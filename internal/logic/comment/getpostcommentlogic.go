@@ -53,6 +53,7 @@ func (l *GetPostCommentLogic) GetPostComment(req *types.GetPostCommentsReq) (res
 				UserAvatar: v.User.Avatar,
 			},
 			//PostID:   v.PostID,
+			LikesCount:   v.LikesCount,
 			Comment:      v.Comment,
 			ReplyComment: uint(len(v.Comments)),
 			UpdateAt:     v.UpdatedAt.Unix(),

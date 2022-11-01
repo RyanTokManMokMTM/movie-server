@@ -7,15 +7,17 @@ import (
 )
 
 type Comment struct {
-	CommentID uint          `gorm:"primaryKey;not null;autoIncrement"`
-	PostID    uint          `gorm:"not null;type:bigint;unsigned;"`
-	UserID    uint          `gorm:"not null;type:bigint;unsigned"`
-	Comment   string        `gorm:"not null;type:longtext"`
-	ReplyTo   sql.NullInt64 `gorm:"null;type:bigint;unsigned"` //if this field is null ,it means not a reply message
+	CommentID  uint          `gorm:"primaryKey;not null;autoIncrement"`
+	PostID     uint          `gorm:"not null;type:bigint;unsigned;"`
+	UserID     uint          `gorm:"not null;type:bigint;unsigned"`
+	Comment    string        `gorm:"not null;type:longtext"`
+	ReplyTo    sql.NullInt64 `gorm:"null;type:bigint;unsigned"` //if this field is null ,it means not a reply message
+	LikesCount uint
 
 	User     User      `gorm:"foreignKey:UserID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 	Comments []Comment `gorm:"foreignKey:ReplyTo;references:CommentID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"` // a list of reply comment
 	PostInfo Post      `gorm:"foreignKey:PostID;references:PostId ;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+
 	DefaultModel
 }
 

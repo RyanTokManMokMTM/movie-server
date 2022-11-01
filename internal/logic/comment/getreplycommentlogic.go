@@ -53,6 +53,7 @@ func (l *GetReplyCommentLogic) GetReplyComment(req *types.GetReplyCommentReq) (r
 				UserName:   reply.User.Name,
 				UserAvatar: reply.User.Avatar,
 			},
+			LikesCount:   reply.LikesCount,
 			Comment:      reply.Comment,
 			UpdateAt:     reply.UpdatedAt.Unix(),
 			ReplyComment: 0, //the parent of this comment is reply post id , it may add a `reply user field` for identifying  which user is replying to. So it is always zero.

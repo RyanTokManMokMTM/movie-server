@@ -455,6 +455,7 @@ type CommentInfo struct {
 	Comment      string      `json:"comment"`
 	UpdateAt     int64       `json:"update_at"`
 	ReplyComment uint        `json:"reply_comments"`
+	LikesCount   uint        `json:"comment_likes_count"`
 }
 
 type CommentUser struct {

@@ -5,8 +5,8 @@ import (
 	"github.com/ryantokmanmokmtm/movie-server/internal/models"
 )
 
-func (d *DAO) UpdateCommentLiked(ctx context.Context, commentLiked *models.CommentLiked) error {
-	return commentLiked.UpdateCommentLiked(ctx, d.engine)
+func (d *DAO) UpdateCommentLiked(ctx context.Context, commentLiked *models.CommentLiked, comment *models.Comment) error {
+	return commentLiked.UpdateCommentLiked(ctx, d.engine, comment)
 }
 
 func (d *DAO) FindOneCommentLiked(ctx context.Context, userId, commentId uint) (*models.CommentLiked, error) {

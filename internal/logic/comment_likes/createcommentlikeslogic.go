@@ -88,7 +88,7 @@ func (l *CreateCommentLikesLogic) CreateCommentLikes(req *types.CreateCommentLik
 
 	commentLiked.State = 1
 
-	if err := l.svcCtx.DAO.UpdateCommentLiked(l.ctx, commentLiked); err != nil {
+	if err := l.svcCtx.DAO.UpdateCommentLiked(l.ctx, commentLiked, comment); err != nil {
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 

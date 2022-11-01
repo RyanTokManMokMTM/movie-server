@@ -205,7 +205,19 @@ func (m *User) CreateUserPostLiked(ctx context.Context, db *gorm.DB, post *Post)
 
 //CommentLiked
 func (m *User) CreateUserCommentLiked(ctx context.Context, db *gorm.DB, comment *Comment) error {
-	return db.Debug().WithContext(ctx).Model(&m).Omit("CommentLiked.*").Association("CommentLiked").Append(comment)
+	return db.WithContext(ctx).Debug().Transaction(func(tx *gorm.DB) error {
+		if err := tx.Debug().WithContext(ctx).Model(&m).Omit("CommentLiked.*").Association("CommentLiked").Append(comment); err != nil {
+			return err
+		}
+
+		//TODO: Add 1 count to db
+		comment.LikesCount = comment.LikesCount + 1
+		if err := tx.WithContext(ctx).Debug().Model(&comment).Update("LikesCount", comment.LikesCount).Error; err != nil {
+			return err
+		}
+
+		return nil
+	})
 }
 
 //CreateUserGenre
