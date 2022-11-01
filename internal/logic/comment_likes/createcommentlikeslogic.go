@@ -2,9 +2,11 @@ package comment_likes
 
 import (
 	"context"
+	"fmt"
 	"github.com/pkg/errors"
 	"github.com/ryantokmanmokmtm/movie-server/common/ctxtool"
 	"github.com/ryantokmanmokmtm/movie-server/common/errx"
+	"github.com/ryantokmanmokmtm/movie-server/internal/logic/serverWs"
 	"gorm.io/gorm"
 	"time"
 
@@ -33,7 +35,7 @@ func (l *CreateCommentLikesLogic) CreateCommentLikes(req *types.CreateCommentLik
 	userID := ctxtool.GetUserIDFromCTX(l.ctx)
 
 	//find that user
-	_, err = l.svcCtx.DAO.FindUserByID(l.ctx, userID)
+	u, err := l.svcCtx.DAO.FindUserByID(l.ctx, userID)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errx.NewErrCode(errx.USER_NOT_EXIST)
@@ -72,6 +74,7 @@ func (l *CreateCommentLikesLogic) CreateCommentLikes(req *types.CreateCommentLik
 
 					go func() {
 						logx.Info("TODO: Send a comment like notification")
+						_ = serverWs.SendNotificationToUserWithUserInfo(comment.UserID, u, fmt.Sprintf("%s給您的留言點讚", u.Name))
 					}()
 
 				}

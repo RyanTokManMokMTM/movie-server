@@ -11,7 +11,7 @@ syntax = "v1"
 type (
     GetLikeNotificationReq{}
     GetLikeNotificationResp {
-        LikedNotificationList []LikedNotification `json:"notification"`
+        LikedNotificationList []LikedNotification `json:"notifications"`
     }
 )
 

@@ -703,7 +703,7 @@ type GetLikeNotificationReq struct {
 }
 
 type GetLikeNotificationResp struct {
-	LikedNotificationList []LikedNotification `json:"notification"`
+	LikedNotificationList []LikedNotification `json:"notifications"`
 }
 
 type LikedNotification struct {
@@ -723,4 +723,21 @@ type SimplePostInfo struct {
 type SimpleCommentInfo struct {
 	CommentID uint   `json:"id"`
 	Comment   string `json:"comment"`
+}
+
+type GetCommentNotificationReq struct {
+}
+
+type GetCommentNotificationResp struct {
+	CommentNotificationList []CommentNotification `json:"notifications"`
+}
+
+type CommentNotification struct {
+	ID               uint              `json:"id"`
+	CommentBy        UserInfo          `json:"comment_by"`
+	PostInfo         SimplePostInfo    `json:"post_info"`
+	CommentInfo      SimpleCommentInfo `json:"comment_info"`
+	ReplyCommentInfo SimpleCommentInfo `json:"reply_comment_info"` //only reply type will have this info
+	Type             uint              `json:"type"`
+	CommentAt        uint              `json:"comment_at"`
 }

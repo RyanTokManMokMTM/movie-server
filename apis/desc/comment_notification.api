@@ -1,0 +1,30 @@
+syntax = "v1"
+
+type (
+    GetCommentNotificationReq{}
+    GetCommentNotificationResp {
+        CommentNotificationList []CommentNotification `json:"notifications"`
+    }
+)
+
+type CommentNotification {
+    ID uint `json:"id"`
+    CommentBy UserInfo `json:"comment_by"`
+    PostInfo SimplePostInfo `json:"post_info"`
+    CommentInfo SimpleCommentInfo `json:"comment_info"`
+    ReplyCommentInfo SimpleCommentInfo `json:"reply_comment_info"` //only reply type will have this info
+    Type uint `json:"type"`
+    CommentAt uint `json:"comment_at"`
+}
+
+
+@server (
+    group : notification
+    jwt : Auth
+    prefix: /api/v1
+)
+service MovieService {
+    @handler getcommentnotification
+    get /notification/comments(GetCommentNotificationReq) returns (GetCommentNotificationResp)
+}
+

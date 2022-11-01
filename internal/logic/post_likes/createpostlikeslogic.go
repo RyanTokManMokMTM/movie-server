@@ -2,9 +2,11 @@ package post_likes
 
 import (
 	"context"
+	"fmt"
 	"github.com/pkg/errors"
 	"github.com/ryantokmanmokmtm/movie-server/common/ctxtool"
 	"github.com/ryantokmanmokmtm/movie-server/common/errx"
+	"github.com/ryantokmanmokmtm/movie-server/internal/logic/serverWs"
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
 	"github.com/ryantokmanmokmtm/movie-server/internal/types"
 	"github.com/zeromicro/go-zero/core/logx"
@@ -31,7 +33,7 @@ func (l *CreatePostLikesLogic) CreatePostLikes(req *types.CreatePostLikesReq) (r
 	userID := ctxtool.GetUserIDFromCTX(l.ctx)
 
 	//find that user
-	_, err = l.svcCtx.DAO.FindUserByID(l.ctx, userID)
+	u, err := l.svcCtx.DAO.FindUserByID(l.ctx, userID)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errx.NewErrCode(errx.USER_NOT_EXIST)
@@ -70,6 +72,7 @@ func (l *CreatePostLikesLogic) CreatePostLikes(req *types.CreatePostLikesReq) (r
 					//TODO: send the notification
 					go func() {
 						logx.Info("TODO: Send a liked post notification")
+						_ = serverWs.SendNotificationToUserWithUserInfo(post.UserId, u, fmt.Sprintf("%s給您的文章點讚", u.Name))
 					}()
 				}
 
