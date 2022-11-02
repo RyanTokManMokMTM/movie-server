@@ -7,17 +7,20 @@ import (
 )
 
 type Comment struct {
-	CommentID  uint          `gorm:"primaryKey;not null;autoIncrement"`
-	PostID     uint          `gorm:"not null;type:bigint;unsigned;"`
-	UserID     uint          `gorm:"not null;type:bigint;unsigned"`
-	Comment    string        `gorm:"not null;type:longtext"`
-	ReplyTo    sql.NullInt64 `gorm:"null;type:bigint;unsigned"` //if this field is null ,it means not a reply message
-	LikesCount uint
+	CommentID   uint          `gorm:"primaryKey;not null;autoIncrement"`
+	PostID      uint          `gorm:"not null;type:bigint;unsigned;"`
+	UserID      uint          `gorm:"not null;type:bigint;unsigned"`
+	Comment     string        `gorm:"not null;type:longtext"`
+	ReplyTo     sql.NullInt64 `gorm:"null;type:bigint;unsigned"` //if this field is null ,it means not a reply message
+	ReplyUserID sql.NullInt64 `gorm:"null;type:bigint;unsigned"`
+	ParentID    sql.NullInt64 `gorm:"null;type:bigint;unsigned"` //this field uses to group reply message to its parent, root won't have parent node
+	LikesCount  uint
 
-	User      User      `gorm:"foreignKey:UserID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
-	Comments  []Comment `gorm:"foreignKey:ReplyTo;references:CommentID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"` // a list of reply comment
-	PostInfo  Post      `gorm:"foreignKey:PostID;references:PostId ;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
-	LikedUser []User    `gorm:"many2many:comment_liked"`
+	User        User      `gorm:"foreignKey:UserID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+	ReplyToInfo User      `gorm:"foreignKey:ReplyUserID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:set null"`
+	Comments    []Comment `gorm:"foreignKey:ParentID;references:CommentID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"` // a list of reply comment
+	PostInfo    Post      `gorm:"foreignKey:PostID;references:PostId ;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+	LikedUser   []User    `gorm:"many2many:comment_liked"`
 	DefaultModel
 }
 
@@ -49,9 +52,35 @@ func (m *Comment) FindOnePostComments(ctx context.Context, db *gorm.DB, checkUse
 	return comments, nil
 }
 
-func (m *Comment) FindReplyComments(ctx context.Context, db *gorm.DB) ([]*Comment, error) {
+//func (m *Comment) FindReplyComments(ctx context.Context, db *gorm.DB) ([]*Comment, error) {
+//	var replyComments []*Comment
+//	if err := db.Debug().WithContext(ctx).Where("reply_to = ?", m.ReplyTo).Preload("User").Find(&replyComments).Error; err != nil {
+//		return nil, err
+//	}
+//	return replyComments, nil
+//}
+
+/*
+	if err := db.Debug().WithContext(ctx).Model(m).Where("post_id = ? AND reply_to IS NULL", m.PostID).Preload("User").Preload("Comments", func(tx *gorm.DB) *gorm.DB {
+		return db.Preload("User")
+	}).Preload("LikedUser", func(tx *gorm.DB) *gorm.DB {
+		return db.Where("ID = ?", checkUser)
+	}).Find(&comments).Error; err != nil {
+		return nil, err
+	}
+	return comments, nil
+*/
+
+func (m *Comment) FindReplyParentComments(ctx context.Context, db *gorm.DB, checkUser uint) ([]*Comment, error) {
 	var replyComments []*Comment
-	if err := db.Debug().WithContext(ctx).Where("reply_to = ?", m.ReplyTo).Preload("User").Find(&replyComments).Error; err != nil {
+	//if err := db.Debug().WithContext(ctx).Where("parent_id = ?", m.ParentID).Preload("User").Find(&replyComments).Error; err != nil {
+	//	return nil, err
+	//}
+	if err := db.Debug().WithContext(ctx).Model(m).Where("parent_id  = ?", m.ParentID).Preload("User").Preload("Comments", func(tx *gorm.DB) *gorm.DB {
+		return db.Preload("User")
+	}).Preload("ReplyToInfo").Preload("LikedUser", func(tx *gorm.DB) *gorm.DB {
+		return db.Where("ID = ?", checkUser)
+	}).Find(&replyComments).Error; err != nil {
 		return nil, err
 	}
 	return replyComments, nil

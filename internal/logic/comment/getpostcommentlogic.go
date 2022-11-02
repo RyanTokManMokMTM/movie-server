@@ -62,11 +62,12 @@ func (l *GetPostCommentLogic) GetPostComment(req *types.GetPostCommentsReq) (res
 				UserAvatar: v.User.Avatar,
 			},
 			//PostID:   v.PostID,
-			LikesCount:   v.LikesCount,
-			Comment:      v.Comment,
-			ReplyComment: uint(len(v.Comments)),
-			UpdateAt:     v.UpdatedAt.Unix(),
-			IsLiked:      len(v.LikedUser) == 1,
+			LikesCount:      v.LikesCount,
+			Comment:         v.Comment,
+			ReplyComment:    uint(len(v.Comments)),
+			UpdateAt:        v.UpdatedAt.Unix(),
+			ParentCommentID: uint(v.ParentID.Int64),
+			IsLiked:         len(v.LikedUser) == 1,
 		})
 	}
 

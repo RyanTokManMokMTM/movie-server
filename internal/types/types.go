@@ -399,9 +399,10 @@ type CreateCommentResp struct {
 }
 
 type CreateReplyCommentReq struct {
-	PostID         uint   `path:"post_id"`
-	ReplyCommentId uint   `path:"comment_id"`
-	Comment        string `json:"comment"`
+	PostID          uint   `path:"post_id"`
+	ReplyCommentId  uint   `path:"comment_id"`
+	ParentCommentID uint   `json:"parent_id"`
+	Comment         string `json:"comment"`
 }
 
 type CreateReplyCommentResp struct {
@@ -434,7 +435,7 @@ type GetPostCommentsResp struct {
 }
 
 type GetReplyCommentReq struct {
-	CommentId uint `path:"comment_id"`
+	ParentCommentID uint `path:"comment_id"`
 }
 
 type GetReplyCommentResp struct {
@@ -450,13 +451,16 @@ type CountPostCommentsResp struct {
 }
 
 type CommentInfo struct {
-	CommentID    uint        `json:"id"`
-	UserInfo     CommentUser `json:"user_info"`
-	Comment      string      `json:"comment"`
-	UpdateAt     int64       `json:"update_at"`
-	ReplyComment uint        `json:"reply_comments"`
-	LikesCount   uint        `json:"comment_likes_count"`
-	IsLiked      bool        `json:"is_liked"`
+	CommentID       uint        `json:"id"`
+	UserInfo        CommentUser `json:"user_info"`
+	Comment         string      `json:"comment"`
+	UpdateAt        int64       `json:"update_at"`
+	ReplyID         uint        `json:"reply_id"`
+	ReplyTo         UserInfo    `json:"reply_to"`
+	ReplyComment    uint        `json:"reply_comments"`
+	LikesCount      uint        `json:"comment_likes_count"`
+	ParentCommentID uint        `json:"parent_comment_id"`
+	IsLiked         bool        `json:"is_liked"`
 }
 
 type CommentUser struct {

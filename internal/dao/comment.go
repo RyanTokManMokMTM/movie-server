@@ -18,12 +18,14 @@ func (d *DAO) CreatePostComment(ctx context.Context, userID, PostID uint, commen
 	return newComment, nil
 }
 
-func (d *DAO) CreatePostReplyComment(ctx context.Context, userID, PostID, replyCommentId uint, comment string) (*models.Comment, error) {
+func (d *DAO) CreatePostReplyComment(ctx context.Context, userID, PostID, replyCommentId, parentID, replyUserID uint, comment string) (*models.Comment, error) {
 	newComment := &models.Comment{
-		PostID:  PostID,
-		UserID:  userID,
-		Comment: comment,
-		ReplyTo: sql.NullInt64{Int64: int64(replyCommentId), Valid: true},
+		PostID:      PostID,
+		UserID:      userID,
+		Comment:     comment,
+		ParentID:    sql.NullInt64{Int64: int64(parentID), Valid: true},
+		ReplyTo:     sql.NullInt64{Int64: int64(replyCommentId), Valid: true}, //reply to which comment
+		ReplyUserID: sql.NullInt64{Int64: int64(replyUserID), Valid: true},    //reply to who
 	}
 	if err := newComment.CreatePostComment(ctx, d.engine); err != nil {
 		return nil, err
@@ -55,12 +57,12 @@ func (d *DAO) FindPostComments(ctx context.Context, postID, checkUser uint) ([]*
 	return list, err
 }
 
-func (d *DAO) FindReplyComments(ctx context.Context, commentID uint) ([]*models.Comment, error) {
+func (d *DAO) FindReplyComments(ctx context.Context, parentID, checkUser uint) ([]*models.Comment, error) {
 	comment := models.Comment{
-		ReplyTo: sql.NullInt64{Int64: int64(commentID), Valid: true},
+		ParentID: sql.NullInt64{Int64: int64(parentID), Valid: true},
 	}
 
-	return comment.FindReplyComments(ctx, d.engine)
+	return comment.FindReplyParentComments(ctx, d.engine, checkUser)
 }
 
 func (d *DAO) FindOneComment(ctx context.Context, commentID uint) (*models.Comment, error) {

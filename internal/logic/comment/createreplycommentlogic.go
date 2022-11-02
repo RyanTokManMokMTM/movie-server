@@ -58,7 +58,7 @@ func (l *CreateReplyCommentLogic) CreateReplyComment(req *types.CreateReplyComme
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
-	comment, err := l.svcCtx.DAO.CreatePostReplyComment(l.ctx, userID, post.PostId, req.ReplyCommentId, req.Comment)
+	comment, err := l.svcCtx.DAO.CreatePostReplyComment(l.ctx, userID, post.PostId, req.ReplyCommentId, req.ParentCommentID, replyComment.UserID, req.Comment)
 	if err != nil {
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
