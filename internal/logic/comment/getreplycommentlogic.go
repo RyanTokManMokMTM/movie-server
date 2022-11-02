@@ -53,6 +53,7 @@ func (l *GetReplyCommentLogic) GetReplyComment(req *types.GetReplyCommentReq) (r
 				UserName:   reply.User.Name,
 				UserAvatar: reply.User.Avatar,
 			},
+			IsLiked:      len(reply.LikedUser) == 1, //this one user must be the current user
 			LikesCount:   reply.LikesCount,
 			Comment:      reply.Comment,
 			UpdateAt:     reply.UpdatedAt.Unix(),

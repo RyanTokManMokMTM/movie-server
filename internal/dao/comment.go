@@ -43,12 +43,12 @@ func (d *DAO) DeleteComment(ctx context.Context, commentID uint) error {
 	return comment.DeletePostComment(ctx, d.engine)
 }
 
-func (d *DAO) FindPostComments(ctx context.Context, postID uint) ([]*models.Comment, error) {
+func (d *DAO) FindPostComments(ctx context.Context, postID, checkUser uint) ([]*models.Comment, error) {
 	comment := models.Comment{
 		PostID: postID,
 	}
 
-	list, err := comment.FindOnePostComments(ctx, d.engine)
+	list, err := comment.FindOnePostComments(ctx, d.engine, checkUser)
 	if err != nil {
 		return nil, err
 	}
@@ -73,4 +73,10 @@ func (d *DAO) FindOneComment(ctx context.Context, commentID uint) (*models.Comme
 	}
 
 	return comment, nil
+}
+
+func (d *DAO) UpdateCommentCount(ctx context.Context, comment *models.Comment, updateCount uint) error {
+	comment.LikesCount = comment.LikesCount + updateCount
+
+	return comment.UpdateCommentLiked(ctx, d.engine)
 }

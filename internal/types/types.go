@@ -456,6 +456,7 @@ type CommentInfo struct {
 	UpdateAt     int64       `json:"update_at"`
 	ReplyComment uint        `json:"reply_comments"`
 	LikesCount   uint        `json:"comment_likes_count"`
+	IsLiked      bool        `json:"is_liked"`
 }
 
 type CommentUser struct {
@@ -545,22 +546,6 @@ type RemoveCommentLikesReq struct {
 }
 
 type RemoveCommentLikesResq struct {
-}
-
-type IsCommentLikedReq struct {
-	CommentId uint `path:"comment_id"`
-}
-
-type IsCommentLikedResp struct {
-	IsLiked bool `json:"is_liked"`
-}
-
-type CountCommentLikesReq struct {
-	CommentId uint `path:"comment_id"`
-}
-
-type CountCommentLikesResp struct {
-	TotalLikes uint `json:"total_likes"`
 }
 
 type CreatePostLikesReq struct {

@@ -307,13 +307,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/comments/:comment_id",
 				Handler: comment.DeleteCommentHandler(serverCtx),
 			},
-		},
-		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
-		rest.WithPrefix("/api/v1"),
-	)
-
-	server.AddRoutes(
-		[]rest.Route{
 			{
 				Method:  http.MethodGet,
 				Path:    "/comments/:post_id",
@@ -325,6 +318,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: comment.GetReplyCommentHandler(serverCtx),
 			},
 		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 		rest.WithPrefix("/api/v1"),
 	)
 
@@ -382,24 +376,8 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/liked/comment",
 				Handler: comment_likes.RemoveCommentLikesHandler(serverCtx),
 			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/liked/comment/:comment_id",
-				Handler: comment_likes.IsCommentLikedHandler(serverCtx),
-			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
-		rest.WithPrefix("/api/v1"),
-	)
-
-	server.AddRoutes(
-		[]rest.Route{
-			{
-				Method:  http.MethodGet,
-				Path:    "/liked/comment/count/:comment_id",
-				Handler: comment_likes.CountCommentLikesHandler(serverCtx),
-			},
-		},
 		rest.WithPrefix("/api/v1"),
 	)
 

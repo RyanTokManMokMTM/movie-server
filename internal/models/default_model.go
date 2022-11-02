@@ -83,6 +83,10 @@ func NewEngine(c config.Config) *gorm.DB {
 		panic(err.(any))
 	}
 
+	if err := db.SetupJoinTable(&Comment{}, "LikedUser", &CommentLiked{}); err != nil {
+		panic(err.(any))
+	}
+
 	err = db.SetupJoinTable(&User{}, "Rooms", &UsersRooms{})
 	if err != nil {
 		logx.Info(err)

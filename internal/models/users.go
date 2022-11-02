@@ -204,21 +204,21 @@ func (m *User) CreateUserPostLiked(ctx context.Context, db *gorm.DB, post *Post)
 }
 
 //CommentLiked
-func (m *User) CreateUserCommentLiked(ctx context.Context, db *gorm.DB, comment *Comment) error {
-	return db.WithContext(ctx).Debug().Transaction(func(tx *gorm.DB) error {
-		if err := tx.Debug().WithContext(ctx).Model(&m).Omit("CommentLiked.*").Association("CommentLiked").Append(comment); err != nil {
-			return err
-		}
-
-		//TODO: Add 1 count to db
-		comment.LikesCount = comment.LikesCount + 1
-		if err := tx.WithContext(ctx).Debug().Model(&comment).Update("LikesCount", comment.LikesCount).Error; err != nil {
-			return err
-		}
-
-		return nil
-	})
-}
+//func (m *User) CreateUserCommentLiked(ctx context.Context, db *gorm.DB, comment *Comment) error {
+//	return db.WithContext(ctx).Debug().Transaction(func(tx *gorm.DB) error {
+//		if err := tx.Debug().WithContext(ctx).Model(&m).Omit("CommentLiked.*").Association("CommentLiked").Append(comment); err != nil {
+//			return err
+//		}
+//
+//		//TODO: Add 1 count to db
+//		comment.LikesCount = comment.LikesCount + 1
+//		if err := tx.WithContext(ctx).Debug().Model(&comment).Update("LikesCount", comment.LikesCount).Error; err != nil {
+//			return err
+//		}
+//
+//		return nil
+//	})
+//}
 
 //CreateUserGenre
 func (m *User) UpdateUserGenreTrans(ctx context.Context, db *gorm.DB, ids []uint) error {
@@ -361,6 +361,40 @@ func (m *User) GetUserRoomsWithMembers(ctx context.Context, db *gorm.DB) error {
 	}).Preload("Rooms.Users").Preload("Rooms.Messages", func(tx *gorm.DB) *gorm.DB {
 		return tx.Order("sent_time desc").Limit(10)
 	}).Preload("Rooms.Messages.SendUser").First(&m).Error
+
+}
+
+func (m *User) InsertOneCommentLikes(ctx context.Context, db *gorm.DB, commentID, count uint) error {
+	return db.WithContext(ctx).Debug().Transaction(func(tx *gorm.DB) error {
+		//TODO: Adding by 1
+		if err := tx.WithContext(ctx).Debug().Model(&m).Association("CommentLiked").Append(&Comment{CommentID: commentID}); err != nil {
+			logx.Error("append to like comment err")
+			return err
+		}
+		//TODO: Update like count
+		if err := tx.WithContext(ctx).Debug().Model(Comment{CommentID: commentID}).UpdateColumn("LikesCount", count).Error; err != nil {
+			logx.Error("update likes count err")
+			return err
+		}
+
+		return nil
+	})
+
+}
+
+func (m *User) RemoveOneCommentLikes(ctx context.Context, db *gorm.DB, commentID, count uint) error {
+	return db.WithContext(ctx).Debug().Transaction(func(tx *gorm.DB) error {
+		if err := tx.WithContext(ctx).Debug().Model(&m).Association("CommentLiked").Delete(&Comment{CommentID: commentID}); err != nil {
+			return err
+		}
+
+		//TODO: Update like count
+		if err := tx.WithContext(ctx).Debug().Model(&Comment{CommentID: commentID}).Update("LikesCount", count).Error; err != nil {
+			return err
+		}
+
+		return nil
+	})
 
 }
 

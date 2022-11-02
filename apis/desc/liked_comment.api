@@ -19,20 +19,20 @@ type (
     }
     RemoveCommentLikesResq {}
 
-    IsCommentLikedReq {
-        CommentId uint `path:"comment_id"`
-    }
-    IsCommentLikedResp {
-        IsLiked bool `json:"is_liked"`
-    }
+//    IsCommentLikedReq {
+//        CommentId uint `path:"comment_id"`
+//    }
+//    IsCommentLikedResp {
+//        IsLiked bool `json:"is_liked"`
+//    }
 
-    CountCommentLikesReq {
-        CommentId uint `path:"comment_id"`
-
-    }
-    CountCommentLikesResp {
-        TotalLikes uint `json:"total_likes"`
-    }
+//    CountCommentLikesReq {
+//        CommentId uint `path:"comment_id"`
+//
+//    }
+//    CountCommentLikesResp {
+//        TotalLikes uint `json:"total_likes"`
+//    }
 )
 
 
@@ -55,21 +55,21 @@ service  MovieService{
     @handler RemoveCommentLikes
     patch /liked/comment(RemoveCommentLikesReq) returns (RemoveCommentLikesResq);
 
-    @doc (
-        summary : "is comment liked by user"
-    )
-    @handler IsCommentLiked
-    get /liked/comment/:comment_id(IsCommentLikedReq) returns (IsCommentLikedResp);
+//    @doc (
+//        summary : "is comment liked by user"
+//    )
+//    @handler IsCommentLiked
+//    get /liked/comment/:comment_id(IsCommentLikedReq) returns (IsCommentLikedResp);
 }
 
-@server (
-    group : comment_likes
-    prefix : /api/v1
-)
-service  MovieService{
-    @doc (
-        summary : "Count total comment likes"
-    )
-    @handler CountCommentLikes
-    get /liked/comment/count/:comment_id(CountCommentLikesReq) returns (CountCommentLikesResp);
-}
+//@server (
+//    group : comment_likes
+//    prefix : /api/v1
+//)
+//service  MovieService{
+//    @doc (
+//        summary : "Count total comment likes"
+//    )
+//    @handler CountCommentLikes
+//    get /liked/comment/count/:comment_id(CountCommentLikesReq) returns (CountCommentLikesResp);
+//}

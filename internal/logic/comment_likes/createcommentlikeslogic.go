@@ -7,11 +7,10 @@ import (
 	"github.com/ryantokmanmokmtm/movie-server/common/ctxtool"
 	"github.com/ryantokmanmokmtm/movie-server/common/errx"
 	"github.com/ryantokmanmokmtm/movie-server/internal/logic/serverWs"
-	"gorm.io/gorm"
-	"time"
-
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
 	"github.com/ryantokmanmokmtm/movie-server/internal/types"
+	"gorm.io/gorm"
+	"time"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -53,43 +52,28 @@ func (l *CreateCommentLikesLogic) CreateCommentLikes(req *types.CreateCommentLik
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
-	//Who is the
-	commentLiked, err := l.svcCtx.DAO.FindOneCommentLiked(l.ctx, userID, req.CommentId)
-	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			//Create a new record
-			if err := l.svcCtx.DAO.CreateCommentLiked(l.ctx, userID, comment); err != nil {
-				return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
-			}
-
-			if userID != comment.UserID {
-				//TODO: is notification exist?
-				err = l.svcCtx.DAO.FindOneLikeCommentNotification(l.ctx, comment.UserID, userID, comment.CommentID)
-				if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
-					logx.Info("Notification not found...")
-
-					if err := l.svcCtx.DAO.InsertOneCommentLikeNotification(l.ctx, comment.PostID, userID, req.CommentId, comment.UserID, time.Now()); err != nil {
-						return nil, err
-					}
-
-					go func() {
-						logx.Info("TODO: Send a comment like notification")
-						_ = serverWs.SendNotificationToUserWithUserInfo(comment.UserID, u, fmt.Sprintf("%s給您的留言點讚", u.Name))
-					}()
-
-				}
-
-			}
-
-			return &types.CreateCommentLikesResp{}, nil
-		}
+	//TODO: add comment liked
+	logx.Infof("%+v", comment)
+	if err := l.svcCtx.DAO.InsertOneCommentLike(l.ctx, userID, comment.CommentID, comment.LikesCount+1); err != nil {
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
-	commentLiked.State = 1
+	//TODO: Send notification
+	if userID != comment.UserID {
+		//TODO: is notification exist?
+		err = l.svcCtx.DAO.FindOneLikeCommentNotification(l.ctx, comment.UserID, userID, comment.CommentID)
+		if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
+			logx.Info("Notification not found...")
 
-	if err := l.svcCtx.DAO.UpdateCommentLiked(l.ctx, commentLiked, comment); err != nil {
-		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
+			if err := l.svcCtx.DAO.InsertOneCommentLikeNotification(l.ctx, comment.PostID, userID, req.CommentId, comment.UserID, time.Now()); err != nil {
+				return nil, err
+			}
+
+			go func() {
+				_ = serverWs.SendNotificationToUserWithUserInfo(comment.UserID, u, fmt.Sprintf("%s給您的留言點讚", u.Name))
+			}()
+
+		}
 	}
 
 	return &types.CreateCommentLikesResp{}, nil

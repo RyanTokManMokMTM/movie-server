@@ -3,6 +3,7 @@ package comment
 import (
 	"context"
 	"github.com/pkg/errors"
+	"github.com/ryantokmanmokmtm/movie-server/common/ctxtool"
 	"github.com/ryantokmanmokmtm/movie-server/common/errx"
 	"gorm.io/gorm"
 
@@ -28,6 +29,14 @@ func NewGetPostCommentLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ge
 
 func (l *GetPostCommentLogic) GetPostComment(req *types.GetPostCommentsReq) (resp *types.GetPostCommentsResp, err error) {
 	// todo: add your logic here and delete this line
+	userID := ctxtool.GetUserIDFromCTX(l.ctx)
+	_, err = l.svcCtx.DAO.FindUserByID(l.ctx, userID)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errx.NewErrCode(errx.USER_NOT_EXIST)
+		}
+		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
+	}
 
 	//post is exist?
 	_, err = l.svcCtx.DAO.FindOnePostInfo(l.ctx, req.PostID)
@@ -38,7 +47,7 @@ func (l *GetPostCommentLogic) GetPostComment(req *types.GetPostCommentsReq) (res
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
-	commentList, err := l.svcCtx.DAO.FindPostComments(l.ctx, req.PostID)
+	commentList, err := l.svcCtx.DAO.FindPostComments(l.ctx, req.PostID, userID)
 	if err != nil {
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
@@ -57,6 +66,7 @@ func (l *GetPostCommentLogic) GetPostComment(req *types.GetPostCommentsReq) (res
 			Comment:      v.Comment,
 			ReplyComment: uint(len(v.Comments)),
 			UpdateAt:     v.UpdatedAt.Unix(),
+			IsLiked:      len(v.LikedUser) == 1,
 		})
 	}
 
