@@ -45,11 +45,12 @@ type UserProfileReq struct {
 }
 
 type UserProfileResp struct {
-	ID     uint   `json:"id"`
-	Name   string `json:"name"`
-	Email  string `json:"email"`
-	Avatar string `json:"avatar"`
-	Cover  string `json:"cover"`
+	ID               uint                  `json:"id"`
+	Name             string                `json:"name"`
+	Email            string                `json:"email"`
+	Avatar           string                `json:"avatar"`
+	Cover            string                `json:"cover"`
+	NotificationInfo NotificationCountInfo `json:"notification_info"` //only logged in user will have this information
 }
 
 type UpdateProfileReq struct {
@@ -89,6 +90,24 @@ type GetUserFriendRoomListResp struct {
 	Lists []FriendRoomInfo `json:"lists"`
 }
 
+type FriendNotificationReq struct {
+}
+
+type FriendNotificationResp struct {
+}
+
+type CommentNotificationReq struct {
+}
+
+type CommentNotificationResp struct {
+}
+
+type LikesNotificationReq struct {
+}
+
+type LikesNotificationResp struct {
+}
+
 type FriendRoomInfo struct {
 	RoomID uint     `json:"id"`
 	Info   UserInfo `json:"info"`
@@ -98,6 +117,12 @@ type UserInfo struct {
 	ID     uint   `json:"id"`
 	Name   string `json:"name"`
 	Avatar string `json:"avatar"`
+}
+
+type NotificationCountInfo struct {
+	FriendNotificationCount  uint `json:"friend_notification_count"`
+	LikesNotificationCount   uint `json:"likes_notification_count"`
+	CommentNotificationCount uint `json:"comment_notification_count"`
 }
 
 type MoviePageListByGenreReq struct {

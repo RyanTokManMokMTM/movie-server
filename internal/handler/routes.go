@@ -98,6 +98,21 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/user/friends/room",
 				Handler: user.GetFriendRoomListHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodPatch,
+				Path:    "/user/reset/friend/notification",
+				Handler: user.ResetFriendNotificationHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPatch,
+				Path:    "/user/reset/comment/notification",
+				Handler: user.ResetCommentNotificationHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPatch,
+				Path:    "/user/reset/likes/notification",
+				Handler: user.ResetLikesNotificationHandler(serverCtx),
+			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 		rest.WithPrefix("/api/v1"),

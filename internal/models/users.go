@@ -15,6 +15,10 @@ type User struct {
 	Avatar   string `gorm:"not null;type:varchar(255)"`
 	Cover    string `gorm:"not null;type:varchar(255)"`
 
+	FriendNotificationCount  uint
+	LikeNotificationCount    uint
+	CommentNotificationCount uint
+
 	//can have a lot of list
 	List            []List      `gorm:"foreignKey:UserId;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 	MovieInfos      []MovieInfo `gorm:"many2many:users_movies;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
@@ -162,6 +166,18 @@ func (m *User) IsFriend(db *gorm.DB, ctx context.Context, friendID uint) (bool, 
 	}
 
 	return true, nil
+}
+
+func (m *User) UpdateFriendNotification(db *gorm.DB, ctx context.Context) error {
+	return db.WithContext(ctx).Debug().Model(&m).Update("FriendNotificationCount", m.FriendNotificationCount).Error
+}
+
+func (m *User) UpdateLikesNotification(db *gorm.DB, ctx context.Context) error {
+	return db.WithContext(ctx).Debug().Model(&m).Update("LikeNotificationCount", m.LikeNotificationCount).Error
+}
+
+func (m *User) UpdateCommentNotification(db *gorm.DB, ctx context.Context) error {
+	return db.WithContext(ctx).Debug().Model(&m).Update("CommentNotificationCount", m.CommentNotificationCount).Error
 }
 
 //

@@ -21,8 +21,19 @@ func (f *FriendNotification) TableName() string {
 	return "friend_notifications"
 }
 
-func (f *FriendNotification) InsertOne(db *gorm.DB, ctx context.Context) error {
-	return db.WithContext(ctx).Debug().Create(&f).Error
+func (f *FriendNotification) InsertOne(db *gorm.DB, ctx context.Context, receiver *User) error {
+	return db.WithContext(ctx).Debug().Transaction(func(tx *gorm.DB) error {
+		if err := tx.WithContext(ctx).Debug().Create(&f).Error; err != nil {
+			return err
+		}
+
+		//TODO: add 1 friend notification count for the receiver
+		receiver.FriendNotificationCount = receiver.FriendNotificationCount + 1
+		if err := tx.WithContext(ctx).Debug().Model(&receiver).UpdateColumn("FriendNotificationCount", receiver.FriendNotificationCount).Error; err != nil {
+			return err
+		}
+		return nil
+	})
 }
 
 func (f *FriendNotification) FineOneByID(db *gorm.DB, ctx context.Context) error {
@@ -79,7 +90,18 @@ func (f *FriendNotification) Accept(db *gorm.DB, ctx context.Context) error {
 			return err
 		}
 
-		return nil
+		//TODO: update user friend notification count
+		receiverInfo := &User{
+			ID: f.Sender,
+		}
+
+		if err := tx.WithContext(ctx).Debug().First(&receiverInfo).Error; err != nil {
+			return err
+		}
+
+		receiverInfo.FriendNotificationCount = receiverInfo.FriendNotificationCount + 1
+		return receiverInfo.UpdateFriendNotification(tx, ctx)
+
 	})
 }
 
@@ -92,7 +114,7 @@ func (f *FriendNotification) Decline(db *gorm.DB, ctx context.Context) error {
 
 func (f *FriendNotification) GetNotifications(db *gorm.DB, ctx context.Context) ([]*FriendNotification, error) {
 	var resp []*FriendNotification
-	if err := db.WithContext(ctx).Debug().Model(&f).Preload("SenderInfo").Where("Receiver = ? AND State between ? and ?", f.Receiver, 1, 2).Find(&resp).Error; err != nil {
+	if err := db.WithContext(ctx).Debug().Model(&f).Preload("SenderInfo").Preload("ReceiverInfo").Where("(Receiver = ? AND  State BETWEEN ? AND ? ) OR (Sender = ?  AND State BETWEEN ? AND ?)", f.Receiver,1, 2, f.Receiver,1, 2).Find(&resp).Error; err != nil {
 		return nil, err
 	}
 	return resp, nil

@@ -36,7 +36,23 @@ func (m *LikeNotification) TableName() string {
 }
 
 func (m *LikeNotification) InsertOne(db *gorm.DB, ctx context.Context) error {
-	return db.WithContext(ctx).Debug().Create(&m).Error
+	return db.WithContext(ctx).Debug().Transaction(func(tx *gorm.DB) error {
+		if err := tx.WithContext(ctx).Debug().Create(&m).Error; err != nil {
+			return err
+		}
+
+		receiver := &User{
+			ID: m.ReceiverID,
+		}
+
+		if err := tx.WithContext(ctx).Debug().First(&receiver).Error; err != nil {
+			return err
+		}
+
+		receiver.LikeNotificationCount = receiver.LikeNotificationCount + 1
+		return receiver.UpdateLikesNotification(tx, ctx)
+	})
+
 }
 
 func (m *LikeNotification) FindNotificationsByReceiver(db *gorm.DB, ctx context.Context) ([]*LikeNotification, error) {

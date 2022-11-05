@@ -50,6 +50,7 @@ type (
 		Email string `json:"email"`
 		Avatar string `json:"avatar"`
 		Cover string `json:"cover"`
+		NotificationInfo NotificationCountInfo `json:"notification_info"` //only logged in user will have this information
 //
 //		//Need  liked moive list
 //		LikedMovies []*LikedMovieInfo `json:"liked_movies"`
@@ -85,6 +86,15 @@ type (
 	GetUserFriendRoomListResp {
 		lists []FriendRoomInfo `json:"lists"`
 	}
+
+	FriendNotificationReq{}
+	FriendNotificationResp{}
+
+	CommentNotificationReq{}
+	CommentNotificationResp{}
+
+	LikesNotificationReq{}
+	LikesNotificationResp{}
 //
 //	CountFollowingReq {
 //		UserId uint `path:"user_id"`
@@ -128,6 +138,12 @@ type (
 	}
 )
 
+type NotificationCountInfo {
+	FriendNotificationCount uint `json:"friend_notification_count"`
+	LikesNotificationCount uint `json:"likes_notification_count"`
+	CommentNotificationCount uint `json:"comment_notification_count"`
+}
+
 
 //User Service
 @server (
@@ -146,6 +162,7 @@ service MovieService {
 	)
 	@handler  UserSignUp
 	post /user/signup(UserSignUpReq) returns (UserSignUpResp);
+
 }
 
 @server (
@@ -171,7 +188,10 @@ service MovieService{
 	)
 	@handler  GetFriendList
 	get /user/friends/list/:user_id(GetFriendListReq) returns (GetFriendListResp);
-//	@doc (
+
+
+
+	//	@doc (
 //		summary : "Count how many users have been followed by user"
 //	)
 //	@handler CountFollowingUser
@@ -230,6 +250,17 @@ service MovieService{
 
 	@handler GetFriendRoomList
 	get /user/friends/room(GetUserFriendRoomListReq) returns (GetUserFriendRoomListResp);
+
+
+
+	@handler ResetFriendNotification
+	patch /user/reset/friend/notification(FriendNotificationReq) returns (FriendNotificationResp)
+
+	@handler ResetCommentNotification
+	patch /user/reset/comment/notification(CommentNotificationReq) returns (CommentNotificationResp)
+
+	@handler ResetLikesNotification
+	patch /user/reset/likes/notification(LikesNotificationReq) returns (LikesNotificationResp)
 }
 
 

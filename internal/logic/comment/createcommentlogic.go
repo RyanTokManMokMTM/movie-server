@@ -64,7 +64,7 @@ func (l *CreateCommentLogic) CreateComment(req *types.CreateCommentReq) (resp *t
 		}
 		go func() {
 			logx.Info("Send a comment notification")
-			_ = serverWs.SendNotificationToUserWithUserInfo(post.UserId, u, fmt.Sprintf("%s回復了您的文章", u.Name))
+			_ = serverWs.SendNotificationToUserWithUserInfo(post.UserId, u, fmt.Sprintf("%s回復了您的文章", u.Name), serverWs.COMMENT_NOTIFICATION)
 		}()
 	}
 

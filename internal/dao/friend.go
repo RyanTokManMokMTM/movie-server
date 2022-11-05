@@ -82,14 +82,14 @@ func (d *DAO) GetFriendRoomList(ctx context.Context, UserID uint) (*models.User,
 //	return f, nil
 //}
 
-func (d *DAO) InsertOneFriendNotification(ctx context.Context, sender, receiver uint) (uint, error) {
+func (d *DAO) InsertOneFriendNotification(ctx context.Context, sender uint, receiver *models.User) (uint, error) {
 	fr := &models.FriendNotification{
 		Sender:   sender,
-		Receiver: receiver,
+		Receiver: receiver.ID,
 		State:    1,
 	}
 
-	if err := fr.InsertOne(d.engine, ctx); err != nil {
+	if err := fr.InsertOne(d.engine, ctx, receiver); err != nil {
 		return 0, err
 	}
 

@@ -70,7 +70,7 @@ func (l *CreateCommentLikesLogic) CreateCommentLikes(req *types.CreateCommentLik
 			}
 
 			go func() {
-				_ = serverWs.SendNotificationToUserWithUserInfo(comment.UserID, u, fmt.Sprintf("%s給您的留言點讚", u.Name))
+				_ = serverWs.SendNotificationToUserWithUserInfo(comment.UserID, u, fmt.Sprintf("%s給您的留言點讚", u.Name), serverWs.COMMENT_NOTIFICATION)
 			}()
 
 		}

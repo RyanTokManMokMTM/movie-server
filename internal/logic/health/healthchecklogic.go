@@ -2,6 +2,7 @@ package health
 
 import (
 	"context"
+	"github.com/ryantokmanmokmtm/movie-server/common/errx"
 
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
 	"github.com/ryantokmanmokmtm/movie-server/internal/types"
@@ -26,7 +27,9 @@ func NewHealthCheckLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Healt
 func (l *HealthCheckLogic) HealthCheck(req *types.HealthCheckReq) (resp *types.HealthCheckResp, err error) {
 	// todo: add your logic here and delete this line
 
-	return &types.HealthCheckResp{
-		Result: "Pong",
-	}, nil
+	//return &types.HealthCheckResp{
+	//	Result: "Pong",
+	//}, nil
+
+	return nil, errx.NewErrCode(errx.SERVER_COMMON_ERROR)
 }

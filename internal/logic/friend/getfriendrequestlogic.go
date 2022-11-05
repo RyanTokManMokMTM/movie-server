@@ -50,15 +50,28 @@ func (l *GetFriendRequestLogic) GetFriendRequest(req *types.GetFriendRequestReq)
 
 	requests := make([]types.FriendRequest, 0)
 	for _, req := range list {
-		requests = append(requests, types.FriendRequest{
-			RequestID: req.ID,
-			Sender: types.UserInfo{
+		//if user is sender ,send receiver data
+		//else send sender data
+		var info types.UserInfo
+		if userId == req.SenderInfo.ID { //if user is sender -> it needs the receiver info
+			info = types.UserInfo{
+				ID:     req.ReceiverInfo.ID,
+				Name:   req.ReceiverInfo.Name,
+				Avatar: req.ReceiverInfo.Avatar,
+			}
+		} else {
+			info = types.UserInfo{
 				ID:     req.SenderInfo.ID,
 				Name:   req.SenderInfo.Name,
 				Avatar: req.SenderInfo.Avatar,
-			},
-			SentTime: req.CreatedAt.Unix(),
-			State:    req.State,
+			}
+		}
+
+		requests = append(requests, types.FriendRequest{
+			RequestID: req.ID,
+			Sender:    info,
+			SentTime:  req.CreatedAt.Unix(),
+			State:     req.State,
 		})
 	}
 	return &types.GetFriendRequestResp{

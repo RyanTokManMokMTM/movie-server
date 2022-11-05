@@ -124,3 +124,39 @@ func (d *DAO) RemoveOneCommentLike(ctx context.Context, userID uint, commentID, 
 
 	return u.RemoveOneCommentLikes(ctx, d.engine, commentID, count)
 }
+
+//FriendNotification
+
+func (d *DAO) UpdateFriendNotification(ctx context.Context, u *models.User, count uint) error {
+	u.FriendNotificationCount = u.FriendNotificationCount + count
+	return u.UpdateFriendNotification(d.engine, ctx)
+}
+
+func (d *DAO) ResetFriendNotification(ctx context.Context, u *models.User) error {
+	u.FriendNotificationCount = 0
+	return u.UpdateFriendNotification(d.engine, ctx)
+}
+
+//LikesNotification
+
+func (d *DAO) UpdateLikesNotification(ctx context.Context, u *models.User, count uint) error {
+	u.LikeNotificationCount = u.LikeNotificationCount + count
+	return u.UpdateFriendNotification(d.engine, ctx)
+}
+
+func (d *DAO) ResetLikesNotification(ctx context.Context, u *models.User) error {
+	u.LikeNotificationCount = 0
+	return u.UpdateLikesNotification(d.engine, ctx)
+}
+
+//CommentNotification
+
+func (d *DAO) UpdateCommentNotification(ctx context.Context, u *models.User, count uint) error {
+	u.CommentNotificationCount = u.CommentNotificationCount + count
+	return u.UpdateFriendNotification(d.engine, ctx)
+}
+
+func (d *DAO) ResetCommentNotification(ctx context.Context, u *models.User) error {
+	u.CommentNotificationCount = 0
+	return u.UpdateCommentNotification(d.engine, ctx)
+}

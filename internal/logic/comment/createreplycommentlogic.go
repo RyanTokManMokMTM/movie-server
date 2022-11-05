@@ -40,6 +40,13 @@ func (l *CreateReplyCommentLogic) CreateReplyComment(req *types.CreateReplyComme
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errx.NewErrCode(errx.USER_NOT_EXIST)
+		}
+		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
+	}
+
 	//check post is exist
 	post, err := l.svcCtx.DAO.FindOnePostInfo(l.ctx, req.PostID)
 	if err != nil {
@@ -72,7 +79,7 @@ func (l *CreateReplyCommentLogic) CreateReplyComment(req *types.CreateReplyComme
 		//send a notification
 		go func() {
 			logx.Info("send a reply comment notification")
-			_ = serverWs.SendNotificationToUserWithUserInfo(replyComment.UserID, u, fmt.Sprintf("%s回復了您的留言", u.Name))
+			_ = serverWs.SendNotificationToUserWithUserInfo(replyComment.UserID, u, fmt.Sprintf("%s回覆您的留言", u.Name), serverWs.COMMENT_NOTIFICATION)
 		}()
 	}
 
