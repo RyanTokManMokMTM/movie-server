@@ -27,6 +27,11 @@ type (
 	HealthCheckResp {
 		Result string `json:"result"`
 	}
+
+	//for
+	MetaData {
+		TotalPage uint `json:"total_page"`
+	}
 )
 
 //Health service

@@ -90,10 +90,18 @@ func (f *FriendNotification) Decline(db *gorm.DB, ctx context.Context) error {
 	return db.WithContext(ctx).Debug().Model(&f).Update("state", 0).Error
 }
 
-func (f *FriendNotification) GetNotifications(db *gorm.DB, ctx context.Context) ([]*FriendNotification, error) {
+func (f *FriendNotification) GetNotifications(db *gorm.DB, ctx context.Context, limit, pageOffset int) ([]*FriendNotification, int64, error) {
 	var resp []*FriendNotification
-	if err := db.WithContext(ctx).Debug().Model(&f).Preload("SenderInfo").Where("Receiver = ? AND State between ? and ?", f.Receiver, 1, 2).Find(&resp).Error; err != nil {
-		return nil, err
+	var count int64 = 0
+	if err := db.WithContext(ctx).Debug().Model(&f).
+		Preload("SenderInfo").
+		Where("Receiver = ? AND State between ? and ?", f.Receiver, 1, 2).
+		Order("created_at desc").
+		Count(&count).
+		Offset(pageOffset).
+		Limit(limit).
+		Find(&resp).Error; err != nil {
+		return nil, 0, err
 	}
-	return resp, nil
+	return resp, count, nil
 }

@@ -5,6 +5,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/ryantokmanmokmtm/movie-server/common/ctxtool"
 	"github.com/ryantokmanmokmtm/movie-server/common/errx"
+	"github.com/ryantokmanmokmtm/movie-server/common/pagination"
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
 	"github.com/ryantokmanmokmtm/movie-server/internal/types"
 	"github.com/zeromicro/go-zero/core/logx"
@@ -39,13 +40,23 @@ func (l *GetAllPostLogic) GetAllPost(req *types.AllPostsInfoReq) (resp *types.Al
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
-	res, err := l.svcCtx.DAO.FindAllPosts(l.ctx, userID)
+	//TODO: Get Page Offset and limit
+	//if page = 1 -> offset by 20
+	limit := pagination.GetLimit(req.Limit)
+	pageOffset := pagination.PageOffset(pagination.DEFAULT_PAGE_SIZE, pagination.GetPage(req.Page))
+	res, count, err := l.svcCtx.DAO.FindAllPosts(l.ctx, userID, int(limit), int(pageOffset))
+	logx.Info("total record : ", count)
+
+	totalPage := pagination.GetTotalPageByPageSize(uint(count), pagination.DEFAULT_PAGE_SIZE)
+	logx.Info("total page : ", totalPage)
 	if err != nil {
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
 	//Post List
 	var posts []types.PostInfo
+
+	//TODO: This part need to be fix,using preload liked model instead of the loop -------- ....
 	for _, v := range res {
 
 		var isPostLiked uint = 0
@@ -81,6 +92,9 @@ func (l *GetAllPostLogic) GetAllPost(req *types.AllPostsInfoReq) (resp *types.Al
 
 	return &types.AllPostsInfoResp{
 		Infos: posts,
+		MetaData: types.MetaData{
+			TotalPage: totalPage,
+		},
 	}, nil
 }
 

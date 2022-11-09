@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/pkg/errors"
 	"github.com/ryantokmanmokmtm/movie-server/common/errx"
+	"github.com/ryantokmanmokmtm/movie-server/common/pagination"
 	"gorm.io/gorm"
 
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
@@ -36,10 +37,16 @@ func (l *GetUserLikedMovieListLogic) GetUserLikedMovieList(req *types.AllUserLik
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
-	u, err := l.svcCtx.DAO.GetUserLikedMovies(l.ctx, req.ID)
+	limit := pagination.GetLimit(req.Limit)
+	pageOffset := pagination.PageOffset(pagination.DEFAULT_PAGE_SIZE, req.Page)
+
+	u, count, err := l.svcCtx.DAO.GetUserLikedMovies(l.ctx, req.ID, int(limit), int(pageOffset))
 	if err != nil {
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
+	logx.Info("total record : ", count)
+
+	totalPage := pagination.GetTotalPageByPageSize(uint(count), pagination.DEFAULT_PAGE_SIZE)
 
 	var likedMovie []*types.LikedMovieInfo
 	for _, v := range u.MovieInfos {
@@ -61,5 +68,8 @@ func (l *GetUserLikedMovieListLogic) GetUserLikedMovieList(req *types.AllUserLik
 	}
 	return &types.AllUserAllLikedMoviesResp{
 		LikedMoviesList: likedMovie,
+		MetaData: types.MetaData{
+			TotalPage: totalPage,
+		},
 	}, nil
 }

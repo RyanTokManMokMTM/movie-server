@@ -11,9 +11,13 @@ syntax = "v1"
 type (
     GetRoomMessageReq {
         RoomID uint `path:"room_id"`
+        Page uint `form:"page,default=1"`
+        Limit uint `form:"limit,default=20"`
+
     }
     GetRoomMessageResp {
         Messagees []MessageData `json:"messages"`
+        MetaData MetaData `json:"metadata"`
     }
 )
 

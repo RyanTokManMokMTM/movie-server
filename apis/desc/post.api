@@ -34,15 +34,22 @@ type (
 
     //For all user
     AllPostsInfoReq {
+        //do we need the last post id that the latest post client have
+        Page uint `form:"page,default=1"`
+        Limit uint `form:"limit,default=20"`
     }
     AllPostsInfoResp {
         Infos []PostInfo `json:"post_info"`
+        MetaData MetaData `json:"metadata"`
     }
 
     FollowPostsInfoReq {
+        Page uint `form:"page,default=1"`
+        Limit uint `form:"limit,default=20"`
     }
     FollowPostsInfoResp {
         Infos []PostInfo `json:"post_info"`
+        MetaData MetaData `json:"metadata"`
     }
 
     //Get one post info
@@ -56,9 +63,12 @@ type (
     //get all post of the user
     PostsInfoReq {
         UserID uint `path:"user_id"`
+        Page uint `form:"page,default=1"`
+        Limit uint `form:"limit,default=20"`
     }
     PostsInfoResp {
         Infos []PostInfo `json:"post_info"`
+        MetaData MetaData `json:"metadata"`
     }
 //
     CountPostLikedReq {

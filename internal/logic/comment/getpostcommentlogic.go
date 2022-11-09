@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/pkg/errors"
 	"github.com/ryantokmanmokmtm/movie-server/common/errx"
+	"github.com/ryantokmanmokmtm/movie-server/common/pagination"
 	"gorm.io/gorm"
 
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
@@ -38,11 +39,16 @@ func (l *GetPostCommentLogic) GetPostComment(req *types.GetPostCommentsReq) (res
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
-	commentList, err := l.svcCtx.DAO.FindPostComments(l.ctx, req.PostID)
+	limit := pagination.GetLimit(req.Limit)
+	pageOffset := pagination.PageOffset(pagination.DEFAULT_PAGE_SIZE, req.Page)
+
+	commentList, count, err := l.svcCtx.DAO.FindPostComments(l.ctx, req.PostID, int(limit), int(pageOffset))
 	if err != nil {
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
+	logx.Info("total record : ", count)
 
+	totalPage := pagination.GetTotalPageByPageSize(uint(count), pagination.DEFAULT_PAGE_SIZE)
 	var comments []types.CommentInfo
 	for _, v := range commentList {
 		comments = append(comments, types.CommentInfo{
@@ -64,5 +70,8 @@ func (l *GetPostCommentLogic) GetPostComment(req *types.GetPostCommentsReq) (res
 	}
 	return &types.GetPostCommentsResp{
 		Comments: comments,
+		MetaData: types.MetaData{
+			TotalPage: totalPage,
+		},
 	}, nil
 }

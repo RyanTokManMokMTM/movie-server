@@ -34,10 +34,10 @@ func (d *DAO) InsertOneReplyCommentNotification(ctx context.Context, receiverID,
 	return notify.InsertOne(d.engine, ctx)
 }
 
-func (d *DAO) FindOneCommentNotification(ctx context.Context, receiverID uint) ([]*models.CommentNotification, error) {
+func (d *DAO) FindOneCommentNotification(ctx context.Context, receiverID uint, limit, pageOffset int) ([]*models.CommentNotification, int64, error) {
 	notify := &models.CommentNotification{
 		ReceiverId: receiverID,
 	}
 
-	return notify.FindNotificationsByReceiver(d.engine, ctx)
+	return notify.FindNotificationsByReceiver(d.engine, ctx, limit, pageOffset)
 }

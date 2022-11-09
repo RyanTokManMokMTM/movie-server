@@ -31,12 +31,12 @@ func (d *DAO) InsertOneCommentLikeNotification(ctx context.Context, postID, like
 	return notify.InsertOne(d.engine, ctx)
 }
 
-func (d *DAO) FindLikesNotificationByReceiver(ctx context.Context, receiverID uint) ([]*models.LikeNotification, error) {
+func (d *DAO) FindLikesNotificationByReceiver(ctx context.Context, receiverID uint, limit, pageOffset int) ([]*models.LikeNotification, int64, error) {
 	notify := &models.LikeNotification{
 		ReceiverID: receiverID,
 	}
 
-	return notify.FindNotificationsByReceiver(d.engine, ctx)
+	return notify.FindNotificationsByReceiver(d.engine, ctx, limit, pageOffset)
 }
 
 func (d *DAO) FindOneLikePostNotification(ctx context.Context, receiverID, likedBy, postID uint) error {

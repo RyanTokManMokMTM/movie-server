@@ -1,9 +1,13 @@
 syntax = "v1"
 
 type (
-    GetCommentNotificationReq{}
+    GetCommentNotificationReq{
+        Page uint `form:"page,default=1"`
+        Limit uint `form:"limit,default=20"`
+    }
     GetCommentNotificationResp {
         CommentNotificationList []CommentNotification `json:"notifications"`
+        MetaData MetaData `json:"metadata"`
     }
 )
 

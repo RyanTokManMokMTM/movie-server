@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/pkg/errors"
 	"github.com/ryantokmanmokmtm/movie-server/common/ctxtool"
+	"github.com/ryantokmanmokmtm/movie-server/common/pagination"
 	"gorm.io/gorm"
 
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
@@ -43,6 +44,9 @@ func (l *GetRoomMessageLogic) GetRoomMessage(req *types.GetRoomMessageReq) (resp
 		return nil, err
 	}
 
+	limit := pagination.GetLimit(req.Limit)
+	pageOffset := pagination.PageOffset(pagination.DEFAULT_PAGE_SIZE, req.Page)
+
 	//TODO: Check User is joined the group
 	mem, err := l.svcCtx.DAO.FindOneRoomMember(l.ctx, req.RoomID, u.ID)
 	if err != nil {
@@ -54,11 +58,13 @@ func (l *GetRoomMessageLogic) GetRoomMessage(req *types.GetRoomMessageReq) (resp
 	}
 
 	//TODO: Get at most 10 latest record belong to the group
-	msgs, err := l.svcCtx.DAO.GetRoomMessage(l.ctx, req.RoomID)
+	msgs, count, err := l.svcCtx.DAO.GetRoomMessage(l.ctx, req.RoomID, int(limit), int(pageOffset))
 	if err != nil {
 		return nil, err
 	}
+	logx.Info("total record : ", count)
 
+	totalPage := pagination.GetTotalPageByPageSize(uint(count), pagination.DEFAULT_PAGE_SIZE)
 	record := make([]types.MessageData, 0)
 	for _, data := range msgs {
 		record = append(record, types.MessageData{
@@ -75,5 +81,8 @@ func (l *GetRoomMessageLogic) GetRoomMessage(req *types.GetRoomMessageReq) (resp
 
 	return &types.GetRoomMessageResp{
 		Messagees: record,
+		MetaData: types.MetaData{
+			TotalPage: totalPage,
+		},
 	}, nil
 }

@@ -43,24 +43,21 @@ func (d *DAO) DeleteComment(ctx context.Context, commentID uint) error {
 	return comment.DeletePostComment(ctx, d.engine)
 }
 
-func (d *DAO) FindPostComments(ctx context.Context, postID uint) ([]*models.Comment, error) {
+func (d *DAO) FindPostComments(ctx context.Context, postID uint, limit, pageOffset int) ([]*models.Comment, int64, error) {
 	comment := models.Comment{
 		PostID: postID,
 	}
 
-	list, err := comment.FindOnePostComments(ctx, d.engine)
-	if err != nil {
-		return nil, err
-	}
-	return list, err
+	return comment.FindOnePostComments(ctx, d.engine, limit, pageOffset)
+
 }
 
-func (d *DAO) FindReplyComments(ctx context.Context, commentID uint) ([]*models.Comment, error) {
+func (d *DAO) FindReplyComments(ctx context.Context, commentID uint, limit, pageOffset int) ([]*models.Comment, int64, error) {
 	comment := models.Comment{
 		ReplyTo: sql.NullInt64{Int64: int64(commentID), Valid: true},
 	}
 
-	return comment.FindReplyComments(ctx, d.engine)
+	return comment.FindReplyComments(ctx, d.engine, limit, pageOffset)
 }
 
 func (d *DAO) FindOneComment(ctx context.Context, commentID uint) (*models.Comment, error) {

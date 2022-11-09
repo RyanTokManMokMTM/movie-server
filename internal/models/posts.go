@@ -57,20 +57,15 @@ func (m *Post) GetPostInfo(ctx context.Context, db *gorm.DB) error {
 }
 
 //Get All PostInfo - 10 record by recent 10
-func (m *Post) GetAllPostInfoByCreateTimeDesc(ctx context.Context, db *gorm.DB, userID uint) ([]*Post, error) {
+func (m *Post) GetAllPostInfoByCreateTimeDesc(ctx context.Context, db *gorm.DB, userID uint, limit, pageOffset int) ([]*Post, int64, error) {
 	//exclude following user
 	var friends []uint
-	//if err := db.Debug().WithContext(ctx).Model(&Friend{UserID: userID}).Select("user_id").Association("Friend").Find(&followingIds); err != nil {
-	//	return nil, err
-	//}
-	//
-	//followingIds = append(followingIds, userID)
-
+	var count int64 = 0
 	//get friend list
 	fd := &User{ID: userID}
 	list, err := fd.GetFriendsList(db, ctx)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 
 	for _, info := range list {
@@ -80,29 +75,23 @@ func (m *Post) GetAllPostInfoByCreateTimeDesc(ctx context.Context, db *gorm.DB, 
 	friends = append(friends, userID) //include itself???
 
 	//logx.Info("friend ids", list)
-
+	//TODO: Get total
 	var resp []*Post
-	if err := db.Debug().WithContext(ctx).Model(&m).Preload("MovieInfo").Preload("UserInfo").Preload("Comments").Preload("PostsLiked").Where("user_id NOT IN(?)", friends).Order("created_at desc").Limit(10).Omit("state").Find(&resp).Error; err != nil {
-		return nil, err
+	if err := db.Debug().WithContext(ctx).Model(&m).Preload("MovieInfo").Preload("UserInfo").Preload("Comments").Preload("PostsLiked").Where("user_id NOT IN(?)", friends).Order("created_at desc").Count(&count).Offset(pageOffset).Limit(limit).Omit("state").Find(&resp).Error; err != nil {
+		return nil, 0, err
 	}
-	return resp, nil
+	return resp, count, nil
 }
 
-func (m *Post) GetFollowPostInfoByCreateTimeDesc(ctx context.Context, db *gorm.DB, userID uint) ([]*Post, error) {
+func (m *Post) GetFollowPostInfoByCreateTimeDesc(ctx context.Context, db *gorm.DB, userID uint, limit, pageOffset int) ([]*Post, int64, error) {
 	var resp []*Post
+	var count int64 = 0
 
-	//Following User Ids
-	//var followingIds []uint
-	//if err := db.Debug().WithContext(ctx).Model(&FriendTemp{}).Select("friend_id").Where("user_id = ?", userID).Find(&followingIds).Error; err != nil {
-	//	return nil, err
-	//}
-
-	//followingIds = append(followingIds, userID) //including owner
 	var friends []uint
 	fd := &User{ID: userID}
 	list, err := fd.GetFriendsList(db, ctx)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 
 	for _, info := range list {
@@ -111,10 +100,16 @@ func (m *Post) GetFollowPostInfoByCreateTimeDesc(ctx context.Context, db *gorm.D
 
 	friends = append(friends, userID)
 
-	if err := db.Debug().WithContext(ctx).Model(&m).Preload("MovieInfo").Preload("UserInfo").Preload("Comments").Preload("PostsLiked").Where("user_id IN (?)", friends).Order("created_at desc").Limit(10).Find(&resp).Error; err != nil {
-		return nil, err
+	if err := db.Debug().WithContext(ctx).Model(&m).
+		Preload("MovieInfo").
+		Preload("UserInfo").
+		Preload("Comments").
+		Preload("PostsLiked").
+		Where("user_id IN (?)", friends).
+		Count(&count).Offset(pageOffset).Order("created_at desc").Limit(limit).Find(&resp).Error; err != nil {
+		return nil, 0, err
 	}
-	return resp, nil
+	return resp, count, nil
 }
 
 //Get All PostInfo - 10 record by recent 10
@@ -127,12 +122,13 @@ func (m *Post) GetPostInfoByPostID(ctx context.Context, db *gorm.DB) error {
 	return nil
 }
 
-func (m *Post) GetUserPostsByCreateTimeDesc(ctx context.Context, db *gorm.DB) ([]*Post, error) {
+func (m *Post) GetUserPostsByCreateTimeDesc(ctx context.Context, db *gorm.DB, limit, pageOffset int) ([]*Post, int64, error) {
 	var resp []*Post
-	if err := db.Debug().WithContext(ctx).Preload("MovieInfo").Preload("UserInfo").Preload("Comments").Preload("PostsLiked").Where("user_id = ?", m.UserId).Order("created_at desc").Limit(10).Find(&resp).Limit(10).Error; err != nil {
-		return nil, err
+	var count int64 = 0
+	if err := db.Debug().WithContext(ctx).Model(&m).Preload("MovieInfo").Preload("UserInfo").Preload("Comments").Preload("PostsLiked").Where("user_id = ?", m.UserId).Count(&count).Order("created_at desc").Offset(pageOffset).Limit(limit).Find(&resp).Limit(10).Error; err != nil {
+		return nil, 0, err
 	}
-	return resp, nil
+	return resp, count, nil
 }
 
 func (m *Post) CountUserPosts(ctx context.Context, db *gorm.DB) (int64, error) {

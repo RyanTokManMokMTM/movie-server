@@ -40,14 +40,14 @@ func (d *DAO) UpdateUser(ctx context.Context, user *models.User) error {
 	return nil
 }
 
-func (d *DAO) GetUserLikedMovies(ctx context.Context, userID uint) (*models.User, error) {
+func (d *DAO) GetUserLikedMovies(ctx context.Context, userID uint, limit, pageOffset int) (*models.User, int64, error) {
 	user := &models.User{ID: userID}
 
-	err := user.GetUserLikedMovies(ctx, d.engine)
+	err, count := user.GetUserLikedMovies(ctx, d.engine, limit, pageOffset)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
-	return user, err
+	return user, count, nil
 }
 
 func (d *DAO) CreateLikedMovie(ctx context.Context, movieID, userID uint) error {

@@ -39,17 +39,19 @@ func (m *LikeNotification) InsertOne(db *gorm.DB, ctx context.Context) error {
 	return db.WithContext(ctx).Debug().Create(&m).Error
 }
 
-func (m *LikeNotification) FindNotificationsByReceiver(db *gorm.DB, ctx context.Context) ([]*LikeNotification, error) {
+func (m *LikeNotification) FindNotificationsByReceiver(db *gorm.DB, ctx context.Context, limit, pageOffset int) ([]*LikeNotification, int64, error) {
 	var list []*LikeNotification
-	if err := db.WithContext(ctx).Debug().Where("receiver_id = ?", m.ReceiverID).
+	var count int64 = 0
+	if err := db.WithContext(ctx).Debug().Model(&m).Where("receiver_id = ?", m.ReceiverID).
 		Preload("PostInfo").
 		Preload("PostInfo.MovieInfo").
 		Preload("LikedUser").
 		Preload("CommentInfo").
+		Order("created_at desc").Count(&count).Offset(pageOffset).Limit(limit).
 		Find(&list).Error; err != nil {
-		return nil, err
+		return nil, 0, err
 	}
-	return list, nil
+	return list, count, nil
 
 }
 

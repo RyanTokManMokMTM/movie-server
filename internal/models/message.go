@@ -36,10 +36,19 @@ func (m *Message) InsertOne(db *gorm.DB, ctx context.Context) error {
 	return db.WithContext(ctx).Debug().Create(&m).Error
 }
 
-func (m *Message) GetRoomMessages(db *gorm.DB, ctx context.Context) ([]*Message, error) {
+func (m *Message) GetRoomMessages(db *gorm.DB, ctx context.Context, limit, pageOffset int) ([]*Message, int64, error) {
 	var record []*Message
-	if err := db.WithContext(ctx).Debug().Model(&m).Where("room_id = ?", m.RoomID).Preload("SendUser").Limit(10).Find(&record).Error; err != nil {
-		return nil, err
+	var count int64 = 0
+	if err := db.WithContext(ctx).Debug().
+		Model(&m).
+		Where("room_id = ?", m.RoomID).
+		Preload("SendUser").
+		Order("sent_time desc").
+		Count(&count).
+		Offset(pageOffset).
+		Limit(limit).
+		Find(&record).Error; err != nil {
+		return nil, 0, err
 	}
-	return record, nil
+	return record, count, nil
 }

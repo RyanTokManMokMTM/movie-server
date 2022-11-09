@@ -9,9 +9,13 @@ syntax = "v1"
 //)
 
 type (
-    GetLikeNotificationReq{}
+    GetLikeNotificationReq{
+        Page uint `form:"page,default=1"`
+        Limit uint `form:"limit,default=20"`
+    }
     GetLikeNotificationResp {
         LikedNotificationList []LikedNotification `json:"notifications"`
+        MetaData MetaData `json:"metadata"`
     }
 )
 

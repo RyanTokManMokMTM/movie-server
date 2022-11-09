@@ -3,6 +3,7 @@ package custom_list
 import (
 	"context"
 	"github.com/ryantokmanmokmtm/movie-server/common/errx"
+	"github.com/ryantokmanmokmtm/movie-server/common/pagination"
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
 	"github.com/ryantokmanmokmtm/movie-server/internal/types"
 	"github.com/zeromicro/go-zero/core/logx"
@@ -25,11 +26,16 @@ func NewGetAllUserListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ge
 func (l *GetAllUserListLogic) GetAllUserList(req *types.AllCustomListReq) (resp *types.AllCustomListResp, err error) {
 	// todo: add your logic here and delete this line
 
-	lists, err := l.svcCtx.DAO.FindUserLists(l.ctx, req.ID)
+	limit := pagination.GetLimit(req.Limit)
+	pageOffset := pagination.PageOffset(pagination.DEFAULT_PAGE_SIZE, req.Page)
+
+	lists, count, err := l.svcCtx.DAO.FindUserLists(l.ctx, req.ID, int(limit), int(pageOffset))
 	if err != nil {
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
+	logx.Info("total record : ", count)
 
+	totalPage := pagination.GetTotalPageByPageSize(uint(count), pagination.DEFAULT_PAGE_SIZE)
 	var userLists []types.ListInfo
 	for _, v := range lists {
 		var movieList []types.MovieInfo
@@ -52,5 +58,8 @@ func (l *GetAllUserListLogic) GetAllUserList(req *types.AllCustomListReq) (resp 
 	}
 	return &types.AllCustomListResp{
 		Lists: userLists,
+		MetaData: types.MetaData{
+			TotalPage: totalPage,
+		},
 	}, nil
 }

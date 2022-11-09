@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/pkg/errors"
 	"github.com/ryantokmanmokmtm/movie-server/common/ctxtool"
+	"github.com/ryantokmanmokmtm/movie-server/common/pagination"
 	"gorm.io/gorm"
 
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
@@ -43,11 +44,16 @@ func (l *GetFriendRequestLogic) GetFriendRequest(req *types.GetFriendRequestReq)
 		return nil, err
 	}
 
-	list, err := l.svcCtx.DAO.GetFriendRequest(l.ctx, userId)
+	limit := pagination.GetLimit(req.Limit)
+	pageOffset := pagination.PageOffset(pagination.DEFAULT_PAGE_SIZE, req.Page)
+
+	list, count, err := l.svcCtx.DAO.GetFriendRequest(l.ctx, userId, int(limit), int(pageOffset))
 	if err != nil {
 		return nil, err
 	}
+	logx.Info("total record : ", count)
 
+	totalPage := pagination.GetTotalPageByPageSize(uint(count), pagination.DEFAULT_PAGE_SIZE)
 	requests := make([]types.FriendRequest, 0)
 	for _, req := range list {
 		requests = append(requests, types.FriendRequest{
@@ -63,5 +69,8 @@ func (l *GetFriendRequestLogic) GetFriendRequest(req *types.GetFriendRequestReq)
 	}
 	return &types.GetFriendRequestResp{
 		Requests: requests,
+		MetaData: types.MetaData{
+			TotalPage: totalPage,
+		},
 	}, nil
 }

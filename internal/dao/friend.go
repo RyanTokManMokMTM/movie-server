@@ -162,12 +162,12 @@ func (d *DAO) RemoveFriend(ctx context.Context, userID, friendID uint) error {
 	return f.RemoveOne(d.engine, ctx, userID, friendID)
 }
 
-func (d *DAO) GetFriendRequest(ctx context.Context, userID uint) ([]*models.FriendNotification, error) {
+func (d *DAO) GetFriendRequest(ctx context.Context, userID uint, limit, pageOffset int) ([]*models.FriendNotification, int64, error) {
 	notification := &models.FriendNotification{
 		Receiver: userID,
 	}
 
-	return notification.GetNotifications(d.engine, ctx)
+	return notification.GetNotifications(d.engine, ctx, limit, pageOffset)
 }
 
 func (d *DAO) IsFriend(ctx context.Context, userID, friendID uint) (bool, error) {

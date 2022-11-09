@@ -8,6 +8,10 @@ type HealthCheckResp struct {
 	Result string `json:"result"`
 }
 
+type MetaData struct {
+	TotalPage uint `json:"total_page"`
+}
+
 type UserLoginReq struct {
 	Email    string `json:"email" validate:"required,max=32,email"`
 	Password string `json:"password" validate:"required,min=8,max=32"`
@@ -178,11 +182,14 @@ type LikedMovieResp struct {
 }
 
 type AllUserLikedMoviesReq struct {
-	ID uint `path:"user_id"`
+	ID    uint `path:"user_id"`
+	Page  uint `form:"page,default=1"`
+	Limit uint `form:"limit,default=20"`
 }
 
 type AllUserAllLikedMoviesResp struct {
 	LikedMoviesList []*LikedMovieInfo `json:"liked_movies"`
+	MetaData        MetaData          `json:"metadata"`
 }
 
 type IsLikedMovieReq struct {
@@ -236,11 +243,14 @@ type DeleteCustomListResp struct {
 }
 
 type AllCustomListReq struct {
-	ID uint `path:"user_id"`
+	ID    uint `path:"user_id"`
+	Page  uint `form:"page,default=1"`
+	Limit uint `form:"limit,default=20"`
 }
 
 type AllCustomListResp struct {
-	Lists []ListInfo `json:"lists"`
+	Lists    []ListInfo `json:"lists"`
+	MetaData MetaData   `json:"metadata"`
 }
 
 type UserListReq struct {
@@ -319,17 +329,23 @@ type DeletePostResp struct {
 }
 
 type AllPostsInfoReq struct {
+	Page  uint `form:"page,default=1"`
+	Limit uint `form:"limit,default=20"`
 }
 
 type AllPostsInfoResp struct {
-	Infos []PostInfo `json:"post_info"`
+	Infos    []PostInfo `json:"post_info"`
+	MetaData MetaData   `json:"metadata"`
 }
 
 type FollowPostsInfoReq struct {
+	Page  uint `form:"page,default=1"`
+	Limit uint `form:"limit,default=20"`
 }
 
 type FollowPostsInfoResp struct {
-	Infos []PostInfo `json:"post_info"`
+	Infos    []PostInfo `json:"post_info"`
+	MetaData MetaData   `json:"metadata"`
 }
 
 type PostInfoByIdReq struct {
@@ -342,10 +358,13 @@ type PostInfoByIdResp struct {
 
 type PostsInfoReq struct {
 	UserID uint `path:"user_id"`
+	Page   uint `form:"page,default=1"`
+	Limit  uint `form:"limit,default=20"`
 }
 
 type PostsInfoResp struct {
-	Infos []PostInfo `json:"post_info"`
+	Infos    []PostInfo `json:"post_info"`
+	MetaData MetaData   `json:"metadata"`
 }
 
 type CountPostLikedReq struct {
@@ -427,18 +446,24 @@ type DeleteCommentResp struct {
 
 type GetPostCommentsReq struct {
 	PostID uint `path:"post_id"`
+	Page   uint `form:"page,default=1"`
+	Limit  uint `form:"limit,default=20"`
 }
 
 type GetPostCommentsResp struct {
 	Comments []CommentInfo `json:"comments"`
+	MetaData MetaData      `json:"metadata"`
 }
 
 type GetReplyCommentReq struct {
 	CommentId uint `path:"comment_id"`
+	Page      uint `form:"page,default=1"`
+	Limit     uint `form:"limit,default=5"`
 }
 
 type GetReplyCommentResp struct {
 	ReplyComments []CommentInfo `json:"reply"`
+	MetaData      MetaData      `json:"metadata"`
 }
 
 type CountPostCommentsReq struct {
@@ -504,10 +529,13 @@ type CancelFriendNotificationResp struct {
 }
 
 type GetFriendRequestReq struct {
+	Page  uint `form:"page,default=1"`
+	Limit uint `form:"limit,default=20"`
 }
 
 type GetFriendRequestResp struct {
 	Requests []FriendRequest `json:"requests"`
+	MetaData MetaData        `json:"metadata"`
 }
 
 type IsFriendReq struct {
@@ -686,10 +714,13 @@ type MessageInfo struct {
 
 type GetRoomMessageReq struct {
 	RoomID uint `path:"room_id"`
+	Page   uint `form:"page,default=1"`
+	Limit  uint `form:"limit,default=20"`
 }
 
 type GetRoomMessageResp struct {
 	Messagees []MessageData `json:"messages"`
+	MetaData  MetaData      `json:"metadata"`
 }
 
 type MessageData struct {
@@ -700,10 +731,13 @@ type MessageData struct {
 }
 
 type GetLikeNotificationReq struct {
+	Page  uint `form:"page,default=1"`
+	Limit uint `form:"limit,default=20"`
 }
 
 type GetLikeNotificationResp struct {
 	LikedNotificationList []LikedNotification `json:"notifications"`
+	MetaData              MetaData            `json:"metadata"`
 }
 
 type LikedNotification struct {
@@ -726,10 +760,13 @@ type SimpleCommentInfo struct {
 }
 
 type GetCommentNotificationReq struct {
+	Page  uint `form:"page,default=1"`
+	Limit uint `form:"limit,default=20"`
 }
 
 type GetCommentNotificationResp struct {
 	CommentNotificationList []CommentNotification `json:"notifications"`
+	MetaData                MetaData              `json:"metadata"`
 }
 
 type CommentNotification struct {

@@ -5,6 +5,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/ryantokmanmokmtm/movie-server/common/ctxtool"
 	"github.com/ryantokmanmokmtm/movie-server/common/errx"
+	"github.com/ryantokmanmokmtm/movie-server/common/pagination"
 	"gorm.io/gorm"
 
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
@@ -40,11 +41,16 @@ func (l *GetFollowingPostLogic) GetFollowingPost(req *types.FollowPostsInfoReq) 
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
-	res, err := l.svcCtx.DAO.FindFollowingPosts(l.ctx, userID)
+	limit := pagination.GetLimit(req.Limit)
+	pageOffset := pagination.PageOffset(pagination.DEFAULT_PAGE_SIZE, pagination.GetPage(req.Page))
+
+	res, count, err := l.svcCtx.DAO.FindFollowingPosts(l.ctx, userID, int(limit), int(pageOffset))
 	if err != nil {
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
+	logx.Info("total record : ", count)
 
+	totalPage := pagination.GetTotalPageByPageSize(uint(count), pagination.DEFAULT_PAGE_SIZE)
 	//Post List
 	var posts []types.PostInfo
 	for _, v := range res {
@@ -81,6 +87,8 @@ func (l *GetFollowingPostLogic) GetFollowingPost(req *types.FollowPostsInfoReq) 
 
 	return &types.FollowPostsInfoResp{
 		Infos: posts,
+		MetaData: types.MetaData{
+			TotalPage: totalPage,
+		},
 	}, nil
-	return
 }

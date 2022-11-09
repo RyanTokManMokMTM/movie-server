@@ -35,34 +35,23 @@ func (d *DAO) FindOnePostInfo(ctx context.Context, postID uint) (*models.Post, e
 	return post, nil
 }
 
-func (d *DAO) FindAllPosts(ctx context.Context, userID uint) ([]*models.Post, error) {
+func (d *DAO) FindAllPosts(ctx context.Context, userID uint, limit, offset int) ([]*models.Post, int64, error) {
 	post := &models.Post{}
-	resp, err := post.GetAllPostInfoByCreateTimeDesc(ctx, d.engine, userID)
-	if err != nil {
-		return nil, err
-	}
-
-	return resp, err
+	return post.GetAllPostInfoByCreateTimeDesc(ctx, d.engine, userID, limit, offset)
 }
 
-func (d *DAO) FindFollowingPosts(ctx context.Context, userID uint) ([]*models.Post, error) {
+func (d *DAO) FindFollowingPosts(ctx context.Context, userID uint, limit, pageOffset int) ([]*models.Post, int64, error) {
 	post := &models.Post{}
-	resp, err := post.GetFollowPostInfoByCreateTimeDesc(ctx, d.engine, userID)
-	if err != nil {
-		return nil, err
-	}
-	return resp, err
+	return post.GetFollowPostInfoByCreateTimeDesc(ctx, d.engine, userID, limit, pageOffset)
+
 }
 
-func (d *DAO) FindUserPosts(ctx context.Context, userID uint) ([]*models.Post, error) {
+func (d *DAO) FindUserPosts(ctx context.Context, userID uint, limit, pageOffset int) ([]*models.Post, int64, error) {
 	post := &models.Post{
 		UserId: userID,
 	}
-	resp, err := post.GetUserPostsByCreateTimeDesc(ctx, d.engine)
-	if err != nil {
-		return nil, err
-	}
-	return resp, err
+	return post.GetUserPostsByCreateTimeDesc(ctx, d.engine, limit, pageOffset)
+
 }
 
 func (d *DAO) CountUserPosts(ctx context.Context, userID uint) (int64, error) {

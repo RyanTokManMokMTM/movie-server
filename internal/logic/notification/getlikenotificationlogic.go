@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/ryantokmanmokmtm/movie-server/common/ctxtool"
 	"github.com/ryantokmanmokmtm/movie-server/common/errx"
+	"github.com/ryantokmanmokmtm/movie-server/common/pagination"
 	"gorm.io/gorm"
 
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
@@ -38,11 +39,16 @@ func (l *GetlikenotificationLogic) Getlikenotification(req *types.GetLikeNotific
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
-	list, err := l.svcCtx.DAO.FindLikesNotificationByReceiver(l.ctx, userID)
+	limit := pagination.GetLimit(req.Limit)
+	pageOffset := pagination.PageOffset(pagination.DEFAULT_PAGE_SIZE, req.Page)
+
+	list, count, err := l.svcCtx.DAO.FindLikesNotificationByReceiver(l.ctx, userID, int(limit), int(pageOffset))
 	if err != nil {
 		return nil, err
 	}
+	logx.Info("total record : ", count)
 
+	totalPage := pagination.GetTotalPageByPageSize(uint(count), pagination.DEFAULT_PAGE_SIZE)
 	res := make([]types.LikedNotification, 0)
 	for _, v := range list {
 		res = append(res, types.LikedNotification{
@@ -71,5 +77,8 @@ func (l *GetlikenotificationLogic) Getlikenotification(req *types.GetLikeNotific
 
 	return &types.GetLikeNotificationResp{
 		LikedNotificationList: res,
+		MetaData: types.MetaData{
+			TotalPage: totalPage,
+		},
 	}, nil
 }

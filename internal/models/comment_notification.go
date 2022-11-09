@@ -43,17 +43,19 @@ func (m *CommentNotification) InsertOne(db *gorm.DB, ctx context.Context) error 
 	return db.WithContext(ctx).Debug().Create(&m).Error
 }
 
-func (m *CommentNotification) FindNotificationsByReceiver(db *gorm.DB, ctx context.Context) ([]*CommentNotification, error) {
+func (m *CommentNotification) FindNotificationsByReceiver(db *gorm.DB, ctx context.Context, limit, pageOffset int) ([]*CommentNotification, int64, error) {
 	var list []*CommentNotification
-	if err := db.WithContext(ctx).Debug().Where("receiver_id = ?", m.ReceiverId).
+	var count int64 = 0
+	if err := db.WithContext(ctx).Debug().Model(&m).Where("receiver_id = ?", m.ReceiverId).
 		Preload("PostInfo").
 		Preload("PostInfo.MovieInfo").
 		Preload("CommentInfo").
 		Preload("RelyCommentInfo").
 		Preload("CommentUser").
+		Order("comment_time  desc").Count(&count).Offset(pageOffset).Limit(limit).
 		Find(&list).Error; err != nil {
-		return nil, err
+		return nil, 0, err
 	}
-	return list, nil
+	return list, count, nil
 
 }

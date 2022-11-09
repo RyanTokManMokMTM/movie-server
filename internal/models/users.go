@@ -86,14 +86,20 @@ func (m *User) UpdateLikedMovie(ctx context.Context, db *gorm.DB, movie *MovieIn
 	return db.WithContext(ctx).Model(&m).Association("MovieInfos").Delete(movie)
 }
 
-func (m *User) GetUserLikedMovies(ctx context.Context, db *gorm.DB) error {
+func (m *User) GetUserLikedMovies(ctx context.Context, db *gorm.DB, limit, pageOffset int) (error, int64) {
 	logx.Infof("UserDB - User Liked Movies:%+v \n", m)
+	var count int64 = 0
 	if err := db.Debug().WithContext(ctx).Preload("MovieInfos", func(db *gorm.DB) *gorm.DB {
 		return db.Select("movie_infos.*").Joins("left join users_movies on users_movies.movie_info_id = movie_infos.id").Where("users_movies.state = ?", 1)
-	}).Preload("MovieInfos.GenreInfo").Where("id = ?", m.ID).Find(&m).Error; err != nil {
-		return err
+	}).
+		Preload("MovieInfos.GenreInfo").
+		Where("id = ?", m.ID).
+		Count(&count).
+		Offset(pageOffset).Limit(limit).
+		Find(&m).Error; err != nil {
+		return err, 0
 	}
-	return nil
+	return nil, count
 }
 
 //Friend data

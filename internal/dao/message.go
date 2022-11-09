@@ -19,10 +19,10 @@ func (d *DAO) InsertOneMessage(ctx context.Context, roomID, userId uint, message
 	return msg.InsertOne(d.engine, ctx)
 }
 
-func (d *DAO) GetRoomMessage(ctx context.Context, roomID uint) ([]*models.Message, error) {
+func (d *DAO) GetRoomMessage(ctx context.Context, roomID uint, limit, pageOffset int) ([]*models.Message, int64, error) {
 	msg := &models.Message{
 		RoomID: roomID,
 	}
 
-	return msg.GetRoomMessages(d.engine, ctx)
+	return msg.GetRoomMessages(d.engine, ctx, limit, pageOffset)
 }

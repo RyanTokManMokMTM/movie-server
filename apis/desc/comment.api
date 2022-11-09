@@ -45,16 +45,22 @@ type (
 
     GetPostCommentsReq {
         PostID uint `path:"post_id"`
+        Page uint `form:"page,default=1"`
+        Limit uint `form:"limit,default=20"`
     }
     GetPostCommentsResp {
         Comments []CommentInfo `json:"comments"`
+        MetaData MetaData `json:"metadata"`
     }
 
     GetReplyCommentReq {
         CommentId uint `path:"comment_id"`
+        Page uint `form:"page,default=1"`
+        Limit uint `form:"limit,default=5"`
     }
     GetReplyCommentResp {
         ReplyComments []CommentInfo `json:"reply"`
+        MetaData MetaData `json:"metadata"`
     }
 
     CountPostCommentsReq {

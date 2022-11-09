@@ -41,17 +41,12 @@ func (d *DAO) FindOneList(ctx context.Context, listID uint) (*models.List, error
 	return list, nil
 }
 
-func (d *DAO) FindUserLists(ctx context.Context, userID uint) ([]*models.List, error) {
+func (d *DAO) FindUserLists(ctx context.Context, userID uint, limit, pageOffset int) ([]*models.List, int64, error) {
 	list := &models.List{
 		UserId: userID,
 	}
 
-	resp, err := list.FindAllList(ctx, d.engine)
-	if err != nil {
-		return nil, err
-	}
-
-	return resp, nil
+	return list.FindAllList(ctx, d.engine, limit, pageOffset)
 }
 
 ////TO Check movie is in the list already

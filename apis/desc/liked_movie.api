@@ -16,9 +16,12 @@ type (
 
     AllUserLikedMoviesReq {
         ID uint `path:"user_id"`
+        Page uint `form:"page,default=1"`
+        Limit uint `form:"limit,default=20"`
     }
     AllUserAllLikedMoviesResp {
         LikedMoviesList []*LikedMovieInfo `json:"liked_movies"`
+        MetaData MetaData `json:"metadata"`
     }
 
     IsLikedMovieReq {

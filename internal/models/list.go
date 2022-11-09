@@ -33,12 +33,19 @@ func (m *List) FindOneList(ctx context.Context, db *gorm.DB) error {
 	}).First(&m).Error
 }
 
-func (m *List) FindAllList(ctx context.Context, db *gorm.DB) ([]*List, error) {
+func (m *List) FindAllList(ctx context.Context, db *gorm.DB, limit, pageOffset int) ([]*List, int64, error) {
 	var lists []*List
-	if err := db.Debug().WithContext(ctx).Model(&m).Where("user_id = ?", m.UserId).Preload("MovieInfos").Find(&lists).Error; err != nil {
-		return nil, err
+	var count int64 = 0
+	if err := db.Debug().WithContext(ctx).Model(&m).
+		Where("user_id = ?", m.UserId).
+		Preload("MovieInfos").
+		Count(&count).
+		Offset(pageOffset).
+		Limit(limit).
+		Find(&lists).Error; err != nil {
+		return nil, 0, err
 	}
-	return lists, nil
+	return lists, count, nil
 }
 
 func (m *List) UpdateList(ctx context.Context, db *gorm.DB) error {

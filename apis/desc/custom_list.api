@@ -33,9 +33,12 @@ type (
 
     AllCustomListReq {
         ID uint `path:"user_id"`
+        Page uint `form:"page,default=1"`
+        Limit uint `form:"limit,default=20"`
     }
     AllCustomListResp {
         Lists []ListInfo `json:"lists"`
+        MetaData MetaData `json:"metadata"`
     }
 
     UserListReq {
