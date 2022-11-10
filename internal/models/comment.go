@@ -57,10 +57,19 @@ func (m *Comment) FindOnePostComments(ctx context.Context, db *gorm.DB, limit, p
 	return comments, count, nil
 }
 
-func (m *Comment) FindReplyComments(ctx context.Context, db *gorm.DB, limit, pageOffset int) ([]*Comment, int64, error) {
+func (m *Comment) FindReplyParentComments(ctx context.Context, db *gorm.DB, checkUser uint, limit, pageOffset int) ([]*Comment, int64, error) {
 	var replyComments []*Comment
 	var count int64 = 0
-	if err := db.Debug().WithContext(ctx).Where("reply_to = ?", m.ReplyTo).Preload("User").Order("created_at desc").Count(&count).Offset(pageOffset).Limit(limit).Find(&replyComments).Error; err != nil {
+	//if err := db.Debug().WithContext(ctx).Where("parent_id = ?", m.ParentID).Preload("User").Find(&replyComments).Error; err != nil {
+	//	return nil, err
+	//}
+	if err := db.Debug().WithContext(ctx).Model(m).Where("parent_id  = ?", m.ParentID).Preload("User").Preload("Comments", func(tx *gorm.DB) *gorm.DB {
+		return db.Preload("User")
+	}).Preload("ReplyToInfo").Preload("LikedUser", func(tx *gorm.DB) *gorm.DB {
+		return db.Where("ID = ?", checkUser)
+	}).Count(&count).Order("created_at desc").
+		Offset(pageOffset).Limit(limit).
+		Find(&replyComments).Error; err != nil {
 		return nil, 0, err
 	}
 	return replyComments, count, nil
