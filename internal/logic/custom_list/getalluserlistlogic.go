@@ -59,7 +59,9 @@ func (l *GetAllUserListLogic) GetAllUserList(req *types.AllCustomListReq) (resp 
 	return &types.AllCustomListResp{
 		Lists: userLists,
 		MetaData: types.MetaData{
-			TotalPage: totalPage,
+			TotalPages:   totalPage,
+			TotalResults: uint(count),
+			Page:         pagination.GetPage(req.Page),
 		},
 	}, nil
 }

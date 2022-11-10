@@ -86,7 +86,9 @@ func (l *GetReplyCommentLogic) GetReplyComment(req *types.GetReplyCommentReq) (r
 	return &types.GetReplyCommentResp{
 		ReplyComments: replyComments,
 		MetaData: types.MetaData{
-			TotalPage: totalPage,
+			TotalPages:   totalPage,
+			TotalResults: uint(count),
+			Page:         pagination.GetPage(req.Page),
 		},
 	}, nil
 }

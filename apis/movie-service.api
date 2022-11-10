@@ -33,8 +33,9 @@ type (
 
 		//The OlderID of the response
 		//The newestID of the response
-		//for
-		TotalPage uint `json:"total_page"`
+		TotalPages   uint `json:"total_pages"`
+		TotalResults uint `json:"total_results"`
+		Page         uint `json:"page"`
 	}
 )
 

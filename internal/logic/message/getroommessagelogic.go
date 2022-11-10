@@ -82,7 +82,9 @@ func (l *GetRoomMessageLogic) GetRoomMessage(req *types.GetRoomMessageReq) (resp
 	return &types.GetRoomMessageResp{
 		Messagees: record,
 		MetaData: types.MetaData{
-			TotalPage: totalPage,
+			TotalPages:   totalPage,
+			TotalResults: uint(count),
+			Page:         pagination.GetPage(req.Page),
 		},
 	}, nil
 }

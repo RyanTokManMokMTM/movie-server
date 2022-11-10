@@ -82,7 +82,9 @@ func (l *GetcommentnotificationLogic) Getcommentnotification(req *types.GetComme
 	return &types.GetCommentNotificationResp{
 		CommentNotificationList: res,
 		MetaData: types.MetaData{
-			TotalPage: totalPage,
+			TotalPages:   totalPage,
+			TotalResults: uint(count),
+			Page:         pagination.GetPage(req.Page),
 		},
 	}, nil
 }

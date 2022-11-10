@@ -84,7 +84,9 @@ func (l *GetPostCommentLogic) GetPostComment(req *types.GetPostCommentsReq) (res
 	return &types.GetPostCommentsResp{
 		Comments: comments,
 		MetaData: types.MetaData{
-			TotalPage: totalPage,
+			TotalPages:   totalPage,
+			TotalResults: uint(count),
+			Page:         pagination.GetPage(req.Page),
 		},
 	}, nil
 }

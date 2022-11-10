@@ -78,7 +78,9 @@ func (l *GetlikenotificationLogic) Getlikenotification(req *types.GetLikeNotific
 	return &types.GetLikeNotificationResp{
 		LikedNotificationList: res,
 		MetaData: types.MetaData{
-			TotalPage: totalPage,
+			TotalPages:   totalPage,
+			TotalResults: uint(count),
+			Page:         pagination.GetPage(req.Page),
 		},
 	}, nil
 }

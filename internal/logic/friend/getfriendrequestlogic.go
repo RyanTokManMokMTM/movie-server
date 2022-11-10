@@ -83,7 +83,9 @@ func (l *GetFriendRequestLogic) GetFriendRequest(req *types.GetFriendRequestReq)
 	return &types.GetFriendRequestResp{
 		Requests: requests,
 		MetaData: types.MetaData{
-			TotalPage: totalPage,
+			TotalPages:   totalPage,
+			TotalResults: uint(count),
+			Page:         pagination.GetPage(req.Page),
 		},
 	}, nil
 }

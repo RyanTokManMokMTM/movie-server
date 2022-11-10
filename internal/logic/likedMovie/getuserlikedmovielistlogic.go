@@ -69,7 +69,9 @@ func (l *GetUserLikedMovieListLogic) GetUserLikedMovieList(req *types.AllUserLik
 	return &types.AllUserAllLikedMoviesResp{
 		LikedMoviesList: likedMovie,
 		MetaData: types.MetaData{
-			TotalPage: totalPage,
+			TotalPages:   totalPage,
+			TotalResults: uint(count),
+			Page:         pagination.GetPage(req.Page),
 		},
 	}, nil
 }

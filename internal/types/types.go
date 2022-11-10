@@ -9,7 +9,9 @@ type HealthCheckResp struct {
 }
 
 type MetaData struct {
-	TotalPage uint `json:"total_page"`
+	TotalPages   uint `json:"total_pages"`
+	TotalResults uint `json:"total_results"`
+	Page         uint `json:"page"`
 }
 
 type UserLoginReq struct {

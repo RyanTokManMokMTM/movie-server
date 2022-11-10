@@ -88,7 +88,9 @@ func (l *GetFollowingPostLogic) GetFollowingPost(req *types.FollowPostsInfoReq) 
 	return &types.FollowPostsInfoResp{
 		Infos: posts,
 		MetaData: types.MetaData{
-			TotalPage: totalPage,
+			TotalPages:   totalPage,
+			TotalResults: uint(count),
+			Page:         pagination.GetPage(req.Page),
 		},
 	}, nil
 }

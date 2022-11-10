@@ -86,7 +86,9 @@ func (l *GetUserPostsLogic) GetUserPosts(req *types.PostsInfoReq) (resp *types.P
 	return &types.PostsInfoResp{
 		Infos: posts,
 		MetaData: types.MetaData{
-			TotalPage: totalPage,
+			TotalPages:   totalPage,
+			TotalResults: uint(count),
+			Page:         pagination.GetPage(req.Page),
 		},
 	}, nil
 }

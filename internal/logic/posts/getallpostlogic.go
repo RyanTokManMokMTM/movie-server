@@ -93,7 +93,9 @@ func (l *GetAllPostLogic) GetAllPost(req *types.AllPostsInfoReq) (resp *types.Al
 	return &types.AllPostsInfoResp{
 		Infos: posts,
 		MetaData: types.MetaData{
-			TotalPage: totalPage,
+			TotalPages:   totalPage,
+			TotalResults: uint(count),
+			Page:         pagination.GetPage(req.Page),
 		},
 	}, nil
 }
