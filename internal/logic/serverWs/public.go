@@ -22,11 +22,11 @@ func SendNotificationToUser(from, to uint, data string) error {
 	globalHub.broadcast <- message
 	return nil
 }
-func SendNotificationToUserWithUserInfo(to uint, fromUserInfo *models.User, data string) error {
+func SendNotificationToUserWithUserInfo(to uint, fromUserInfo *models.User, data string, messageType uint) error {
 	logx.Info("send add friend notification...")
 	message := &Message{
 		OpCode:       OpText,
-		Type:         SYSTEM,
+		Type:         messageType,
 		MessageID:    "",
 		GroupID:      0,
 		ToUser:       to,

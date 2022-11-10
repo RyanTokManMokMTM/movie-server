@@ -49,11 +49,12 @@ type UserProfileReq struct {
 }
 
 type UserProfileResp struct {
-	ID     uint   `json:"id"`
-	Name   string `json:"name"`
-	Email  string `json:"email"`
-	Avatar string `json:"avatar"`
-	Cover  string `json:"cover"`
+	ID               uint                  `json:"id"`
+	Name             string                `json:"name"`
+	Email            string                `json:"email"`
+	Avatar           string                `json:"avatar"`
+	Cover            string                `json:"cover"`
+	NotificationInfo NotificationCountInfo `json:"notification_info"` //only logged in user will have this information
 }
 
 type UpdateProfileReq struct {
@@ -93,6 +94,24 @@ type GetUserFriendRoomListResp struct {
 	Lists []FriendRoomInfo `json:"lists"`
 }
 
+type FriendNotificationReq struct {
+}
+
+type FriendNotificationResp struct {
+}
+
+type CommentNotificationReq struct {
+}
+
+type CommentNotificationResp struct {
+}
+
+type LikesNotificationReq struct {
+}
+
+type LikesNotificationResp struct {
+}
+
 type FriendRoomInfo struct {
 	RoomID uint     `json:"id"`
 	Info   UserInfo `json:"info"`
@@ -102,6 +121,12 @@ type UserInfo struct {
 	ID     uint   `json:"id"`
 	Name   string `json:"name"`
 	Avatar string `json:"avatar"`
+}
+
+type NotificationCountInfo struct {
+	FriendNotificationCount  uint `json:"friend_notification_count"`
+	LikesNotificationCount   uint `json:"likes_notification_count"`
+	CommentNotificationCount uint `json:"comment_notification_count"`
 }
 
 type MoviePageListByGenreReq struct {
@@ -418,9 +443,10 @@ type CreateCommentResp struct {
 }
 
 type CreateReplyCommentReq struct {
-	PostID         uint   `path:"post_id"`
-	ReplyCommentId uint   `path:"comment_id"`
-	Comment        string `json:"comment"`
+	PostID          uint   `path:"post_id"`
+	ReplyCommentId  uint   `path:"comment_id"`
+	ParentCommentID uint   `json:"parent_id"`
+	Comment         string `json:"comment"`
 }
 
 type CreateReplyCommentResp struct {
@@ -456,9 +482,10 @@ type GetPostCommentsResp struct {
 }
 
 type GetReplyCommentReq struct {
-	CommentId uint `path:"comment_id"`
-	Page      uint `form:"page,default=1"`
-	Limit     uint `form:"limit,default=5"`
+	CommentId       uint `path:"comment_id"`
+	Page            uint `form:"page,default=1"`
+	Limit           uint `form:"limit,default=5"`
+	ParentCommentID uint `path:"comment_id"`
 }
 
 type GetReplyCommentResp struct {
@@ -475,11 +502,16 @@ type CountPostCommentsResp struct {
 }
 
 type CommentInfo struct {
-	CommentID    uint        `json:"id"`
-	UserInfo     CommentUser `json:"user_info"`
-	Comment      string      `json:"comment"`
-	UpdateAt     int64       `json:"update_at"`
-	ReplyComment uint        `json:"reply_comments"`
+	CommentID       uint        `json:"id"`
+	UserInfo        CommentUser `json:"user_info"`
+	Comment         string      `json:"comment"`
+	UpdateAt        int64       `json:"update_at"`
+	ReplyID         uint        `json:"reply_id"`
+	ReplyTo         UserInfo    `json:"reply_to"`
+	ReplyComment    uint        `json:"reply_comments"`
+	LikesCount      uint        `json:"comment_likes_count"`
+	ParentCommentID uint        `json:"parent_comment_id"`
+	IsLiked         bool        `json:"is_liked"`
 }
 
 type CommentUser struct {
@@ -572,22 +604,6 @@ type RemoveCommentLikesReq struct {
 }
 
 type RemoveCommentLikesResq struct {
-}
-
-type IsCommentLikedReq struct {
-	CommentId uint `path:"comment_id"`
-}
-
-type IsCommentLikedResp struct {
-	IsLiked bool `json:"is_liked"`
-}
-
-type CountCommentLikesReq struct {
-	CommentId uint `path:"comment_id"`
-}
-
-type CountCommentLikesResp struct {
-	TotalLikes uint `json:"total_likes"`
 }
 
 type CreatePostLikesReq struct {

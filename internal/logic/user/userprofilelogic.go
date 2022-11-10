@@ -43,6 +43,11 @@ func (l *UserProfileLogic) UserProfile(req *types.UserProfileReq) (resp *types.U
 		Email:  user.Email,
 		Avatar: user.Avatar,
 		Cover:  user.Cover,
+		NotificationInfo: types.NotificationCountInfo{
+			FriendNotificationCount:  user.FriendNotificationCount,
+			LikesNotificationCount:   user.LikeNotificationCount,
+			CommentNotificationCount: user.CommentNotificationCount,
+		},
 	}, nil
 }
 

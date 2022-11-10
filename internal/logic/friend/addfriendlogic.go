@@ -50,7 +50,7 @@ func (l *AddFriendLogic) AddFriend(req *types.AddFriendReq) (resp *types.AddFrie
 	}
 
 	//TODO: Check that user is exist?
-	_, err = l.svcCtx.DAO.FindUserByID(l.ctx, req.UserID)
+	receiver, err := l.svcCtx.DAO.FindUserByID(l.ctx, req.UserID)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, fmt.Errorf("friend is not exist")
@@ -77,13 +77,14 @@ func (l *AddFriendLogic) AddFriend(req *types.AddFriendReq) (resp *types.AddFrie
 	}
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		id, err := l.svcCtx.DAO.InsertOneFriendNotification(l.ctx, userId, req.UserID)
+		//TODO: insert 1 notification and add the friend count
+		id, err := l.svcCtx.DAO.InsertOneFriendNotification(l.ctx, userId, receiver)
 		if err != nil {
 			return nil, err
 		}
 		go func() {
 			//Send the notification via websocket
-			_ = serverWs.SendNotificationToUserWithUserInfo(req.UserID, u, fmt.Sprintf("%s傳送了好友邀請給您", u.Name))
+			_ = serverWs.SendNotificationToUserWithUserInfo(req.UserID, u, fmt.Sprintf("%s傳送了好友邀請給您", u.Name), serverWs.FRIEND_NOTIFICATION)
 			//_ = serverWs.SendNotificationToUser(u.ID, req.UserID, fmt.Sprintf("%s傳送了好友邀請給您", u.Name))
 		}()
 

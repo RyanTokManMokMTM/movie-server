@@ -1,4 +1,4 @@
-package comment_likes
+package user
 
 import (
 	"github.com/go-playground/locales/en"
@@ -9,14 +9,14 @@ import (
 	"github.com/zeromicro/go-zero/rest/httpx"
 	"net/http"
 
-	"github.com/ryantokmanmokmtm/movie-server/internal/logic/comment_likes"
+	"github.com/ryantokmanmokmtm/movie-server/internal/logic/user"
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
 	"github.com/ryantokmanmokmtm/movie-server/internal/types"
 )
 
-func CountCommentLikesHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func ResetLikesNotificationHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.CountCommentLikesReq
+		var req types.LikesNotificationReq
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.Error(w, err)
 			return
@@ -34,8 +34,8 @@ func CountCommentLikesHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
-		l := comment_likes.NewCountCommentLikesLogic(r.Context(), svcCtx)
-		resp, err := l.CountCommentLikes(&req)
+		l := user.NewResetLikesNotificationLogic(r.Context(), svcCtx)
+		resp, err := l.ResetLikesNotification(&req)
 		if err != nil {
 			httpx.Error(w, err)
 		} else {

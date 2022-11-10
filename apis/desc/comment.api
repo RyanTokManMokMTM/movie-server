@@ -22,6 +22,7 @@ type (
     CreateReplyCommentReq {
         PostID uint `path:"post_id"`
         ReplyCommentId uint `path:"comment_id"`
+        ParentCommentID uint `json:"parent_id"`
         Comment string `json:"comment"`
     }
     CreateReplyCommentResp {
@@ -54,9 +55,13 @@ type (
     }
 
     GetReplyCommentReq {
+
         CommentId uint `path:"comment_id"`
         Page uint `form:"page,default=1"`
         Limit uint `form:"limit,default=5"`
+
+        ParentCommentID uint `path:"comment_id"`
+
     }
     GetReplyCommentResp {
         ReplyComments []CommentInfo `json:"reply"`
@@ -96,7 +101,13 @@ type (
         UserInfo CommentUser `json:"user_info"`
         Comment string `json:"comment"`
         UpdateAt int64 `json:"update_at"`
+        ReplyID uint `json:"reply_id"`
+        ReplyTo UserInfo `json:"reply_to"`
         ReplyComment uint `json:"reply_comments"`
+        LikesCount uint `json:"comment_likes_count"`
+        ParentCommentID uint `json:"parent_comment_id"`
+        // is_user_liked
+        IsLiked bool `json:"is_liked"`
     }
 
     CommentUser {
@@ -136,13 +147,8 @@ service MovieService {
     )
     @handler DeleteComment
     delete /comments/:comment_id(DeleteCommentReq) returns (DeleteCommentResp);
-}
 
-@server(
-    group: comment
-    prefix : /api/v1
-)
-service MovieService {
+    //with liked field
     @doc (
         summary : "Get Post Comments"
     )
@@ -155,3 +161,21 @@ service MovieService {
     @handler GetReplyComment
     get /comments/reply/:comment_id(GetReplyCommentReq) returns (GetReplyCommentResp);
 }
+
+//@server(
+//    group: comment
+//    prefix : /api/v1
+//)
+//service MovieService {
+//    @doc (
+//        summary : "Get Post Comments"
+//    )
+//    @handler GetPostComment
+//    get /comments/:post_id(GetPostCommentsReq) returns (GetPostCommentsResp);
+//
+//    @doc (
+//        summary : "Get Reply Comments by id"
+//    )
+//    @handler GetReplyComment
+//    get /comments/reply/:comment_id(GetReplyCommentReq) returns (GetReplyCommentResp);
+//}

@@ -40,7 +40,22 @@ func (m *CommentNotification) TableName() string {
 }
 
 func (m *CommentNotification) InsertOne(db *gorm.DB, ctx context.Context) error {
-	return db.WithContext(ctx).Debug().Create(&m).Error
+	return db.WithContext(ctx).Debug().Transaction(func(tx *gorm.DB) error {
+		if err := tx.WithContext(ctx).Debug().Create(&m).Error; err != nil {
+			return err
+		}
+
+		receiver := &User{
+			ID: m.ReceiverId,
+		}
+		if err := tx.WithContext(ctx).Debug().First(&receiver).Error; err != nil {
+			return err
+		}
+
+		//TODO: add 1 comment count
+		receiver.CommentNotificationCount = receiver.CommentNotificationCount + 1
+		return receiver.UpdateCommentNotification(tx, ctx)
+	})
 }
 
 func (m *CommentNotification) FindNotificationsByReceiver(db *gorm.DB, ctx context.Context, limit, pageOffset int) ([]*CommentNotification, int64, error) {

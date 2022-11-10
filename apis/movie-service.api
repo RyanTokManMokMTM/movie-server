@@ -30,6 +30,10 @@ type (
 
 	//for
 	MetaData {
+
+		//The OlderID of the response
+		//The newestID of the response
+		//for
 		TotalPage uint `json:"total_page"`
 	}
 )

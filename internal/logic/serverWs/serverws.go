@@ -24,6 +24,9 @@ const (
 const (
 	SYSTEM = iota
 	MESSAGE
+	FRIEND_NOTIFICATION
+	COMMENT_NOTIFICATION
+	LIKES_NOTIFICATION
 )
 
 type SenderData struct {
@@ -42,7 +45,7 @@ type MessageReq struct {
 
 type Message struct {
 	OpCode       OpCode     `json:"opcode"`
-	Type         uint       `json:"message_type"` //system , message , ping ,pong
+	Type         uint       `json:"message_type"` //system , message,friend , like ,comment notification
 	MessageID    string     `json:"message_id"`   //same as sender
 	GroupID      uint       `json:"group_id"`     //for chat
 	GroupMembers []uint     `json:"-"`

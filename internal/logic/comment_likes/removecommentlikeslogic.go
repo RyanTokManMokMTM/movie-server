@@ -40,7 +40,7 @@ func (l *RemoveCommentLikesLogic) RemoveCommentLikes(req *types.RemoveCommentLik
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
-	_, err = l.svcCtx.DAO.FindOneComment(l.ctx, req.CommentId)
+	comment, err := l.svcCtx.DAO.FindOneComment(l.ctx, req.CommentId)
 	if err != nil {
 		//Create a new record
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -50,18 +50,8 @@ func (l *RemoveCommentLikesLogic) RemoveCommentLikes(req *types.RemoveCommentLik
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
-	commentLikes, err := l.svcCtx.DAO.FindOneCommentLiked(l.ctx, userID, req.CommentId)
-	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, errx.NewErrCode(errx.NOT_LIKE_COMMENT_YET)
-		}
-		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
-	}
-
-	commentLikes.State = 0 //always false
-
-	if err := l.svcCtx.DAO.UpdateCommentLiked(l.ctx, commentLikes); err != nil {
-		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
+	if err := l.svcCtx.DAO.RemoveOneCommentLike(l.ctx, userID, comment.CommentID, comment.LikesCount-1); err != nil {
+		return nil, err
 	}
 
 	return &types.RemoveCommentLikesResq{}, nil

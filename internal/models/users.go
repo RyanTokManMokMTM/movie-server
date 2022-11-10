@@ -15,6 +15,10 @@ type User struct {
 	Avatar   string `gorm:"not null;type:varchar(255)"`
 	Cover    string `gorm:"not null;type:varchar(255)"`
 
+	FriendNotificationCount  uint
+	LikeNotificationCount    uint
+	CommentNotificationCount uint
+
 	//can have a lot of list
 	List            []List      `gorm:"foreignKey:UserId;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 	MovieInfos      []MovieInfo `gorm:"many2many:users_movies;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
@@ -170,6 +174,18 @@ func (m *User) IsFriend(db *gorm.DB, ctx context.Context, friendID uint) (bool, 
 	return true, nil
 }
 
+func (m *User) UpdateFriendNotification(db *gorm.DB, ctx context.Context) error {
+	return db.WithContext(ctx).Debug().Model(&m).Update("FriendNotificationCount", m.FriendNotificationCount).Error
+}
+
+func (m *User) UpdateLikesNotification(db *gorm.DB, ctx context.Context) error {
+	return db.WithContext(ctx).Debug().Model(&m).Update("LikeNotificationCount", m.LikeNotificationCount).Error
+}
+
+func (m *User) UpdateCommentNotification(db *gorm.DB, ctx context.Context) error {
+	return db.WithContext(ctx).Debug().Model(&m).Update("CommentNotificationCount", m.CommentNotificationCount).Error
+}
+
 //
 ////RETURN A LIST OF USERINFO
 //func (m *User) GetFollowingList(ctx context.Context, db *gorm.DB) ([]*User, error) {
@@ -210,9 +226,21 @@ func (m *User) CreateUserPostLiked(ctx context.Context, db *gorm.DB, post *Post)
 }
 
 //CommentLiked
-func (m *User) CreateUserCommentLiked(ctx context.Context, db *gorm.DB, comment *Comment) error {
-	return db.Debug().WithContext(ctx).Model(&m).Omit("CommentLiked.*").Association("CommentLiked").Append(comment)
-}
+//func (m *User) CreateUserCommentLiked(ctx context.Context, db *gorm.DB, comment *Comment) error {
+//	return db.WithContext(ctx).Debug().Transaction(func(tx *gorm.DB) error {
+//		if err := tx.Debug().WithContext(ctx).Model(&m).Omit("CommentLiked.*").Association("CommentLiked").Append(comment); err != nil {
+//			return err
+//		}
+//
+//		//TODO: Add 1 count to db
+//		comment.LikesCount = comment.LikesCount + 1
+//		if err := tx.WithContext(ctx).Debug().Model(&comment).Update("LikesCount", comment.LikesCount).Error; err != nil {
+//			return err
+//		}
+//
+//		return nil
+//	})
+//}
 
 //CreateUserGenre
 func (m *User) UpdateUserGenreTrans(ctx context.Context, db *gorm.DB, ids []uint) error {
@@ -355,6 +383,40 @@ func (m *User) GetUserRoomsWithMembers(ctx context.Context, db *gorm.DB) error {
 	}).Preload("Rooms.Users").Preload("Rooms.Messages", func(tx *gorm.DB) *gorm.DB {
 		return tx.Order("sent_time desc").Limit(10)
 	}).Preload("Rooms.Messages.SendUser").First(&m).Error
+
+}
+
+func (m *User) InsertOneCommentLikes(ctx context.Context, db *gorm.DB, commentID, count uint) error {
+	return db.WithContext(ctx).Debug().Transaction(func(tx *gorm.DB) error {
+		//TODO: Adding by 1
+		if err := tx.WithContext(ctx).Debug().Model(&m).Association("CommentLiked").Append(&Comment{CommentID: commentID}); err != nil {
+			logx.Error("append to like comment err")
+			return err
+		}
+		//TODO: Update like count
+		if err := tx.WithContext(ctx).Debug().Model(Comment{CommentID: commentID}).UpdateColumn("LikesCount", count).Error; err != nil {
+			logx.Error("update likes count err")
+			return err
+		}
+
+		return nil
+	})
+
+}
+
+func (m *User) RemoveOneCommentLikes(ctx context.Context, db *gorm.DB, commentID, count uint) error {
+	return db.WithContext(ctx).Debug().Transaction(func(tx *gorm.DB) error {
+		if err := tx.WithContext(ctx).Debug().Model(&m).Association("CommentLiked").Delete(&Comment{CommentID: commentID}); err != nil {
+			return err
+		}
+
+		//TODO: Update like count
+		if err := tx.WithContext(ctx).Debug().Model(&Comment{CommentID: commentID}).Update("LikesCount", count).Error; err != nil {
+			return err
+		}
+
+		return nil
+	})
 
 }
 

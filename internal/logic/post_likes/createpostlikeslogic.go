@@ -72,7 +72,7 @@ func (l *CreatePostLikesLogic) CreatePostLikes(req *types.CreatePostLikesReq) (r
 					//TODO: send the notification
 					go func() {
 						logx.Info("TODO: Send a liked post notification")
-						_ = serverWs.SendNotificationToUserWithUserInfo(post.UserId, u, fmt.Sprintf("%s給您的文章點讚", u.Name))
+						_ = serverWs.SendNotificationToUserWithUserInfo(post.UserId, u, fmt.Sprintf("%s給您的文章點讚", u.Name), serverWs.LIKES_NOTIFICATION)
 					}()
 				}
 
