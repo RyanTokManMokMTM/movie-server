@@ -40,7 +40,6 @@ func (m *Comment) DeletePostComment(ctx context.Context, db *gorm.DB) error {
 	return db.Debug().WithContext(ctx).Where("comment_id = ?", m.CommentID).Delete(m).Error
 }
 
-<<<<<<< HEAD
 func (m *Comment) FindOnePostComments(ctx context.Context, db *gorm.DB, limit, pageOffset int) ([]*Comment, int64, error) {
 	var comments []*Comment
 	var count int64 = 0
@@ -54,58 +53,15 @@ func (m *Comment) FindOnePostComments(ctx context.Context, db *gorm.DB, limit, p
 		Count(&count).Offset(pageOffset).Limit(limit).
 		Find(&comments).Error; err != nil {
 		return nil, 0, err
-=======
-func (m *Comment) FindOnePostComments(ctx context.Context, db *gorm.DB, checkUser uint) ([]*Comment, error) {
-	var comments []*Comment
-	if err := db.Debug().WithContext(ctx).Model(m).Where("post_id = ? AND reply_to IS NULL", m.PostID).Preload("User").Preload("Comments", func(tx *gorm.DB) *gorm.DB {
-		return db.Preload("User")
-	}).Preload("LikedUser", func(tx *gorm.DB) *gorm.DB {
-		return db.Where("ID = ?", checkUser)
-	}).Find(&comments).Error; err != nil {
-		return nil, err
->>>>>>> d91c53fa9425adcc67a3b3f94b556c84f2a1a718
 	}
 	return comments, count, nil
 }
 
-<<<<<<< HEAD
 func (m *Comment) FindReplyComments(ctx context.Context, db *gorm.DB, limit, pageOffset int) ([]*Comment, int64, error) {
 	var replyComments []*Comment
 	var count int64 = 0
 	if err := db.Debug().WithContext(ctx).Where("reply_to = ?", m.ReplyTo).Preload("User").Order("created_at desc").Count(&count).Offset(pageOffset).Limit(limit).Find(&replyComments).Error; err != nil {
 		return nil, 0, err
-=======
-//func (m *Comment) FindReplyComments(ctx context.Context, db *gorm.DB) ([]*Comment, error) {
-//	var replyComments []*Comment
-//	if err := db.Debug().WithContext(ctx).Where("reply_to = ?", m.ReplyTo).Preload("User").Find(&replyComments).Error; err != nil {
-//		return nil, err
-//	}
-//	return replyComments, nil
-//}
-
-/*
-	if err := db.Debug().WithContext(ctx).Model(m).Where("post_id = ? AND reply_to IS NULL", m.PostID).Preload("User").Preload("Comments", func(tx *gorm.DB) *gorm.DB {
-		return db.Preload("User")
-	}).Preload("LikedUser", func(tx *gorm.DB) *gorm.DB {
-		return db.Where("ID = ?", checkUser)
-	}).Find(&comments).Error; err != nil {
-		return nil, err
-	}
-	return comments, nil
-*/
-
-func (m *Comment) FindReplyParentComments(ctx context.Context, db *gorm.DB, checkUser uint) ([]*Comment, error) {
-	var replyComments []*Comment
-	//if err := db.Debug().WithContext(ctx).Where("parent_id = ?", m.ParentID).Preload("User").Find(&replyComments).Error; err != nil {
-	//	return nil, err
-	//}
-	if err := db.Debug().WithContext(ctx).Model(m).Where("parent_id  = ?", m.ParentID).Preload("User").Preload("Comments", func(tx *gorm.DB) *gorm.DB {
-		return db.Preload("User")
-	}).Preload("ReplyToInfo").Preload("LikedUser", func(tx *gorm.DB) *gorm.DB {
-		return db.Where("ID = ?", checkUser)
-	}).Find(&replyComments).Error; err != nil {
-		return nil, err
->>>>>>> d91c53fa9425adcc67a3b3f94b556c84f2a1a718
 	}
 	return replyComments, count, nil
 }

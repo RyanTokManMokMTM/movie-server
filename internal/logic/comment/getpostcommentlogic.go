@@ -48,14 +48,11 @@ func (l *GetPostCommentLogic) GetPostComment(req *types.GetPostCommentsReq) (res
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
-<<<<<<< HEAD
 	limit := pagination.GetLimit(req.Limit)
 	pageOffset := pagination.PageOffset(pagination.DEFAULT_PAGE_SIZE, req.Page)
 
 	commentList, count, err := l.svcCtx.DAO.FindPostComments(l.ctx, req.PostID, int(limit), int(pageOffset))
-=======
-	commentList, err := l.svcCtx.DAO.FindPostComments(l.ctx, req.PostID, userID)
->>>>>>> d91c53fa9425adcc67a3b3f94b556c84f2a1a718
+
 	if err != nil {
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}

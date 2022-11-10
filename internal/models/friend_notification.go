@@ -114,7 +114,7 @@ func (f *FriendNotification) Decline(db *gorm.DB, ctx context.Context) error {
 
 func (f *FriendNotification) GetNotifications(db *gorm.DB, ctx context.Context, limit, pageOffset int) ([]*FriendNotification, int64, error) {
 	var resp []*FriendNotification
-<<<<<<< HEAD
+
 	var count int64 = 0
 	if err := db.WithContext(ctx).Debug().Model(&f).
 		Preload("SenderInfo").
@@ -125,10 +125,7 @@ func (f *FriendNotification) GetNotifications(db *gorm.DB, ctx context.Context, 
 		Limit(limit).
 		Find(&resp).Error; err != nil {
 		return nil, 0, err
-=======
-	if err := db.WithContext(ctx).Debug().Model(&f).Preload("SenderInfo").Preload("ReceiverInfo").Where("(Receiver = ? AND  State BETWEEN ? AND ? ) OR (Sender = ?  AND State BETWEEN ? AND ?)", f.Receiver,1, 2, f.Receiver,1, 2).Find(&resp).Error; err != nil {
-		return nil, err
->>>>>>> d91c53fa9425adcc67a3b3f94b556c84f2a1a718
+
 	}
 	return resp, count, nil
 }

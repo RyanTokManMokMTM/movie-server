@@ -45,40 +45,23 @@ func (d *DAO) DeleteComment(ctx context.Context, commentID uint) error {
 	return comment.DeletePostComment(ctx, d.engine)
 }
 
-<<<<<<< HEAD
 func (d *DAO) FindPostComments(ctx context.Context, postID uint, limit, pageOffset int) ([]*models.Comment, int64, error) {
-=======
-func (d *DAO) FindPostComments(ctx context.Context, postID, checkUser uint) ([]*models.Comment, error) {
->>>>>>> d91c53fa9425adcc67a3b3f94b556c84f2a1a718
 	comment := models.Comment{
 		PostID: postID,
 	}
 
-<<<<<<< HEAD
 	return comment.FindOnePostComments(ctx, d.engine, limit, pageOffset)
 
 }
 
 func (d *DAO) FindReplyComments(ctx context.Context, commentID uint, limit, pageOffset int) ([]*models.Comment, int64, error) {
-=======
-	list, err := comment.FindOnePostComments(ctx, d.engine, checkUser)
-	if err != nil {
-		return nil, err
-	}
-	return list, err
-}
 
-func (d *DAO) FindReplyComments(ctx context.Context, parentID, checkUser uint) ([]*models.Comment, error) {
->>>>>>> d91c53fa9425adcc67a3b3f94b556c84f2a1a718
 	comment := models.Comment{
-		ParentID: sql.NullInt64{Int64: int64(parentID), Valid: true},
+		ParentID: sql.NullInt64{Int64: int64(commentID), Valid: true},
 	}
 
-<<<<<<< HEAD
 	return comment.FindReplyComments(ctx, d.engine, limit, pageOffset)
-=======
-	return comment.FindReplyParentComments(ctx, d.engine, checkUser)
->>>>>>> d91c53fa9425adcc67a3b3f94b556c84f2a1a718
+
 }
 
 func (d *DAO) FindOneComment(ctx context.Context, commentID uint) (*models.Comment, error) {

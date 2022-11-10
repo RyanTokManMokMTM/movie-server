@@ -52,11 +52,9 @@ func (l *GetReplyCommentLogic) GetReplyComment(req *types.GetReplyCommentReq) (r
 
 	//get reply comments list
 	var replyComments []types.CommentInfo
-<<<<<<< HEAD
+
 	replyList, count, err := l.svcCtx.DAO.FindReplyComments(l.ctx, req.CommentId, int(limit), int(pageOffset))
-=======
-	replyList, err := l.svcCtx.DAO.FindReplyComments(l.ctx, req.ParentCommentID, userID)
->>>>>>> d91c53fa9425adcc67a3b3f94b556c84f2a1a718
+
 	if err != nil {
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
