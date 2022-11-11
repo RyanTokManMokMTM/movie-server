@@ -51,7 +51,7 @@ type (
     }
     GetPostCommentsResp {
         Comments []CommentInfo `json:"comments"`
-        MetaData MetaData `json:"metadata"`
+        MetaData MetaData `json:"meta_data"`
     }
 
     GetReplyCommentReq {
@@ -65,7 +65,7 @@ type (
     }
     GetReplyCommentResp {
         ReplyComments []CommentInfo `json:"reply"`
-        MetaData MetaData `json:"metadata"`
+        MetaData MetaData `json:"meta_data"`
     }
 
     CountPostCommentsReq {

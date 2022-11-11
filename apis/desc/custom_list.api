@@ -38,7 +38,7 @@ type (
     }
     AllCustomListResp {
         Lists []ListInfo `json:"lists"`
-        MetaData MetaData `json:"metadata"`
+        MetaData MetaData `json:"meta_data"`
     }
 
     UserListReq {

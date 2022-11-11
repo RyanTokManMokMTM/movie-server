@@ -216,7 +216,7 @@ type AllUserLikedMoviesReq struct {
 
 type AllUserAllLikedMoviesResp struct {
 	LikedMoviesList []*LikedMovieInfo `json:"liked_movies"`
-	MetaData        MetaData          `json:"metadata"`
+	MetaData        MetaData          `json:"meta_data"`
 }
 
 type IsLikedMovieReq struct {
@@ -277,7 +277,7 @@ type AllCustomListReq struct {
 
 type AllCustomListResp struct {
 	Lists    []ListInfo `json:"lists"`
-	MetaData MetaData   `json:"metadata"`
+	MetaData MetaData   `json:"meta_data"`
 }
 
 type UserListReq struct {
@@ -362,7 +362,7 @@ type AllPostsInfoReq struct {
 
 type AllPostsInfoResp struct {
 	Infos    []PostInfo `json:"post_info"`
-	MetaData MetaData   `json:"metadata"`
+	MetaData MetaData   `json:"meta_data"`
 }
 
 type FollowPostsInfoReq struct {
@@ -372,7 +372,7 @@ type FollowPostsInfoReq struct {
 
 type FollowPostsInfoResp struct {
 	Infos    []PostInfo `json:"post_info"`
-	MetaData MetaData   `json:"metadata"`
+	MetaData MetaData   `json:"meta_data"`
 }
 
 type PostInfoByIdReq struct {
@@ -480,7 +480,7 @@ type GetPostCommentsReq struct {
 
 type GetPostCommentsResp struct {
 	Comments []CommentInfo `json:"comments"`
-	MetaData MetaData      `json:"metadata"`
+	MetaData MetaData      `json:"meta_data"`
 }
 
 type GetReplyCommentReq struct {
@@ -492,7 +492,7 @@ type GetReplyCommentReq struct {
 
 type GetReplyCommentResp struct {
 	ReplyComments []CommentInfo `json:"reply"`
-	MetaData      MetaData      `json:"metadata"`
+	MetaData      MetaData      `json:"meta_data"`
 }
 
 type CountPostCommentsReq struct {
@@ -569,7 +569,7 @@ type GetFriendRequestReq struct {
 
 type GetFriendRequestResp struct {
 	Requests []FriendRequest `json:"requests"`
-	MetaData MetaData        `json:"metadata"`
+	MetaData MetaData        `json:"meta_data"`
 }
 
 type IsFriendReq struct {
@@ -738,7 +738,7 @@ type GetRoomMessageReq struct {
 
 type GetRoomMessageResp struct {
 	Messagees []MessageData `json:"messages"`
-	MetaData  MetaData      `json:"metadata"`
+	MetaData  MetaData      `json:"meta_data"`
 }
 
 type MessageData struct {
@@ -755,7 +755,7 @@ type GetLikeNotificationReq struct {
 
 type GetLikeNotificationResp struct {
 	LikedNotificationList []LikedNotification `json:"notifications"`
-	MetaData              MetaData            `json:"metadata"`
+	MetaData              MetaData            `json:"meta_data"`
 }
 
 type LikedNotification struct {
@@ -784,7 +784,7 @@ type GetCommentNotificationReq struct {
 
 type GetCommentNotificationResp struct {
 	CommentNotificationList []CommentNotification `json:"notifications"`
-	MetaData                MetaData              `json:"metadata"`
+	MetaData                MetaData              `json:"meta_data"`
 }
 
 type CommentNotification struct {

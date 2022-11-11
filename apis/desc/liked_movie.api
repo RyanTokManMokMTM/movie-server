@@ -21,7 +21,7 @@ type (
     }
     AllUserAllLikedMoviesResp {
         LikedMoviesList []*LikedMovieInfo `json:"liked_movies"`
-        MetaData MetaData `json:"metadata"`
+        MetaData MetaData `json:"meta_data"`
     }
 
     IsLikedMovieReq {

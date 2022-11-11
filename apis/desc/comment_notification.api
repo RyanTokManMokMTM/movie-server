@@ -7,7 +7,7 @@ type (
     }
     GetCommentNotificationResp {
         CommentNotificationList []CommentNotification `json:"notifications"`
-        MetaData MetaData `json:"metadata"`
+        MetaData MetaData `json:"meta_data"`
     }
 )
 

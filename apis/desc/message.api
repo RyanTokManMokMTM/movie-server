@@ -17,7 +17,7 @@ type (
     }
     GetRoomMessageResp {
         Messagees []MessageData `json:"messages"`
-        MetaData MetaData `json:"metadata"`
+        MetaData MetaData `json:"meta_data"`
     }
 )
 

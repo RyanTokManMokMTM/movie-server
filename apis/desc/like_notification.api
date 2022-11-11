@@ -15,7 +15,7 @@ type (
     }
     GetLikeNotificationResp {
         LikedNotificationList []LikedNotification `json:"notifications"`
-        MetaData MetaData `json:"metadata"`
+        MetaData MetaData `json:"meta_data"`
     }
 )
 

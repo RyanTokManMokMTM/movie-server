@@ -142,7 +142,7 @@ type (
     }
     GetFriendRequestResp  {
         Requests []FriendRequest `json:"requests"`
-        MetaData MetaData `json:"metadata"`
+        MetaData MetaData `json:"meta_data"`
     }
 
     IsFriendReq {
