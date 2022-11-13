@@ -16,18 +16,17 @@ type (
 
     }
     GetRoomMessageResp {
-        Messagees []MessageData `json:"messages"`
+        Messagees []MessageInfo `json:"messages"`
         MetaData MetaData `json:"meta_data"`
     }
 )
 
-type MessageData struct {
-    MessageID string `json:"id"`
-    UserInfo UserInfo `json:"users"`
-    Content string `json:"content"`
-    SendTime int64 `json:"send_time"`
-
-}
+//type MessageData struct {
+//    MessageID string `json:"id"`
+//    UserInfo UserInfo `json:"users"`
+//    Content string `json:"content"`
+//    SendTime int64 `json:"send_time"`
+//}
 
 @server (
     jwt : Auth

@@ -65,17 +65,13 @@ func (l *GetRoomMessageLogic) GetRoomMessage(req *types.GetRoomMessageReq) (resp
 	logx.Info("total record : ", count)
 
 	totalPage := pagination.GetTotalPageByPageSize(uint(count), pagination.DEFAULT_PAGE_SIZE)
-	record := make([]types.MessageData, 0)
+	record := make([]types.MessageInfo, 0)
 	for _, data := range msgs {
-		record = append(record, types.MessageData{
-			MessageID: data.MessageID,
-			UserInfo: types.UserInfo{
-				ID:     data.SendUser.ID,
-				Name:   data.SendUser.Name,
-				Avatar: data.SendUser.Avatar,
-			},
-			Content:  data.Content,
-			SendTime: data.SentTime.Unix(),
+		record = append(record, types.MessageInfo{
+			ID:       data.MessageID,
+			Sender:   data.SendUser.ID,
+			Message:  data.Content,
+			SentTime: data.SentTime.Unix(),
 		})
 	}
 

@@ -718,7 +718,7 @@ type SetIsReadResp struct {
 type ChatRoomData struct {
 	ID           uint          `json:"id"`
 	Users        []UserInfo    `json:"users"`
-	Messages     []MessageInfo `json:"messages"`
+	Messages     []MessageInfo `json:"messages"` //or we just need the last record
 	LastSenderID uint          `json:"last_sender_id"`
 	IsRead       bool          `json:"is_read"`
 }
@@ -737,15 +737,8 @@ type GetRoomMessageReq struct {
 }
 
 type GetRoomMessageResp struct {
-	Messagees []MessageData `json:"messages"`
+	Messagees []MessageInfo `json:"messages"`
 	MetaData  MetaData      `json:"meta_data"`
-}
-
-type MessageData struct {
-	MessageID string   `json:"id"`
-	UserInfo  UserInfo `json:"users"`
-	Content   string   `json:"content"`
-	SendTime  int64    `json:"send_time"`
 }
 
 type GetLikeNotificationReq struct {
