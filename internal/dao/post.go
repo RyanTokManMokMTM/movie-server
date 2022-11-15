@@ -24,6 +24,17 @@ func (d *DAO) DeletePost(ctx context.Context, postID, userID uint) error {
 	return post.DeletePost(ctx, d.engine)
 }
 
+func (d *DAO) FindOnePostInfoWithUserLiked(ctx context.Context, postID, userID uint) (*models.Post, error) {
+	post := &models.Post{
+		PostId: postID,
+	}
+
+	if err := post.GetPostInfoWithUserLiked(ctx, d.engine, userID); err != nil {
+		return nil, err
+	}
+	return post, nil
+}
+
 func (d *DAO) FindOnePostInfo(ctx context.Context, postID uint) (*models.Post, error) {
 	post := &models.Post{
 		PostId: postID,
@@ -43,14 +54,13 @@ func (d *DAO) FindAllPosts(ctx context.Context, userID uint, limit, offset int) 
 func (d *DAO) FindFollowingPosts(ctx context.Context, userID uint, limit, pageOffset int) ([]*models.Post, int64, error) {
 	post := &models.Post{}
 	return post.GetFollowPostInfoByCreateTimeDesc(ctx, d.engine, userID, limit, pageOffset)
-
 }
 
-func (d *DAO) FindUserPosts(ctx context.Context, userID uint, limit, pageOffset int) ([]*models.Post, int64, error) {
+func (d *DAO) FindUserPosts(ctx context.Context, userID, likedBy uint, limit, pageOffset int) ([]*models.Post, int64, error) {
 	post := &models.Post{
 		UserId: userID,
 	}
-	return post.GetUserPostsByCreateTimeDesc(ctx, d.engine, limit, pageOffset)
+	return post.GetUserPostsByCreateTimeDesc(ctx, d.engine, likedBy, limit, pageOffset)
 
 }
 

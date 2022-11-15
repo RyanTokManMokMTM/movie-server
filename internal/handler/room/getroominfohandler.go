@@ -14,7 +14,7 @@ import (
 	"github.com/ryantokmanmokmtm/movie-server/internal/types"
 )
 
-func GetRoomINfoHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func GetRoomInfoHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req types.GetRoomInfoReq
 		if err := httpx.Parse(r, &req); err != nil {
@@ -34,8 +34,8 @@ func GetRoomINfoHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
-		l := room.NewGetRoomINfoLogic(r.Context(), svcCtx)
-		resp, err := l.GetRoomINfo(&req)
+		l := room.NewGetRoomInfoLogic(r.Context(), svcCtx)
+		resp, err := l.GetRoomInfo(&req)
 		if err != nil {
 			httpx.Error(w, err)
 		} else {

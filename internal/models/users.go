@@ -381,7 +381,7 @@ func (m *User) GetUserRoomsWithMembers(ctx context.Context, db *gorm.DB) error {
 	return db.WithContext(ctx).Debug().Model(&m).Preload("Rooms", func(tx *gorm.DB) *gorm.DB {
 		return tx.Where("ID IN (?)", roomsIDs)
 	}).Preload("Rooms.Users").Preload("Rooms.Messages", func(tx *gorm.DB) *gorm.DB {
-		return tx.Order("sent_time desc").Limit(20)
+		return tx.Order("sent_time desc").Limit(10)
 	}).Preload("Rooms.Messages.SendUser").First(&m).Error
 
 }

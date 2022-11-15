@@ -56,11 +56,9 @@ type (
 
     GetReplyCommentReq {
 
-        CommentId uint `path:"comment_id"`
+        ParentCommentID uint `path:"comment_id"`
         Page uint `form:"page,default=1"`
         Limit uint `form:"limit,default=5"`
-
-        ParentCommentID uint `path:"comment_id"`
 
     }
     GetReplyCommentResp {

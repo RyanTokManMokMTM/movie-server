@@ -52,6 +52,8 @@ func (l *CreateCommentLikesLogic) CreateCommentLikes(req *types.CreateCommentLik
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
+	//is c
+
 	//TODO: add comment liked
 	logx.Infof("%+v", comment)
 	if err := l.svcCtx.DAO.InsertOneCommentLike(l.ctx, userID, comment.CommentID, comment.LikesCount+1); err != nil {

@@ -40,7 +40,7 @@ func (m *Comment) DeletePostComment(ctx context.Context, db *gorm.DB) error {
 	return db.Debug().WithContext(ctx).Where("comment_id = ?", m.CommentID).Delete(m).Error
 }
 
-func (m *Comment) FindOnePostComments(ctx context.Context, db *gorm.DB, limit, pageOffset int) ([]*Comment, int64, error) {
+func (m *Comment) FindOnePostComments(ctx context.Context, db *gorm.DB, likedBy uint, limit, pageOffset int) ([]*Comment, int64, error) {
 	var comments []*Comment
 	var count int64 = 0
 	if err := db.Debug().WithContext(ctx).Model(m).
@@ -48,7 +48,9 @@ func (m *Comment) FindOnePostComments(ctx context.Context, db *gorm.DB, limit, p
 		Preload("User").
 		Preload("Comments", func(tx *gorm.DB) *gorm.DB {
 			return db.Preload("User")
-		}).
+		}).Preload("LikedUser", func(tx *gorm.DB) *gorm.DB {
+		return db.Find(&User{ID: likedBy})
+	}).
 		Order("created_at desc").
 		Count(&count).Offset(pageOffset).Limit(limit).
 		Find(&comments).Error; err != nil {
@@ -57,7 +59,7 @@ func (m *Comment) FindOnePostComments(ctx context.Context, db *gorm.DB, limit, p
 	return comments, count, nil
 }
 
-func (m *Comment) FindReplyParentComments(ctx context.Context, db *gorm.DB, checkUser uint, limit, pageOffset int) ([]*Comment, int64, error) {
+func (m *Comment) FindReplyParentComments(ctx context.Context, db *gorm.DB, likedBy uint, limit, pageOffset int) ([]*Comment, int64, error) {
 	var replyComments []*Comment
 	var count int64 = 0
 	//if err := db.Debug().WithContext(ctx).Where("parent_id = ?", m.ParentID).Preload("User").Find(&replyComments).Error; err != nil {
@@ -66,7 +68,7 @@ func (m *Comment) FindReplyParentComments(ctx context.Context, db *gorm.DB, chec
 	if err := db.Debug().WithContext(ctx).Model(m).Where("parent_id  = ?", m.ParentID).Preload("User").Preload("Comments", func(tx *gorm.DB) *gorm.DB {
 		return db.Preload("User")
 	}).Preload("ReplyToInfo").Preload("LikedUser", func(tx *gorm.DB) *gorm.DB {
-		return db.Where("ID = ?", checkUser)
+		return db.Find(&User{ID: likedBy})
 	}).Count(&count).Order("created_at desc").
 		Offset(pageOffset).Limit(limit).
 		Find(&replyComments).Error; err != nil {

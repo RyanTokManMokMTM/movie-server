@@ -35,6 +35,17 @@ type SenderData struct {
 	UserAvatar string `json:"avatar"`
 }
 
+/*
+{
+    "opcode" : 1,
+    "group_id" : ,
+    "message_id" : "",
+    "message": "",
+    "sent_time":
+}
+
+*/
+
 type MessageReq struct {
 	OpCode    OpCode `json:"opcode"`
 	GroupID   uint   `json:"group_id"`

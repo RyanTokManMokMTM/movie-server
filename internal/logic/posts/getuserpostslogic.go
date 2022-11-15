@@ -3,6 +3,7 @@ package posts
 import (
 	"context"
 	"github.com/pkg/errors"
+	"github.com/ryantokmanmokmtm/movie-server/common/ctxtool"
 	"github.com/ryantokmanmokmtm/movie-server/common/errx"
 	"github.com/ryantokmanmokmtm/movie-server/common/pagination"
 	"gorm.io/gorm"
@@ -29,7 +30,7 @@ func NewGetUserPostsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetU
 
 func (l *GetUserPostsLogic) GetUserPosts(req *types.PostsInfoReq) (resp *types.PostsInfoResp, err error) {
 	// todo: add your logic here and delete this line
-	//userID := ctxtool.GetUserIDFromCTX(l.ctx)
+	userID := ctxtool.GetUserIDFromCTX(l.ctx) //we need to know this use have liked any posts of the visiting user or not
 
 	//find that user
 	_, err = l.svcCtx.DAO.FindUserByID(l.ctx, req.UserID)
@@ -44,7 +45,8 @@ func (l *GetUserPostsLogic) GetUserPosts(req *types.PostsInfoReq) (resp *types.P
 	pageOffset := pagination.PageOffset(pagination.DEFAULT_PAGE_SIZE, req.Page)
 
 	//Get Post By User ID
-	res, count, err := l.svcCtx.DAO.FindUserPosts(l.ctx, req.UserID, int(limit), int(pageOffset))
+	res, count, err := l.svcCtx.DAO.FindUserPosts(l.ctx, req.UserID, userID, int(limit), int(pageOffset))
+
 	if err != nil {
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
@@ -53,16 +55,6 @@ func (l *GetUserPostsLogic) GetUserPosts(req *types.PostsInfoReq) (resp *types.P
 	//User Post List
 	var posts []types.PostInfo
 	for _, v := range res {
-		var isPostLiked uint = 0
-		_, err := l.svcCtx.DAO.FindOnePostLiked(l.ctx, req.UserID, v.PostId)
-		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
-		}
-
-		if !errors.Is(err, gorm.ErrRecordNotFound) {
-			isPostLiked = 1
-		}
-
 		posts = append(posts, types.PostInfo{
 			PostID:           v.PostId,
 			PostDesc:         v.PostDesc,
@@ -79,7 +71,7 @@ func (l *GetUserPostsLogic) GetUserPosts(req *types.PostsInfoReq) (resp *types.P
 				UserName:   v.UserInfo.Name,
 				UserAvatar: v.UserInfo.Avatar,
 			},
-			IsPostLikedByUser: isPostLiked != 0,
+			IsPostLikedByUser: len(v.PostsLiked) == 1,
 			CreateAt:          v.CreatedAt.Unix(),
 		})
 	}

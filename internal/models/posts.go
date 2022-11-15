@@ -49,8 +49,29 @@ func (m *Post) DeletePost(ctx context.Context, db *gorm.DB) error {
 }
 
 //Get PostInfo by postID
+func (m *Post) GetPostInfoWithUserLiked(ctx context.Context, db *gorm.DB, userID uint) error {
+	if err := db.Debug().
+		WithContext(ctx).
+		Model(&m).
+		Preload("MovieInfo").
+		Preload("UserInfo").
+		Preload("Comments").
+		Preload("PostsLiked", func(db *gorm.DB) *gorm.DB {
+			return db.Find(&User{ID: userID})
+		}).First(&m).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
 func (m *Post) GetPostInfo(ctx context.Context, db *gorm.DB) error {
-	if err := db.Debug().WithContext(ctx).Model(&m).Preload("MovieInfo").Preload("UserInfo").Preload("Comments").Preload("PostsLiked").First(&m).Error; err != nil {
+	if err := db.Debug().
+		WithContext(ctx).
+		Model(&m).
+		Preload("MovieInfo").
+		Preload("UserInfo").
+		Preload("Comments").
+		Preload("PostsLiked").First(&m).Error; err != nil {
 		return err
 	}
 	return nil
@@ -77,7 +98,17 @@ func (m *Post) GetAllPostInfoByCreateTimeDesc(ctx context.Context, db *gorm.DB, 
 	//logx.Info("friend ids", list)
 	//TODO: Get total
 	var resp []*Post
-	if err := db.Debug().WithContext(ctx).Model(&m).Preload("MovieInfo").Preload("UserInfo").Preload("Comments").Preload("PostsLiked").Where("user_id NOT IN(?)", friends).Order("created_at desc").Count(&count).Offset(pageOffset).Limit(limit).Omit("state").Find(&resp).Error; err != nil {
+	if err := db.Debug().
+		WithContext(ctx).
+		Model(&m).
+		Preload("MovieInfo").
+		Preload("UserInfo").
+		Preload("Comments").
+		Preload("PostsLiked", func(db *gorm.DB) *gorm.DB {
+			return db.Find(&User{ID: userID})
+		}).
+		Where("user_id NOT IN(?)", friends).
+		Order("created_at desc").Count(&count).Offset(pageOffset).Limit(limit).Omit("state").Find(&resp).Error; err != nil {
 		return nil, 0, err
 	}
 	return resp, count, nil
@@ -104,7 +135,9 @@ func (m *Post) GetFollowPostInfoByCreateTimeDesc(ctx context.Context, db *gorm.D
 		Preload("MovieInfo").
 		Preload("UserInfo").
 		Preload("Comments").
-		Preload("PostsLiked").
+		Preload("PostsLiked", func(db *gorm.DB) *gorm.DB {
+			return db.Find(&User{ID: userID})
+		}).
 		Where("user_id IN (?)", friends).
 		Count(&count).Offset(pageOffset).Order("created_at desc").Limit(limit).Find(&resp).Error; err != nil {
 		return nil, 0, err
@@ -122,10 +155,18 @@ func (m *Post) GetPostInfoByPostID(ctx context.Context, db *gorm.DB) error {
 	return nil
 }
 
-func (m *Post) GetUserPostsByCreateTimeDesc(ctx context.Context, db *gorm.DB, limit, pageOffset int) ([]*Post, int64, error) {
+func (m *Post) GetUserPostsByCreateTimeDesc(ctx context.Context, db *gorm.DB, likedBy uint, limit, pageOffset int) ([]*Post, int64, error) {
 	var resp []*Post
 	var count int64 = 0
-	if err := db.Debug().WithContext(ctx).Model(&m).Preload("MovieInfo").Preload("UserInfo").Preload("Comments").Preload("PostsLiked").Where("user_id = ?", m.UserId).Count(&count).Order("created_at desc").Offset(pageOffset).Limit(limit).Find(&resp).Limit(10).Error; err != nil {
+	if err := db.Debug().
+		WithContext(ctx).
+		Model(&m).
+		Preload("MovieInfo").
+		Preload("UserInfo").
+		Preload("Comments").
+		Preload("PostsLiked", func(db *gorm.DB) *gorm.DB {
+			return db.Find(&User{ID: likedBy})
+		}).Where("user_id = ?", m.UserId).Count(&count).Order("created_at desc").Offset(pageOffset).Limit(limit).Find(&resp).Limit(10).Error; err != nil {
 		return nil, 0, err
 	}
 	return resp, count, nil

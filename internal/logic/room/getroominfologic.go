@@ -13,21 +13,21 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type GetRoomINfoLogic struct {
+type GetRoomInfoLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
-func NewGetRoomINfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetRoomINfoLogic {
-	return &GetRoomINfoLogic{
+func NewGetRoomInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetRoomInfoLogic {
+	return &GetRoomInfoLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
 	}
 }
 
-func (l *GetRoomINfoLogic) GetRoomINfo(req *types.GetRoomInfoReq) (resp *types.GetRoomInfoResp, err error) {
+func (l *GetRoomInfoLogic) GetRoomInfo(req *types.GetRoomInfoReq) (resp *types.GetRoomInfoResp, err error) {
 	// todo: add your logic here and delete this line
 	userId := ctxtool.GetUserIDFromCTX(l.ctx)
 	if userId == 0 {
@@ -54,6 +54,7 @@ func (l *GetRoomINfoLogic) GetRoomINfo(req *types.GetRoomInfoReq) (resp *types.G
 	messages := make([]types.MessageInfo, 0)
 	user := make([]types.UserInfo, 0)
 
+	//just return the last message instead(id and message?)
 	for i := len(room.Messages) - 1; i >= 0; i-- {
 		messages = append(messages, types.MessageInfo{
 			ID:       room.Messages[i].MessageID,

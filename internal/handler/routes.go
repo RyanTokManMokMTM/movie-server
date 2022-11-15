@@ -487,7 +487,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			{
 				Method:  http.MethodGet,
 				Path:    "/room/:room_id",
-				Handler: room.GetRoomINfoHandler(serverCtx),
+				Handler: room.GetRoomInfoHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPatch,
@@ -503,7 +503,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodGet,
-				Path:    "/message/:room_id",
+				Path:    "/message/:room_id/:last_id",
 				Handler: message.GetRoomMessageHandler(serverCtx),
 			},
 		},

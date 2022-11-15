@@ -12,12 +12,12 @@ type (
     GetRoomMessageReq {
         RoomID uint `path:"room_id"`
         Page uint `form:"page,default=1"`
-        Limit uint `form:"limit,default=20"`
-
+        Limit uint `form:"limit,default=10"`
+        LastID uint `path:"last_id"`
     }
     GetRoomMessageResp {
         Messagees []MessageInfo `json:"messages"`
-        MetaData MetaData `json:"meta_data"`
+//        MetaData MetaData `json:"meta_data"`
     }
 )
 
@@ -35,5 +35,5 @@ type (
 )
 service MovieService {
     @handler GetRoomMessage
-    get /message/:room_id(GetRoomMessageReq) returns (GetRoomMessageResp);
+    get /message/:room_id/:last_id(GetRoomMessageReq) returns (GetRoomMessageResp);
 }

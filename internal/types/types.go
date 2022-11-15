@@ -357,7 +357,7 @@ type DeletePostResp struct {
 
 type AllPostsInfoReq struct {
 	Page  uint `form:"page,default=1"`
-	Limit uint `form:"limit,default=20"`
+	Limit uint `form:"limit,default=5"` //get 5 post per time...
 }
 
 type AllPostsInfoResp struct {
@@ -484,10 +484,9 @@ type GetPostCommentsResp struct {
 }
 
 type GetReplyCommentReq struct {
-	CommentId       uint `path:"comment_id"`
+	ParentCommentID uint `path:"comment_id"`
 	Page            uint `form:"page,default=1"`
 	Limit           uint `form:"limit,default=5"`
-	ParentCommentID uint `path:"comment_id"`
 }
 
 type GetReplyCommentResp struct {
@@ -721,24 +720,26 @@ type ChatRoomData struct {
 	Messages     []MessageInfo `json:"messages"` //or we just need the last record
 	LastSenderID uint          `json:"last_sender_id"`
 	IsRead       bool          `json:"is_read"`
+	MetaData     MetaData      `json:"meta_data"`
 }
 
 type MessageInfo struct {
-	ID       string `json:"id"`
-	Message  string `json:"message"`
-	Sender   uint   `json:"sender_id"`
-	SentTime int64  `json:"sent_time"`
+	ID              string `json:"id"`
+	MessageIdentity uint   `json:"msg_identity"`
+	Message         string `json:"message"`
+	Sender          uint   `json:"sender_id"`
+	SentTime        int64  `json:"sent_time"`
 }
 
 type GetRoomMessageReq struct {
 	RoomID uint `path:"room_id"`
 	Page   uint `form:"page,default=1"`
-	Limit  uint `form:"limit,default=20"`
+	Limit  uint `form:"limit,default=10"`
+	LastID uint `path:"last_id"`
 }
 
 type GetRoomMessageResp struct {
 	Messagees []MessageInfo `json:"messages"`
-	MetaData  MetaData      `json:"meta_data"`
 }
 
 type GetLikeNotificationReq struct {

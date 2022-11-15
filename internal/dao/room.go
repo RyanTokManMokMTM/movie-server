@@ -113,3 +113,10 @@ func (d *DAO) UpdateIsRead(ctx context.Context, roomID uint, isRead bool) error 
 	return r.UpdateIsReadState(d.engine, ctx)
 
 }
+
+func (d *DAO) CountMessage(ctx context.Context, roomID uint) (int64, error) {
+	u := &models.Message{
+		RoomID: roomID,
+	}
+	return u.CountMessage(d.engine, ctx)
+}

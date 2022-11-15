@@ -54,15 +54,15 @@ func (l *GetFollowingPostLogic) GetFollowingPost(req *types.FollowPostsInfoReq) 
 	//Post List
 	var posts []types.PostInfo
 	for _, v := range res {
-		var isPostLiked uint = 0
-		_, err := l.svcCtx.DAO.FindOnePostLiked(l.ctx, userID, v.PostId)
-		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
-		}
-
-		if !errors.Is(err, gorm.ErrRecordNotFound) {
-			isPostLiked = 1
-		}
+		//var isPostLiked uint = 0
+		//_, err := l.svcCtx.DAO.FindOnePostLiked(l.ctx, userID, v.PostId)
+		//if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		//	return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
+		//}
+		//
+		//if !errors.Is(err, gorm.ErrRecordNotFound) {
+		//	isPostLiked = 1
+		//}
 
 		posts = append(posts, types.PostInfo{
 			PostID:           v.PostId,
@@ -80,7 +80,7 @@ func (l *GetFollowingPostLogic) GetFollowingPost(req *types.FollowPostsInfoReq) 
 				UserName:   v.UserInfo.Name,
 				UserAvatar: v.UserInfo.Avatar,
 			},
-			IsPostLikedByUser: isPostLiked != 0,
+			IsPostLikedByUser: len(v.PostsLiked) == 1,
 			CreateAt:          v.CreatedAt.Unix(),
 		})
 	}

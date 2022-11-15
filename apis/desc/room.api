@@ -68,10 +68,14 @@ type ChatRoomData {
     Messages []MessageInfo `json:"messages"` //or we just need the last record
     LastSenderID uint `json:"last_sender_id"`
     IsRead  bool `json:"is_read"`
+
+    //message meta data???????? do we need that???
+    MetaData MetaData `json:"meta_data"`
 }
 
 type MessageInfo {
     ID string `json:"id"`
+    MessageIdentity uint `json:"msg_identity"`
     Message string `json:"message"`
     Sender uint `json:"sender_id"`
     SentTime int64 `json:"sent_time"`
@@ -101,7 +105,7 @@ service MovieService {
     @handler GetUserRooms
     get /room/rooms(GetUserRoomsReq) returns (GetUserRoomsResp);
 
-    @handler GetRoomINfo
+    @handler GetRoomInfo
     get /room/:room_id(GetRoomInfoReq) returns (GetRoomInfoResp);
 
     @handler UpdateIsRead

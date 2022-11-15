@@ -36,19 +36,31 @@ func (m *Message) InsertOne(db *gorm.DB, ctx context.Context) error {
 	return db.WithContext(ctx).Debug().Create(&m).Error
 }
 
-func (m *Message) GetRoomMessages(db *gorm.DB, ctx context.Context, limit, pageOffset int) ([]*Message, int64, error) {
+func (m *Message) GetRoomMessages(db *gorm.DB, ctx context.Context, lastID uint, limit, pageOffset int) ([]*Message, int64, error) {
 	var record []*Message
 	var count int64 = 0
+	//if we use offset directly,it'll cause a bug
+	//example: we now have message as [7,8,9,10] ,and the offset is 4. Now, a user send a new message which message id is 11
+	//then we got some older message by offset ,and we are expecting the result is [3,4,5,6] . But we got a new message ,so the result will be [4,5,6,7]
+	//the message id which is 7 is duplicated in client side : db:[1,2,3,4,5,6,7,8,9,10,(11) new one]
 	if err := db.WithContext(ctx).Debug().
 		Model(&m).
-		Where("room_id = ?", m.RoomID).
+		Where("id < ? AND room_id = ?", lastID, m.RoomID). //using last ID for offset -> smaller id
 		Preload("SendUser").
 		Order("sent_time desc").
 		Count(&count).
-		Offset(pageOffset).
 		Limit(limit).
 		Find(&record).Error; err != nil {
 		return nil, 0, err
 	}
 	return record, count, nil
+}
+
+func (m *Message) CountMessage(db *gorm.DB, ctx context.Context) (int64, error) {
+	var count int64 = 0
+	if err := db.WithContext(ctx).Debug().Model(&m).Where("room_id = ?", m.RoomID).Count(&count).Error; err != nil {
+		return 0, err
+	}
+	return count, nil
+
 }

@@ -44,8 +44,8 @@ func (l *GetRoomMessageLogic) GetRoomMessage(req *types.GetRoomMessageReq) (resp
 		return nil, err
 	}
 
-	limit := pagination.GetLimit(req.Limit)
-	pageOffset := pagination.PageOffset(pagination.DEFAULT_PAGE_SIZE, req.Page)
+	limit := pagination.GetLimit(10)
+	pageOffset := pagination.PageOffset(10, req.Page)
 
 	//TODO: Check User is joined the group
 	mem, err := l.svcCtx.DAO.FindOneRoomMember(l.ctx, req.RoomID, u.ID)
@@ -58,29 +58,28 @@ func (l *GetRoomMessageLogic) GetRoomMessage(req *types.GetRoomMessageReq) (resp
 	}
 
 	//TODO: Get at most 10 latest record belong to the group
-	msgs, count, err := l.svcCtx.DAO.GetRoomMessage(l.ctx, req.RoomID, int(limit), int(pageOffset))
+	//TODO: using the id for doing offset
+
+	msgs, count, err := l.svcCtx.DAO.GetRoomMessage(l.ctx, req.RoomID, req.LastID, int(limit), int(pageOffset))
 	if err != nil {
 		return nil, err
 	}
 	logx.Info("total record : ", count)
 
-	totalPage := pagination.GetTotalPageByPageSize(uint(count), pagination.DEFAULT_PAGE_SIZE)
+	//totalPage := pagination.GetTotalPageByPageSize(uint(count), pagination.DEFAULT_PAGE_SIZE)
 	record := make([]types.MessageInfo, 0)
-	for _, data := range msgs {
+
+	for i := len(msgs) - 1; i >= 0; i-- { //reverse
 		record = append(record, types.MessageInfo{
-			ID:       data.MessageID,
-			Sender:   data.SendUser.ID,
-			Message:  data.Content,
-			SentTime: data.SentTime.Unix(),
+			ID:              msgs[i].MessageID,
+			MessageIdentity: msgs[i].ID,
+			Sender:          msgs[i].SendUser.ID,
+			Message:         msgs[i].Content,
+			SentTime:        msgs[i].SentTime.Unix(),
 		})
 	}
 
 	return &types.GetRoomMessageResp{
 		Messagees: record,
-		MetaData: types.MetaData{
-			TotalPages:   totalPage,
-			TotalResults: uint(count),
-			Page:         pagination.GetPage(req.Page),
-		},
 	}, nil
 }

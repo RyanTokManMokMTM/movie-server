@@ -44,6 +44,7 @@ func (l *GetAllPostLogic) GetAllPost(req *types.AllPostsInfoReq) (resp *types.Al
 	//if page = 1 -> offset by 20
 	limit := pagination.GetLimit(req.Limit)
 	pageOffset := pagination.PageOffset(pagination.DEFAULT_PAGE_SIZE, pagination.GetPage(req.Page))
+
 	res, count, err := l.svcCtx.DAO.FindAllPosts(l.ctx, userID, int(limit), int(pageOffset))
 	logx.Info("total record : ", count)
 
@@ -59,15 +60,15 @@ func (l *GetAllPostLogic) GetAllPost(req *types.AllPostsInfoReq) (resp *types.Al
 	//TODO: This part need to be fix,using preload liked model instead of the loop -------- ....
 	for _, v := range res {
 
-		var isPostLiked uint = 0
-		_, err := l.svcCtx.DAO.FindOnePostLiked(l.ctx, userID, v.PostId)
-		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
-		}
-
-		if !errors.Is(err, gorm.ErrRecordNotFound) {
-			isPostLiked = 1
-		}
+		//var isPostLiked uint = 0
+		//_, err := l.svcCtx.DAO.FindOnePostLiked(l.ctx, userID, v.PostId)
+		//if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		//	return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
+		//}
+		//
+		//if !errors.Is(err, gorm.ErrRecordNotFound) {
+		//	isPostLiked = 1
+		//}
 
 		posts = append(posts, types.PostInfo{
 			PostID:           v.PostId,
@@ -86,7 +87,7 @@ func (l *GetAllPostLogic) GetAllPost(req *types.AllPostsInfoReq) (resp *types.Al
 				UserAvatar: v.UserInfo.Avatar,
 			},
 			CreateAt:          v.CreatedAt.Unix(),
-			IsPostLikedByUser: isPostLiked != 0,
+			IsPostLikedByUser: len(v.PostsLiked) == 1,
 		})
 	}
 

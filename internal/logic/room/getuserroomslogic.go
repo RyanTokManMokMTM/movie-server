@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/pkg/errors"
 	"github.com/ryantokmanmokmtm/movie-server/common/ctxtool"
+	"github.com/ryantokmanmokmtm/movie-server/common/pagination"
 	"gorm.io/gorm"
 
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
@@ -50,6 +51,14 @@ func (l *GetUserRoomsLogic) GetUserRooms(req *types.GetUserRoomsReq) (resp *type
 
 	roomInfos := make([]types.ChatRoomData, 0)
 	for _, v := range userRooms.Rooms {
+		total, err := l.svcCtx.DAO.CountMessage(l.ctx, v.ID)
+		if err != nil {
+			logx.Error("count room message error %v ", err)
+			continue
+		}
+
+		totalPage := pagination.GetTotalPageByPageSize(uint(total), 10)
+
 		user := make([]types.UserInfo, 0)
 		for _, u := range v.Users {
 			if u.ID == userId {
@@ -66,10 +75,11 @@ func (l *GetUserRoomsLogic) GetUserRooms(req *types.GetUserRoomsReq) (resp *type
 		messages := make([]types.MessageInfo, 0)
 		for i := len(v.Messages) - 1; i >= 0; i-- {
 			messages = append(messages, types.MessageInfo{
-				ID:       v.Messages[i].MessageID,
-				Message:  v.Messages[i].Content,
-				Sender:   v.Messages[i].SendUser.ID,
-				SentTime: v.Messages[i].SentTime.Unix(),
+				ID:              v.Messages[i].MessageID,
+				MessageIdentity: v.Messages[i].ID,
+				Message:         v.Messages[i].Content,
+				Sender:          v.Messages[i].SendUser.ID,
+				SentTime:        v.Messages[i].SentTime.Unix(),
 			})
 		}
 		roomInfos = append(roomInfos, types.ChatRoomData{
@@ -78,6 +88,11 @@ func (l *GetUserRoomsLogic) GetUserRooms(req *types.GetUserRoomsReq) (resp *type
 			Messages:     messages,
 			IsRead:       v.IsRead, //read by other user rather than the sender
 			LastSenderID: uint(v.LastSender.Int64),
+			MetaData: types.MetaData{
+				Page:         1,
+				TotalPages:   totalPage,
+				TotalResults: uint(total),
+			},
 		})
 
 	}

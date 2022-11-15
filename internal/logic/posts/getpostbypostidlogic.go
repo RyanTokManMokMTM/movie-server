@@ -40,7 +40,7 @@ func (l *GetPostByPostIDLogic) GetPostByPostID(req *types.PostInfoByIdReq) (resp
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
-	postInfo, err := l.svcCtx.DAO.FindOnePostInfo(l.ctx, req.PostID)
+	postInfo, err := l.svcCtx.DAO.FindOnePostInfoWithUserLiked(l.ctx, req.PostID, userID)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errx.NewErrCode(errx.POST_NOT_EXIST)
@@ -48,15 +48,15 @@ func (l *GetPostByPostIDLogic) GetPostByPostID(req *types.PostInfoByIdReq) (resp
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
-	var isPostLiked uint = 0
-	_, err = l.svcCtx.DAO.FindOnePostLiked(l.ctx, userID, req.PostID)
-	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
-		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
-	}
-
-	if !errors.Is(err, gorm.ErrRecordNotFound) {
-		isPostLiked = 1
-	}
+	//var isPostLiked uint = 0
+	//_, err = l.svcCtx.DAO.FindOnePostLiked(l.ctx, userID, req.PostID)
+	//if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+	//	return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
+	//}
+	//
+	//if !errors.Is(err, gorm.ErrRecordNotFound) {
+	//	isPostLiked = 1
+	//}
 
 	return &types.PostInfoByIdResp{
 		Info: types.PostInfo{
@@ -75,7 +75,7 @@ func (l *GetPostByPostIDLogic) GetPostByPostID(req *types.PostInfoByIdReq) (resp
 				UserName:   postInfo.UserInfo.Name,
 				UserAvatar: postInfo.UserInfo.Avatar,
 			},
-			IsPostLikedByUser: isPostLiked != 0,
+			IsPostLikedByUser: len(postInfo.PostsLiked) == 1,
 			CreateAt:          postInfo.CreatedAt.Unix(),
 		},
 	}, nil
