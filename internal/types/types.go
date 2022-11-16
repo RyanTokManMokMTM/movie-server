@@ -367,7 +367,7 @@ type AllPostsInfoResp struct {
 
 type FollowPostsInfoReq struct {
 	Page  uint `form:"page,default=1"`
-	Limit uint `form:"limit,default=20"`
+	Limit uint `form:"limit,default=5"`
 }
 
 type FollowPostsInfoResp struct {
@@ -734,7 +734,7 @@ type MessageInfo struct {
 type GetRoomMessageReq struct {
 	RoomID uint `path:"room_id"`
 	Page   uint `form:"page,default=1"`
-	Limit  uint `form:"limit,default=10"`
+	Limit  uint `form:"limit,default=20"`
 	LastID uint `path:"last_id"`
 }
 

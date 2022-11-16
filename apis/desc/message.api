@@ -12,7 +12,7 @@ type (
     GetRoomMessageReq {
         RoomID uint `path:"room_id"`
         Page uint `form:"page,default=1"`
-        Limit uint `form:"limit,default=10"`
+        Limit uint `form:"limit,default=20"`
         LastID uint `path:"last_id"`
     }
     GetRoomMessageResp {
