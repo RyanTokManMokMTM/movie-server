@@ -93,7 +93,7 @@ func (m *User) UpdateLikedMovie(ctx context.Context, db *gorm.DB, movie *MovieIn
 func (m *User) GetUserLikedMovies(ctx context.Context, db *gorm.DB, limit, pageOffset int) (error, int64) {
 	logx.Infof("UserDB - User Liked Movies:%+v \n", m)
 	var count int64 = 0
-	if err := db.Debug().WithContext(ctx).Preload("MovieInfos", func(db *gorm.DB) *gorm.DB {
+	if err := db.Debug().WithContext(ctx).Model(&m).Preload("MovieInfos", func(db *gorm.DB) *gorm.DB {
 		return db.Select("movie_infos.*").Joins("left join users_movies on users_movies.movie_info_id = movie_infos.id").Where("users_movies.state = ?", 1)
 	}).
 		Preload("MovieInfos.GenreInfo").
