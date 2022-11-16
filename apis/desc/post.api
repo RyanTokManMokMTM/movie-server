@@ -45,7 +45,7 @@ type (
 
     FollowPostsInfoReq {
         Page uint `form:"page,default=1"`
-        Limit uint `form:"limit,default=20"`
+        Limit uint `form:"limit,default=5"`
     }
     FollowPostsInfoResp {
         Infos []PostInfo `json:"post_info"`

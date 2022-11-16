@@ -43,12 +43,12 @@ func (l *GetAllPostLogic) GetAllPost(req *types.AllPostsInfoReq) (resp *types.Al
 	//TODO: Get Page Offset and limit
 	//if page = 1 -> offset by 20
 	limit := pagination.GetLimit(req.Limit)
-	pageOffset := pagination.PageOffset(pagination.DEFAULT_PAGE_SIZE, pagination.GetPage(req.Page))
+	pageOffset := pagination.PageOffset(req.Limit, pagination.GetPage(req.Page))
 
 	res, count, err := l.svcCtx.DAO.FindAllPosts(l.ctx, userID, int(limit), int(pageOffset))
 	logx.Info("total record : ", count)
 
-	totalPage := pagination.GetTotalPageByPageSize(uint(count), pagination.DEFAULT_PAGE_SIZE)
+	totalPage := pagination.GetTotalPageByPageSize(uint(count), req.Limit)
 	logx.Info("total page : ", totalPage)
 	if err != nil {
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
