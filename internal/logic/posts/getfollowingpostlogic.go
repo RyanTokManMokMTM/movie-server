@@ -42,7 +42,7 @@ func (l *GetFollowingPostLogic) GetFollowingPost(req *types.FollowPostsInfoReq) 
 	}
 
 	limit := pagination.GetLimit(req.Limit)
-	pageOffset := pagination.PageOffset(pagination.DEFAULT_PAGE_SIZE, pagination.GetPage(req.Page))
+	pageOffset := pagination.PageOffset(limit, pagination.GetPage(req.Page))
 
 	res, count, err := l.svcCtx.DAO.FindFollowingPosts(l.ctx, userID, int(limit), int(pageOffset))
 	if err != nil {
@@ -50,7 +50,7 @@ func (l *GetFollowingPostLogic) GetFollowingPost(req *types.FollowPostsInfoReq) 
 	}
 	logx.Info("total record : ", count)
 
-	totalPage := pagination.GetTotalPageByPageSize(uint(count), pagination.DEFAULT_PAGE_SIZE)
+	totalPage := pagination.GetTotalPageByPageSize(uint(count), limit)
 	//Post List
 	var posts []types.PostInfo
 	for _, v := range res {
