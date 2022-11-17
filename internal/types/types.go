@@ -194,6 +194,10 @@ type MovieDetailInfo struct {
 	VoteAverage      float64     `json:"Vote_average"`
 	VoteCount        int64       `json:"vote_count"`
 	Genres           []GenreInfo `json:"genres"`
+	IsCollected      bool        `json:"is_collected"`
+	IsLiked          bool        `json:"is_liked"`
+	CollectedCount   uint        `json:"collected_count"`
+	LikedCount       uint        `json:"liked_count"`
 }
 
 type GenreInfo struct {

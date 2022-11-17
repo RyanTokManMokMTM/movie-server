@@ -41,13 +41,12 @@ func (l *RemoveLikedMovieLogic) RemoveLikedMovie(req *types.RemoveLikedMovieReq)
 	}
 
 	//find movie record
-	lm, err := l.svcCtx.DAO.FindOneUserLikedMovie(l.ctx, req.MovieID, userID)
+	_, err = l.svcCtx.DAO.FindOneUserLikedMovie(l.ctx, req.MovieID, userID)
 	if err != nil {
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
-	lm.State = 0
-	err = l.svcCtx.DAO.UpdateUserLikedMovieState(l.ctx, lm)
+	err = l.svcCtx.DAO.RemoveLikedMovie(l.ctx, req.MovieID, userID)
 	if err != nil {
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}

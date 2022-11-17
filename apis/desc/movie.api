@@ -73,6 +73,11 @@ type (
         VoteCount        int64 `json:"vote_count"`
 
         Genres []GenreInfo `json:"genres"`
+
+        IsCollected bool `json:"is_collected"`
+        IsLiked bool `json:"is_liked"`
+        CollectedCount uint `json:"collected_count"`
+        LikedCount uint `json:"liked_count"`
     }
 
     GenreInfo{
@@ -100,12 +105,6 @@ service MovieService{
     get /movies/genres/:movie_id(MovieGenresInfoReq) returns (MovieGenresInfoResp);
 
     @doc (
-        summary : "get movie detail"
-    )
-    @handler GetMovieDetail
-    get /movies/:movie_id(MovieDetailReq) returns (MovieDetailResp);
-
-    @doc (
         summary  : "get total movie liked by user"
     )
     @handler  GetMovieLikedCount
@@ -116,4 +115,18 @@ service MovieService{
     )
     @handler GetMovieCollectedCount
     get /movie/count/collected/:movie_id(CountMovieCollectedReq) returns (CountMovieCollectedResp);
+}
+
+//This api we need to get some user data
+@server (
+    group : movie
+    prefix : /api/v1
+    jwt : Auth
+)
+service MovieService {
+    @doc (
+        summary : "get movie detail"
+    )
+    @handler GetMovieDetail
+    get /movies/:movie_id(MovieDetailReq) returns (MovieDetailResp);
 }

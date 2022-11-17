@@ -41,7 +41,7 @@ func (l *IsLikedMovieLogic) IsLikedMovie(req *types.IsLikedMovieReq) (resp *type
 	}
 
 	//find liked movie record
-	um, err := l.svcCtx.DAO.FindOneUserLikedMovie(l.ctx, req.MovieID, userID)
+	_, err = l.svcCtx.DAO.FindOneUserLikedMovie(l.ctx, req.MovieID, userID)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return &types.IsLikedMovieResp{
@@ -49,12 +49,6 @@ func (l *IsLikedMovieLogic) IsLikedMovie(req *types.IsLikedMovieReq) (resp *type
 			}, nil
 		}
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
-	}
-
-	if um.State == 0 {
-		return &types.IsLikedMovieResp{
-			IsLiked: false,
-		}, nil
 	}
 
 	return &types.IsLikedMovieResp{

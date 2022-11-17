@@ -81,14 +81,17 @@ func (m *User) UpdateInfo(ctx context.Context, db *gorm.DB) error {
 
 func (m *User) CreateLikedMovie(ctx context.Context, db *gorm.DB, movie *MovieInfo) error {
 	logx.Infof("UserDB - Create User Liked Movie:%+v \n", m)
-	return db.WithContext(ctx).Model(&m).Association("MovieInfos").Append(movie)
-
+	return db.WithContext(ctx).Debug().Model(&m).Association("MovieInfos").Append(movie)
 }
 
-func (m *User) UpdateLikedMovie(ctx context.Context, db *gorm.DB, movie *MovieInfo) error {
-	logx.Infof("UserDB - Remove User Liked Movie:%+v \n", m)
-	return db.WithContext(ctx).Model(&m).Association("MovieInfos").Delete(movie)
+func (m *User) RemoveLikedMovie(ctx context.Context, db *gorm.DB, movie *MovieInfo) error {
+	return db.WithContext(ctx).Debug().Model(&m).Association("MovieInfos").Delete(movie)
 }
+
+//func (m *User) UpdateLikedMovie(ctx context.Context, db *gorm.DB, movie *MovieInfo) error {
+//	logx.Infof("UserDB - Remove User Liked Movie:%+v \n", m)
+//	return db.WithContext(ctx).Model(&m).Association("MovieInfos").Delete(movie)
+//}
 
 func (m *User) GetUserLikedMovies(ctx context.Context, db *gorm.DB, limit, pageOffset int) (error, int64) {
 	logx.Infof("UserDB - User Liked Movies:%+v \n", m)
