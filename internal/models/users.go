@@ -96,7 +96,7 @@ func (m *User) RemoveLikedMovie(ctx context.Context, db *gorm.DB, movie *MovieIn
 func (m *User) GetUserLikedMovies(ctx context.Context, db *gorm.DB, limit, pageOffset int) (error, int64) {
 	logx.Infof("UserDB - User Liked Movies:%+v \n", m)
 	var count int64 = 0
-	if err := db.Debug().WithContext(ctx).Preload("MovieInfos", func(db *gorm.DB) *gorm.DB {
+	if err := db.Debug().WithContext(ctx).Model(&m).Preload("MovieInfos", func(db *gorm.DB) *gorm.DB {
 		return db.Select("movie_infos.*").Joins("left join users_movies on users_movies.movie_info_id = movie_infos.id").Where("users_movies.state = ?", 1)
 	}).
 		Preload("MovieInfos.GenreInfo").
@@ -384,7 +384,7 @@ func (m *User) GetUserRoomsWithMembers(ctx context.Context, db *gorm.DB) error {
 	return db.WithContext(ctx).Debug().Model(&m).Preload("Rooms", func(tx *gorm.DB) *gorm.DB {
 		return tx.Where("ID IN (?)", roomsIDs)
 	}).Preload("Rooms.Users").Preload("Rooms.Messages", func(tx *gorm.DB) *gorm.DB {
-		return tx.Order("sent_time desc").Limit(10)
+		return tx.Order("sent_time desc").Limit(20)
 	}).Preload("Rooms.Messages.SendUser").First(&m).Error
 
 }

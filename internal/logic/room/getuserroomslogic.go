@@ -57,7 +57,7 @@ func (l *GetUserRoomsLogic) GetUserRooms(req *types.GetUserRoomsReq) (resp *type
 			continue
 		}
 
-		totalPage := pagination.GetTotalPageByPageSize(uint(total), 10)
+		totalPage := pagination.GetTotalPageByPageSize(uint(total), 20)
 
 		user := make([]types.UserInfo, 0)
 		for _, u := range v.Users {

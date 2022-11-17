@@ -44,8 +44,8 @@ func (l *GetRoomMessageLogic) GetRoomMessage(req *types.GetRoomMessageReq) (resp
 		return nil, err
 	}
 
-	limit := pagination.GetLimit(10)
-	pageOffset := pagination.PageOffset(10, req.Page)
+	limit := pagination.GetLimit(req.Limit)
+	pageOffset := pagination.PageOffset(req.Limit, req.Page)
 
 	//TODO: Check User is joined the group
 	mem, err := l.svcCtx.DAO.FindOneRoomMember(l.ctx, req.RoomID, u.ID)
