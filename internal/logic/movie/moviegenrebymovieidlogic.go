@@ -24,21 +24,7 @@ func NewMovieGenreByMovieIDLogic(ctx context.Context, svcCtx *svc.ServiceContext
 
 func (l *MovieGenreByMovieIDLogic) MovieGenreByMovieID(req *types.MovieGenresInfoReq) (resp *types.MovieGenresInfoResp, err error) {
 	// todo: add your logic here and delete this line
-	//userId := ctxtool.GetUserIDFromCTX(l.ctx)
-	//if userId == 0 {
-	//	return nil, fmt.Errorf("user_id is missing")
-	//}
-
-	//find that user
-	//_, err = l.svcCtx.DAO.FindUserByID(l.ctx, userId)
-	//if err != nil {
-	//	if errors.Is(err, gorm.ErrRecordNotFound) {
-	//		return nil, fmt.Errorf("user not exist")
-	//	}
-	//	return nil, err
-	//}
-
-	movie, err := l.svcCtx.DAO.FindOneMovieGenres(l.ctx, req.Id)
+	movie, err := l.svcCtx.DAO.FindOneMovieDetail(l.ctx, req.Id)
 	if err != nil {
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}

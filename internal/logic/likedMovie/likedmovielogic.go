@@ -41,12 +41,26 @@ func (l *LikedMovieLogic) LikedMovie(req *types.LikedMovieReq) (resp *types.Like
 	}
 
 	//find liked movie record
-	_, err = l.svcCtx.DAO.FindOneUserLikedMovie(l.ctx, req.MovieID, userID)
+	um, err := l.svcCtx.DAO.FindOneUserLikedMovie(l.ctx, req.MovieID, userID)
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
+	logx.Info(errors.Is(err, gorm.ErrRecordNotFound))
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		if err := l.svcCtx.DAO.CreateLikedMovie(l.ctx, req.MovieID, userID); err != nil {
+			return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
+		}
 
-	if err := l.svcCtx.DAO.CreateLikedMovie(l.ctx, req.MovieID, userID); err != nil {
+		return &types.LikedMovieResp{}, nil
+	}
+	logx.Infof("%+v", um)
+	if um.State == 1 {
+		um.State = 0
+	} else {
+		um.State = 1
+	}
+
+	if err := l.svcCtx.DAO.UpdateUserLikedMovieState(l.ctx, um); err != nil {
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 

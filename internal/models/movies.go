@@ -24,8 +24,6 @@ type MovieInfo struct {
 	VoteCount        int64       `json:"vote_count" gorm:"not null"`
 	GenreInfo        []GenreInfo `gorm:"many2many:genres_movies;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 	Lists            []List      `gorm:"many2many:lists_movies;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
-	Likes            []User      `gorm:"many2many:users_movies;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
-
 	DefaultModel
 }
 
@@ -37,35 +35,10 @@ func (m *MovieInfo) GetMoviesInfoByID(ctx context.Context, db *gorm.DB) ([]*Movi
 	return nil, nil
 }
 
-func (m *MovieInfo) FindOneMovieDetail(ctx context.Context, db *gorm.DB, userID uint) error {
+func (m *MovieInfo) FindOneMovieWithGenres(ctx context.Context, db *gorm.DB) error {
 	logx.Info("MovieDB - Get Movie Detail")
-	if err := db.Debug().WithContext(ctx).
-		Model(&m).
-		Preload("GenreInfo").
-		Preload("Lists", func(db *gorm.DB) *gorm.DB {
-			return db.Debug().Preload("MovieInfos", func(db *gorm.DB) *gorm.DB {
-				return db.Debug().Where("id = ?", m.Id)
-			}).Where("user_id = ?", userID)
-		}).
-		Preload("Likes", func(db *gorm.DB) *gorm.DB {
-			return db.Debug().Where("id = ?", userID)
-		}).
-		Find(&m).Error; err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *MovieInfo) FindOneMovieGenres(ctx context.Context, db *gorm.DB) error {
-	//count total collected?
-	//count total likes
-
-	logx.Info("MovieDB - Get Movie Detail")
-	if err := db.Debug().WithContext(ctx).
-		Model(&m).
-		Where("movie_id = ?", m.Id).
-		Preload("GenreInfo").
-		Find(&m).Error; err != nil {
+	if err := db.Debug().WithContext(ctx).Model(&m).Where("movie_id = ?", m.Id).Preload("GenreInfo").Find(&m).Error; err != nil {
+		fmt.Println(err.Error())
 		return err
 	}
 	return nil

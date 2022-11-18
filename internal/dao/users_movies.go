@@ -13,17 +13,17 @@ func (d *DAO) FindOneUserLikedMovie(ctx context.Context, movieID, userID uint) (
 	return um, nil
 }
 
-//func (d *DAO) UpdateUserLikedMovieState(ctx context.Context, um *models.UserMovie) error {
-//	if err := um.UpdateLikedMovieState(ctx, d.engine); err != nil {
-//		return err
-//	}
-//	return nil
-//}
+func (d *DAO) UpdateUserLikedMovieState(ctx context.Context, um *models.UserMovie) error {
+	if err := um.UpdateLikedMovieState(ctx, d.engine); err != nil {
+		return err
+	}
+	return nil
+}
 
-func (d *DAO) CountLikesMovie(ctx context.Context, movieID uint) (int64, error) {
+func (d *DAO) CountLikesOfMovie(ctx context.Context, movieID uint) (int64, error) {
 	um := &models.UserMovie{
 		MovieInfoId: movieID,
 	}
 
-	return um.CountLikesMovie(ctx, d.engine)
+	return um.CountLikesOfMovie(ctx, d.engine)
 }

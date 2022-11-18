@@ -57,13 +57,6 @@ func (d *DAO) CreateLikedMovie(ctx context.Context, movieID, userID uint) error 
 	return user.CreateLikedMovie(ctx, d.engine, movie)
 }
 
-func (d *DAO) RemoveLikedMovie(ctx context.Context, movieID, userID uint) error {
-	user := &models.User{ID: userID}
-	movie := &models.MovieInfo{Id: movieID}
-
-	return user.RemoveLikedMovie(ctx, d.engine, movie)
-}
-
 //func (d *DAO) FindUserFollowingList(ctx context.Context, userId uint) ([]*models.User, error) {
 //	user := &models.User{
 //		ID: userId,

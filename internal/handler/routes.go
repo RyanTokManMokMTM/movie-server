@@ -132,6 +132,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 			{
 				Method:  http.MethodGet,
+				Path:    "/movies/:movie_id",
+				Handler: movie.GetMovieDetailHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
 				Path:    "/movie/count/liked/:movie_id",
 				Handler: movie.GetMovieLikedCountHandler(serverCtx),
 			},
@@ -141,18 +146,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: movie.GetMovieCollectedCountHandler(serverCtx),
 			},
 		},
-		rest.WithPrefix("/api/v1"),
-	)
-
-	server.AddRoutes(
-		[]rest.Route{
-			{
-				Method:  http.MethodGet,
-				Path:    "/movies/:movie_id",
-				Handler: movie.GetMovieDetailHandler(serverCtx),
-			},
-		},
-		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 		rest.WithPrefix("/api/v1"),
 	)
 
@@ -175,7 +168,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: likedMovie.LikedMovieHandler(serverCtx),
 			},
 			{
-				Method:  http.MethodDelete,
+				Method:  http.MethodPatch,
 				Path:    "/liked/movie",
 				Handler: likedMovie.RemoveLikedMovieHandler(serverCtx),
 			},

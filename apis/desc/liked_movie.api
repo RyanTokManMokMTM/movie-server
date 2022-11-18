@@ -90,7 +90,7 @@ service MovieService {
         summary : "remove user liked movie - update state "
     )
     @handler RemoveLikedMovie
-    delete /liked/movie(RemoveLikedMovieReq) returns (RemoveLikedMovieResp);
+    patch /liked/movie(RemoveLikedMovieReq) returns (RemoveLikedMovieResp);
 
     @doc (
         summary : "Find Liked Movie"
