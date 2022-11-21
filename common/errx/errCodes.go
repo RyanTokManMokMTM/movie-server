@@ -30,6 +30,7 @@ const (
 const (
 	MOVIE_NOT_EXIST     uint32 = 120001
 	MOVIE_ALREADY_LIKED uint32 = 120002
+	MOVIE_NOT_YET_LIKED uint32 = 120003
 )
 
 //List Service 130xxx

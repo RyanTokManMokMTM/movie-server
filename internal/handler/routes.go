@@ -168,7 +168,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: likedMovie.LikedMovieHandler(serverCtx),
 			},
 			{
-				Method:  http.MethodPatch,
+				Method:  http.MethodDelete,
 				Path:    "/liked/movie",
 				Handler: likedMovie.RemoveLikedMovieHandler(serverCtx),
 			},
@@ -193,6 +193,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodGet,
 				Path:    "/list/:list_id",
 				Handler: custom_list.GetListByIDHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/list/movies/count",
+				Handler: custom_list.CountCollectedMovieHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/api/v1"),

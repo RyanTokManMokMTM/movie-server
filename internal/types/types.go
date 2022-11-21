@@ -211,7 +211,7 @@ type LikedMovieResp struct {
 type AllUserLikedMoviesReq struct {
 	ID    uint `path:"user_id"`
 	Page  uint `form:"page,default=1"`
-	Limit uint `form:"limit,default=20"`
+	Limit uint `form:"limit,default=10"`
 }
 
 type AllUserAllLikedMoviesResp struct {
@@ -319,6 +319,14 @@ type RemoveListMoviesReq struct {
 }
 
 type RemoveListMoviesResp struct {
+}
+
+type CountCollectedMovieReq struct {
+	UserID uint `json:"user_id"`
+}
+
+type CountCollectedMovieResp struct {
+	Total uint `json:"total"`
 }
 
 type ListInfo struct {

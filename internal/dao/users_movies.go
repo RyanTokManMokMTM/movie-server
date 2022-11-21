@@ -5,19 +5,12 @@ import (
 	"github.com/ryantokmanmokmtm/movie-server/internal/models"
 )
 
-func (d *DAO) FindOneUserLikedMovie(ctx context.Context, movieID, userID uint) (*models.UserMovie, error) {
-	um := &models.UserMovie{UserId: userID, MovieInfoId: movieID}
-	if err := um.FindOneLikedMovie(ctx, d.engine); err != nil {
-		return nil, err
+func (d *DAO) FindOneUserLikedMovie(ctx context.Context, movieID, userID uint) (*models.User, error) {
+	u := &models.User{
+		ID: userID,
 	}
-	return um, nil
-}
-
-func (d *DAO) UpdateUserLikedMovieState(ctx context.Context, um *models.UserMovie) error {
-	if err := um.UpdateLikedMovieState(ctx, d.engine); err != nil {
-		return err
-	}
-	return nil
+	err := u.FindOneLikedMovie(ctx, d.engine, movieID)
+	return u, err
 }
 
 func (d *DAO) CountLikesOfMovie(ctx context.Context, movieID uint) (int64, error) {
@@ -26,4 +19,12 @@ func (d *DAO) CountLikesOfMovie(ctx context.Context, movieID uint) (int64, error
 	}
 
 	return um.CountLikesOfMovie(ctx, d.engine)
+}
+
+func (d *DAO) RemoveUserLikedMovie(ctx context.Context, movieID, userID uint) error {
+	u := &models.User{
+		ID: userID,
+	}
+
+	return u.RemoveOneLikedMovie(ctx, d.engine, movieID)
 }

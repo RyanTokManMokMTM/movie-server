@@ -41,26 +41,16 @@ func (l *LikedMovieLogic) LikedMovie(req *types.LikedMovieReq) (resp *types.Like
 	}
 
 	//find liked movie record
-	um, err := l.svcCtx.DAO.FindOneUserLikedMovie(l.ctx, req.MovieID, userID)
+	info, err := l.svcCtx.DAO.FindOneUserLikedMovie(l.ctx, req.MovieID, userID)
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
-	logx.Info(errors.Is(err, gorm.ErrRecordNotFound))
-	if errors.Is(err, gorm.ErrRecordNotFound) {
-		if err := l.svcCtx.DAO.CreateLikedMovie(l.ctx, req.MovieID, userID); err != nil {
-			return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
-		}
 
-		return &types.LikedMovieResp{}, nil
-	}
-	logx.Infof("%+v", um)
-	if um.State == 1 {
-		um.State = 0
-	} else {
-		um.State = 1
+	if len(info.MovieInfos) > 0 {
+		return nil, errx.NewErrCode(errx.MOVIE_ALREADY_LIKED)
 	}
 
-	if err := l.svcCtx.DAO.UpdateUserLikedMovieState(l.ctx, um); err != nil {
+	if err := l.svcCtx.DAO.CreateLikedMovie(l.ctx, req.MovieID, userID); err != nil {
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 

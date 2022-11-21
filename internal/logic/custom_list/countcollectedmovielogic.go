@@ -1,9 +1,8 @@
-package likedMovie
+package custom_list
 
 import (
 	"context"
 	"github.com/pkg/errors"
-	"github.com/ryantokmanmokmtm/movie-server/common/ctxtool"
 	"github.com/ryantokmanmokmtm/movie-server/common/errx"
 	"gorm.io/gorm"
 
@@ -13,26 +12,23 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type IsLikedMovieLogic struct {
+type CountCollectedMovieLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
-func NewIsLikedMovieLogic(ctx context.Context, svcCtx *svc.ServiceContext) *IsLikedMovieLogic {
-	return &IsLikedMovieLogic{
+func NewCountCollectedMovieLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CountCollectedMovieLogic {
+	return &CountCollectedMovieLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
 	}
 }
 
-func (l *IsLikedMovieLogic) IsLikedMovie(req *types.IsLikedMovieReq) (resp *types.IsLikedMovieResp, err error) {
+func (l *CountCollectedMovieLogic) CountCollectedMovie(req *types.CountCollectedMovieReq) (resp *types.CountCollectedMovieResp, err error) {
 	// todo: add your logic here and delete this line
-	userID := ctxtool.GetUserIDFromCTX(l.ctx)
-
-	//find that user
-	_, err = l.svcCtx.DAO.FindUserByID(l.ctx, userID)
+	_, err = l.svcCtx.DAO.FindUserByID(l.ctx, req.UserID)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errx.NewErrCode(errx.USER_NOT_EXIST)
@@ -40,18 +36,12 @@ func (l *IsLikedMovieLogic) IsLikedMovie(req *types.IsLikedMovieReq) (resp *type
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
-	//find liked movie record
-	info, err := l.svcCtx.DAO.FindOneUserLikedMovie(l.ctx, req.MovieID, userID)
+	count, err := l.svcCtx.DAO.CountCollectedMovie(l.ctx, req.UserID)
 	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return &types.IsLikedMovieResp{
-				IsLiked: false,
-			}, nil
-		}
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
-	return &types.IsLikedMovieResp{
-		IsLiked: len(info.MovieInfos) == 1,
+	return &types.CountCollectedMovieResp{
+		Total: uint(count),
 	}, nil
 }

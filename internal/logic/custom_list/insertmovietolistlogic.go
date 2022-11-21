@@ -40,16 +40,7 @@ func (l *InsertMovieToListLogic) InsertMovieToList(req *types.InsertMovieReq) (r
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
-	movie, err := l.svcCtx.DAO.FindOneMovie(l.ctx, req.MovieID)
-	logx.Info(movie)
-	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, errx.NewErrCode(errx.MOVIE_NOT_EXIST)
-		}
-		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
-	}
-
-	////Check movie exists
+	//Check movie exists
 	_, err = l.svcCtx.DAO.FindOneMovie(l.ctx, req.MovieID)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -58,9 +49,21 @@ func (l *InsertMovieToListLogic) InsertMovieToList(req *types.InsertMovieReq) (r
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
-	if err := l.svcCtx.DAO.InsertMovieToList(l.ctx, req.MovieID, req.ListID, userID); err != nil {
+	//Movie is already add to any List?
+
+	_, err = l.svcCtx.DAO.FindOneMovieFormAnyList(l.ctx, req.MovieID, userID)
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
-	return
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		if err := l.svcCtx.DAO.InsertMovieToList(l.ctx, req.MovieID, req.ListID, userID); err != nil {
+			return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
+		}
+
+		return &types.InsertMovieResp{}, nil
+	}
+
+	return nil, errx.NewErrCode(errx.LIST_MOVIE_ALREADY_IN_LIST)
+
 }

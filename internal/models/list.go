@@ -48,6 +48,12 @@ func (m *List) FindAllList(ctx context.Context, db *gorm.DB, limit, pageOffset i
 	return lists, count, nil
 }
 
+func (m *List) GetUserListsID(ctx context.Context, db *gorm.DB) ([]int, error) {
+	var listsIDs []int
+	err := db.Debug().WithContext(ctx).Model(&m).Select("list_id").Where("user_id = ?", m.UserId).Scan(&listsIDs).Error
+	return listsIDs, err
+}
+
 func (m *List) UpdateList(ctx context.Context, db *gorm.DB) error {
 	return db.Debug().WithContext(ctx).Model(&m).Where("list_id = ?", m.ListId).Updates(&m).Error
 }

@@ -40,14 +40,14 @@ func (d *DAO) UpdateUser(ctx context.Context, user *models.User) error {
 	return nil
 }
 
-func (d *DAO) GetUserLikedMovies(ctx context.Context, userID uint, limit, pageOffset int) (*models.User, int64, error) {
+func (d *DAO) GetUserLikedMovies(ctx context.Context, userID uint, limit, pageOffset int) (*models.User, error) {
 	user := &models.User{ID: userID}
 
-	err, count := user.GetUserLikedMovies(ctx, d.engine, limit, pageOffset)
+	err := user.GetUserLikedMovies(ctx, d.engine, limit, pageOffset)
 	if err != nil {
-		return nil, 0, err
+		return nil, err
 	}
-	return user, count, nil
+	return user, nil
 }
 
 func (d *DAO) CreateLikedMovie(ctx context.Context, movieID, userID uint) error {
@@ -55,6 +55,11 @@ func (d *DAO) CreateLikedMovie(ctx context.Context, movieID, userID uint) error 
 	movie := &models.MovieInfo{Id: movieID}
 
 	return user.CreateLikedMovie(ctx, d.engine, movie)
+}
+
+func (d *DAO) CountLikedMovie(ctx context.Context, userID uint) int64 {
+	user := &models.User{ID: userID}
+	return user.CountLikedMovie(ctx, d.engine)
 }
 
 //func (d *DAO) FindUserFollowingList(ctx context.Context, userId uint) ([]*models.User, error) {

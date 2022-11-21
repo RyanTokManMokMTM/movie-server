@@ -85,25 +85,27 @@ func (m *User) CreateLikedMovie(ctx context.Context, db *gorm.DB, movie *MovieIn
 
 }
 
+func (m *User) CountLikedMovie(ctx context.Context, db *gorm.DB) int64 {
+	return db.WithContext(ctx).Debug().Model(&m).Association("MovieInfos").Count()
+}
+
 func (m *User) UpdateLikedMovie(ctx context.Context, db *gorm.DB, movie *MovieInfo) error {
 	logx.Infof("UserDB - Remove User Liked Movie:%+v \n", m)
 	return db.WithContext(ctx).Model(&m).Association("MovieInfos").Delete(movie)
 }
 
-func (m *User) GetUserLikedMovies(ctx context.Context, db *gorm.DB, limit, pageOffset int) (error, int64) {
+func (m *User) GetUserLikedMovies(ctx context.Context, db *gorm.DB, limit, pageOffset int) error {
 	logx.Infof("UserDB - User Liked Movies:%+v \n", m)
-	var count int64 = 0
+
 	if err := db.Debug().WithContext(ctx).Preload("MovieInfos", func(db *gorm.DB) *gorm.DB {
-		return db.Select("movie_infos.*").Joins("left join users_movies on users_movies.movie_info_id = movie_infos.id").Where("users_movies.state = ?", 1)
+		return db.WithContext(ctx).Debug().Offset(pageOffset).Limit(limit)
 	}).
 		Preload("MovieInfos.GenreInfo").
 		Where("id = ?", m.ID).
-		Count(&count).
-		Offset(pageOffset).Limit(limit).
 		Find(&m).Error; err != nil {
-		return err, 0
+		return err
 	}
-	return nil, count
+	return nil
 }
 
 //Friend data
@@ -418,6 +420,18 @@ func (m *User) RemoveOneCommentLikes(ctx context.Context, db *gorm.DB, commentID
 		return nil
 	})
 
+}
+
+//Liked Movie
+func (m *User) FindOneLikedMovie(ctx context.Context, db *gorm.DB, movieID uint) error {
+	return db.WithContext(ctx).Debug().Model(&m).Preload("MovieInfos", func(db *gorm.DB) *gorm.DB {
+		return db.WithContext(ctx).Debug().First(&MovieInfo{Id: movieID})
+	}).Find(&m).Error
+
+}
+
+func (m *User) RemoveOneLikedMovie(ctx context.Context, db *gorm.DB, movieID uint) error {
+	return db.WithContext(ctx).Debug().Model(&m).Association("MovieInfos").Delete(&MovieInfo{Id: movieID})
 }
 
 //Util tool

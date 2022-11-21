@@ -76,6 +76,15 @@ type (
     RemoveListMoviesResp {
     }
 
+    CountCollectedMovieReq {
+        UserID uint `json:"user_id"`
+    }
+
+    CountCollectedMovieResp {
+        total uint `json:"total"`
+    }
+
+
 
 )
 
@@ -107,6 +116,12 @@ service MovieService {
     )
     @handler GetListByID
     get /list/:list_id(UserListReq) returns (UserListResp);
+
+    @doc (
+        summary : "Get a total collected movie by list id"
+    )
+    @handler CountCollectedMovie
+    get /list/movies/count(CountCollectedMovieReq) returns (CountCollectedMovieResp);
 
 }
 

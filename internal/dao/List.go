@@ -49,6 +49,11 @@ func (d *DAO) FindUserLists(ctx context.Context, userID uint, limit, pageOffset 
 	return list.FindAllList(ctx, d.engine, limit, pageOffset)
 }
 
+func (d *DAO) CountCollectedMovie(ctx context.Context, userID uint) (int64, error) {
+	list := &models.ListMovie{}
+	return list.CountMovieCollectedByUser(ctx, d.engine, userID)
+}
+
 ////TO Check movie is in the list already
 func (d *DAO) FindOneMovieFromList(ctx context.Context, movieID, listID, userID uint) (*models.MovieInfo, error) {
 	list := &models.List{

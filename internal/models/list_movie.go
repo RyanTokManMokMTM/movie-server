@@ -23,6 +23,20 @@ func (m *ListMovie) CountMovieCollected(ctx context.Context, db *gorm.DB) (int64
 	return count, nil
 }
 
+func (m *ListMovie) CountMovieCollectedByUser(ctx context.Context, db *gorm.DB, userID uint) (int64, error) {
+	var count int64
+
+	listIds, err := (&List{UserId: userID}).GetUserListsID(ctx, db)
+	if err != nil {
+		return 0, err
+	}
+
+	if err := db.Debug().WithContext(ctx).Model(&m).Where("list_list_id IN (?)", listIds).Count(&count).Error; err != nil {
+		return 0, err
+	}
+	return count, nil
+}
+
 func (m *ListMovie) FindOneMovieFromAnyList(ctx context.Context, db *gorm.DB, userId uint) error {
 	//we need to know all list user have
 	//get list id from list model ->

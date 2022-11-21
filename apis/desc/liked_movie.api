@@ -17,7 +17,7 @@ type (
     AllUserLikedMoviesReq {
         ID uint `path:"user_id"`
         Page uint `form:"page,default=1"`
-        Limit uint `form:"limit,default=20"`
+        Limit uint `form:"limit,default=10"`
     }
     AllUserAllLikedMoviesResp {
         LikedMoviesList []*LikedMovieInfo `json:"liked_movies"`
@@ -87,10 +87,10 @@ service MovieService {
     post /liked/movie(LikedMovieReq) returns (LikedMovieResp);
 //
     @doc (
-        summary : "remove user liked movie - update state "
+        summary : "remove user liked movie "
     )
     @handler RemoveLikedMovie
-    patch /liked/movie(RemoveLikedMovieReq) returns (RemoveLikedMovieResp);
+    delete /liked/movie(RemoveLikedMovieReq) returns (RemoveLikedMovieResp);
 
     @doc (
         summary : "Find Liked Movie"
