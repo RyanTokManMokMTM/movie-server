@@ -322,7 +322,7 @@ type RemoveListMoviesResp struct {
 }
 
 type CountCollectedMovieReq struct {
-	UserID uint `json:"user_id"`
+	UserID uint `path:"user_id"`
 }
 
 type CountCollectedMovieResp struct {

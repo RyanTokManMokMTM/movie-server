@@ -196,7 +196,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 			{
 				Method:  http.MethodGet,
-				Path:    "/list/movies/count",
+				Path:    "/list/movies/count/:user_id",
 				Handler: custom_list.CountCollectedMovieHandler(serverCtx),
 			},
 		},

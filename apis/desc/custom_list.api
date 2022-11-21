@@ -77,7 +77,7 @@ type (
     }
 
     CountCollectedMovieReq {
-        UserID uint `json:"user_id"`
+        UserID uint `path:"user_id"`
     }
 
     CountCollectedMovieResp {
@@ -121,7 +121,7 @@ service MovieService {
         summary : "Get a total collected movie by list id"
     )
     @handler CountCollectedMovie
-    get /list/movies/count(CountCollectedMovieReq) returns (CountCollectedMovieResp);
+    get /list/movies/count/:user_id(CountCollectedMovieReq) returns (CountCollectedMovieResp);
 
 }
 
