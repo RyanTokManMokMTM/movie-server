@@ -55,7 +55,7 @@ func (l *GetAllPostLogic) GetAllPost(req *types.AllPostsInfoReq) (resp *types.Al
 	}
 
 	//Post List
-	var posts []types.PostInfo
+	posts := make([]types.PostInfo, 0)
 
 	//TODO: This part need to be fix,using preload liked model instead of the loop -------- ....
 	for _, v := range res {

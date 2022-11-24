@@ -52,7 +52,7 @@ func (l *GetFollowingPostLogic) GetFollowingPost(req *types.FollowPostsInfoReq) 
 
 	totalPage := pagination.GetTotalPageByPageSize(uint(count), limit)
 	//Post List
-	var posts []types.PostInfo
+	posts := make([]types.PostInfo, 0)
 	for _, v := range res {
 		//var isPostLiked uint = 0
 		//_, err := l.svcCtx.DAO.FindOnePostLiked(l.ctx, userID, v.PostId)
