@@ -85,7 +85,7 @@ func (m *List) RemoveMovieFromList(ctx context.Context, db *gorm.DB, info *Movie
 }
 
 func (m *List) RemoveMoviesFromList(ctx context.Context, db *gorm.DB, movieIds []uint) error {
-	l := List{}
+	
 	var infos []*MovieInfo
 	for _, v := range movieIds {
 		infos = append(infos, &MovieInfo{
@@ -93,7 +93,7 @@ func (m *List) RemoveMoviesFromList(ctx context.Context, db *gorm.DB, movieIds [
 		})
 	}
 
-	return db.Debug().WithContext(ctx).Model(&l).Association("MovieInfos").Delete(infos)
+	return db.Debug().WithContext(ctx).Model(&m).Association("MovieInfos").Delete(infos)
 
 }
 
