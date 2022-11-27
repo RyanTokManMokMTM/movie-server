@@ -42,5 +42,5 @@ func (l *RemoveMovieFromListLogic) RemoveMovieFromList(req *types.RemoveMovieReq
 	if err := l.svcCtx.DAO.RemoveMovieFromList(l.ctx, req.MovieID, req.ListID, userID); err != nil {
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
-	return
+	return &types.RemoveMovieResp{}, nil
 }
