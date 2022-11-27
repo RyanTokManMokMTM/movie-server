@@ -41,6 +41,18 @@ func (d *DAO) FindOneList(ctx context.Context, listID uint) (*models.List, error
 	return list, nil
 }
 
+func (d *DAO) FindOneUserList(ctx context.Context, listID, userID uint) (*models.List, error) {
+	list := &models.List{
+		ListId: listID,
+		UserId: userID,
+	}
+
+	if err := list.FindOneList(ctx, d.engine); err != nil {
+		return nil, err
+	}
+	return list, nil
+}
+
 func (d *DAO) FindUserLists(ctx context.Context, userID uint, limit, pageOffset int) ([]*models.List, int64, error) {
 	list := &models.List{
 		UserId: userID,

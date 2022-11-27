@@ -40,6 +40,15 @@ func (l *InsertMovieToListLogic) InsertMovieToList(req *types.InsertMovieReq) (r
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
+	//find the list
+	_, err = l.svcCtx.DAO.FindOneUserList(l.ctx, req.ListID, userID)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errx.NewErrCode(errx.LIST_NOT_EXIST)
+		}
+		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
+	}
+
 	//Check movie exists
 	_, err = l.svcCtx.DAO.FindOneMovie(l.ctx, req.MovieID)
 	if err != nil {

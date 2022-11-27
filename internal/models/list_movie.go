@@ -8,7 +8,7 @@ import (
 type ListMovie struct {
 	ListListId  uint `gorm:"primaryKey"`
 	MovieInfoId uint `gorm:"primaryKey"`
-	DefaultModel
+	//DefaultModel
 }
 
 func (m *ListMovie) TableName() string {

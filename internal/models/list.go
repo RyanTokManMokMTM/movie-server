@@ -33,6 +33,10 @@ func (m *List) FindOneList(ctx context.Context, db *gorm.DB) error {
 	}).First(&m).Error
 }
 
+func (m *List) FindOneUserList(ctx context.Context, db *gorm.DB) error {
+	return db.Debug().WithContext(ctx).First(&m).Error
+}
+
 func (m *List) FindAllList(ctx context.Context, db *gorm.DB, limit, pageOffset int) ([]*List, int64, error) {
 	var lists []*List
 	var count int64 = 0
@@ -59,7 +63,17 @@ func (m *List) UpdateList(ctx context.Context, db *gorm.DB) error {
 }
 
 func (m *List) DeleteList(ctx context.Context, db *gorm.DB) error {
-	return db.Debug().WithContext(ctx).Model(&m).Where("list_id = ? AND user_id = ?", m.ListId, m.UserId).Delete(&m).Error
+	//need to remove all collected record in this list
+	return db.Transaction(func(tx *gorm.DB) error {
+
+		//Remove all list movie
+		if err := tx.Debug().WithContext(ctx).Model(&m).Association("MovieInfos").Clear(); err != nil {
+			return err
+		}
+
+		//delete the list
+		return tx.Debug().WithContext(ctx).Delete(&m).Error
+	})
 }
 
 func (m *List) InsertMovieToList(ctx context.Context, db *gorm.DB, info *MovieInfo) error {
