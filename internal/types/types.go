@@ -399,7 +399,7 @@ type PostsInfoReq struct {
 
 type PostsInfoResp struct {
 	Infos    []PostInfo `json:"post_info"`
-	MetaData MetaData   `json:"metadata"`
+	MetaData MetaData   `json:"meta_data"`
 }
 
 type CountPostLikedReq struct {
