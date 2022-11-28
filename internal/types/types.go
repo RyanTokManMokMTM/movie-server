@@ -394,7 +394,7 @@ type PostInfoByIdResp struct {
 type PostsInfoReq struct {
 	UserID uint `path:"user_id"`
 	Page   uint `form:"page,default=1"`
-	Limit  uint `form:"limit,default=20"`
+	Limit  uint `form:"limit,default=10"`
 }
 
 type PostsInfoResp struct {
