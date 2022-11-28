@@ -64,7 +64,7 @@ type (
     PostsInfoReq {
         UserID uint `path:"user_id"`
         Page uint `form:"page,default=1"`
-        Limit uint `form:"limit,default=20"`
+        Limit uint `form:"limit,default=10"`
     }
     PostsInfoResp {
         Infos []PostInfo `json:"post_info"`
