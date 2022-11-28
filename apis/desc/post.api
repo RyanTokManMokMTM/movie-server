@@ -68,7 +68,7 @@ type (
     }
     PostsInfoResp {
         Infos []PostInfo `json:"post_info"`
-        MetaData MetaData `json:"metadata"`
+        MetaData MetaData `json:"meta_data"`
     }
 //
     CountPostLikedReq {

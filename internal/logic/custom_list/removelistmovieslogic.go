@@ -46,7 +46,7 @@ func (l *RemoveListMoviesLogic) RemoveListMovies(req *types.RemoveListMoviesReq)
 	}
 
 	//remove all the list
-
+	logx.Info(req.MovieIds)
 	if err := l.svcCtx.DAO.RemoveMoviesFromList(l.ctx, req.MovieIds, req.ListId, userID); err != nil {
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}

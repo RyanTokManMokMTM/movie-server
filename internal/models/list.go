@@ -93,7 +93,7 @@ func (m *List) RemoveMoviesFromList(ctx context.Context, db *gorm.DB, movieIds [
 		})
 	}
 
-	return db.Debug().WithContext(ctx).Model(&m).Association("MovieInfos").Delete(infos)
+	return db.Debug().WithContext(ctx).Model(&m).Association("MovieInfos").Delete(&infos)
 
 }
 
