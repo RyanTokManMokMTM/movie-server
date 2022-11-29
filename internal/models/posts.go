@@ -43,8 +43,8 @@ func (m *Post) UpdatePost(ctx context.Context, db *gorm.DB) error {
 //Delete an existing post
 func (m *Post) DeletePost(ctx context.Context, db *gorm.DB) error {
 	return db.Transaction(func(tx *gorm.DB) error {
-		//we need to remove all comments and all liked belongs to this post
-
+		////we need to remove all comments and all liked belongs to this post
+		//
 		//TODO: Delete all likes belongs to this post
 		if err := tx.Debug().WithContext(ctx).Model(&m).Association("PostsLiked").Clear(); err != nil {
 			return err
