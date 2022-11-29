@@ -27,7 +27,7 @@ func (l *GetAllUserListLogic) GetAllUserList(req *types.AllCustomListReq) (resp 
 	// todo: add your logic here and delete this line
 
 	limit := pagination.GetLimit(req.Limit)
-	pageOffset := pagination.PageOffset(pagination.DEFAULT_PAGE_SIZE, req.Page)
+	pageOffset := pagination.PageOffset(limit, req.Page)
 
 	lists, count, err := l.svcCtx.DAO.FindUserLists(l.ctx, req.ID, int(limit), int(pageOffset))
 	if err != nil {
@@ -35,7 +35,7 @@ func (l *GetAllUserListLogic) GetAllUserList(req *types.AllCustomListReq) (resp 
 	}
 	logx.Info("total record : ", count)
 
-	totalPage := pagination.GetTotalPageByPageSize(uint(count), pagination.DEFAULT_PAGE_SIZE)
+	totalPage := pagination.GetTotalPageByPageSize(uint(count), limit)
 	var userLists []types.ListInfo
 	for _, v := range lists {
 		var movieList []types.MovieInfo

@@ -49,7 +49,7 @@ func (l *GetPostCommentLogic) GetPostComment(req *types.GetPostCommentsReq) (res
 	}
 
 	limit := pagination.GetLimit(req.Limit)
-	pageOffset := pagination.PageOffset(pagination.DEFAULT_PAGE_SIZE, req.Page)
+	pageOffset := pagination.PageOffset(limit, req.Page)
 
 	commentList, count, err := l.svcCtx.DAO.FindPostComments(l.ctx, req.PostID, userID, int(limit), int(pageOffset))
 
@@ -58,7 +58,7 @@ func (l *GetPostCommentLogic) GetPostComment(req *types.GetPostCommentsReq) (res
 	}
 	logx.Info("total record : ", count)
 
-	totalPage := pagination.GetTotalPageByPageSize(uint(count), pagination.DEFAULT_PAGE_SIZE)
+	totalPage := pagination.GetTotalPageByPageSize(uint(count), limit)
 	var comments []types.CommentInfo
 	for _, v := range commentList {
 		comments = append(comments, types.CommentInfo{

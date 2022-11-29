@@ -110,6 +110,14 @@ type (
         UserName string `json:"name"`
         UserAvatar string `json:"avatar"`
     }
+
+    CheckPostReq {
+        PostID uint `json:"post_id"`
+    }
+
+    CheckPostResp {
+        IsExist bool `json:"is_exist"`
+    }
 )
 
 
@@ -150,6 +158,13 @@ service MovieService {
     )
     @handler GetFollowingPost
     get /posts/follow(FollowPostsInfoReq) returns (FollowPostsInfoResp);
+
+    //need to identify who we are -> filter
+    @doc (
+        summary : "Get all following Post(within self)"
+    )
+    @handler CheckPost
+    get /post/check/:post_id(CheckPostReq) returns (CheckPostResp);
 
 }
 

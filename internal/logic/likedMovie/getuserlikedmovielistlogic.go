@@ -38,7 +38,7 @@ func (l *GetUserLikedMovieListLogic) GetUserLikedMovieList(req *types.AllUserLik
 	}
 
 	limit := pagination.GetLimit(req.Limit)
-	pageOffset := pagination.PageOffset(pagination.DEFAULT_PAGE_SIZE, req.Page)
+	pageOffset := pagination.PageOffset(limit, req.Page)
 
 	u, err := l.svcCtx.DAO.GetUserLikedMovies(l.ctx, req.ID, int(limit), int(pageOffset))
 	if err != nil {
@@ -49,7 +49,7 @@ func (l *GetUserLikedMovieListLogic) GetUserLikedMovieList(req *types.AllUserLik
 	count := l.svcCtx.DAO.CountLikedMovie(l.ctx, req.ID)
 	logx.Info("total record : ", count)
 
-	totalPage := pagination.GetTotalPageByPageSize(uint(count), pagination.DEFAULT_PAGE_SIZE)
+	totalPage := pagination.GetTotalPageByPageSize(uint(count), limit)
 
 	var likedMovie []*types.LikedMovieInfo
 	for _, v := range u.MovieInfos {

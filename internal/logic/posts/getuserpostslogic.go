@@ -42,7 +42,7 @@ func (l *GetUserPostsLogic) GetUserPosts(req *types.PostsInfoReq) (resp *types.P
 	}
 
 	limit := pagination.GetLimit(req.Limit)
-	pageOffset := pagination.PageOffset(pagination.DEFAULT_PAGE_SIZE, req.Page)
+	pageOffset := pagination.PageOffset(limit, req.Page)
 
 	//Get Post By User ID
 	res, count, err := l.svcCtx.DAO.FindUserPosts(l.ctx, req.UserID, userID, int(limit), int(pageOffset))
@@ -51,7 +51,7 @@ func (l *GetUserPostsLogic) GetUserPosts(req *types.PostsInfoReq) (resp *types.P
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 	logx.Info("total record : ", count)
-	totalPage := pagination.GetTotalPageByPageSize(uint(count), pagination.DEFAULT_PAGE_SIZE)
+	totalPage := pagination.GetTotalPageByPageSize(uint(count), limit)
 	//User Post List
 	var posts []types.PostInfo
 	for _, v := range res {

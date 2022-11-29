@@ -272,6 +272,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/posts/follow",
 				Handler: posts.GetFollowingPostHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/post/check/:post_id",
+				Handler: posts.CheckPostHandler(serverCtx),
+			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 		rest.WithPrefix("/api/v1"),

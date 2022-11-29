@@ -442,6 +442,14 @@ type PostUserInfo struct {
 	UserAvatar string `json:"avatar"`
 }
 
+type CheckPostReq struct {
+	PostID uint `json:"post_id"`
+}
+
+type CheckPostResp struct {
+	IsExist bool `json:"is_exist"`
+}
+
 type CreateCommentReq struct {
 	PostID  uint   `path:"post_id"`
 	Comment string `json:"comment"`
@@ -483,7 +491,7 @@ type DeleteCommentResp struct {
 type GetPostCommentsReq struct {
 	PostID uint `path:"post_id"`
 	Page   uint `form:"page,default=1"`
-	Limit  uint `form:"limit,default=20"`
+	Limit  uint `form:"limit,default=10"`
 }
 
 type GetPostCommentsResp struct {
