@@ -42,10 +42,24 @@ func (m *Post) UpdatePost(ctx context.Context, db *gorm.DB) error {
 
 //Delete an existing post
 func (m *Post) DeletePost(ctx context.Context, db *gorm.DB) error {
-	if err := db.Debug().WithContext(ctx).Model(&m).Where("post_id= ? and user_id = ?", m.PostId, m.UserId).Delete(&m).Error; err != nil {
-		return err
-	}
-	return nil
+	return db.Transaction(func(tx *gorm.DB) error {
+		//we need to remove all comments and all liked belongs to this post
+
+		//TODO: Delete all likes belongs to this post
+		if err := tx.Debug().WithContext(ctx).Model(&m).Association("PostsLiked").Clear(); err != nil {
+			return err
+		}
+
+		//TODO: Delete all comments belongs to this post
+		if err := tx.Debug().WithContext(ctx).Model(&m).Association("Comments").Clear(); err != nil {
+			return err
+		}
+
+		//TODO: Delete the post!
+		return tx.Debug().WithContext(ctx).Model(&m).Delete(&m).Error
+
+	})
+
 }
 
 //Get PostInfo by postID

@@ -37,11 +37,16 @@ func (l *DeletePostLogic) DeletePost(req *types.DeletePostReq) (resp *types.Dele
 	}
 
 	//find post
-	err = l.svcCtx.DAO.DeletePost(l.ctx, req.PostID, userID)
+	_, err = l.svcCtx.DAO.FindOnePostInfoWithUserLiked(l.ctx, req.PostID, userID)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errx.NewErrCode(errx.POST_NOT_EXIST)
 		}
+		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
+	}
+
+	err = l.svcCtx.DAO.DeletePost(l.ctx, req.PostID, userID)
+	if err != nil {
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 

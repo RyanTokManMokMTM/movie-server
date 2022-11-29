@@ -259,7 +259,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 			{
 				Method:  http.MethodDelete,
-				Path:    "/posts",
+				Path:    "/post",
 				Handler: posts.DeletePostHandler(serverCtx),
 			},
 			{

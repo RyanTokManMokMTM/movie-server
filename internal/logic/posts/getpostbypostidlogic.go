@@ -48,16 +48,6 @@ func (l *GetPostByPostIDLogic) GetPostByPostID(req *types.PostInfoByIdReq) (resp
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
-	//var isPostLiked uint = 0
-	//_, err = l.svcCtx.DAO.FindOnePostLiked(l.ctx, userID, req.PostID)
-	//if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
-	//	return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
-	//}
-	//
-	//if !errors.Is(err, gorm.ErrRecordNotFound) {
-	//	isPostLiked = 1
-	//}
-
 	return &types.PostInfoByIdResp{
 		Info: types.PostInfo{
 			PostID:           postInfo.PostId,

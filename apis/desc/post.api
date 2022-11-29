@@ -135,7 +135,7 @@ service MovieService {
         summary : "delete post"
     )
     @handler DeletePost
-    delete /posts(DeletePostReq) returns (DeletePostResp);
+    delete /post(DeletePostReq) returns (DeletePostResp);
 
     //need to identify who we are -> filter
     @doc (
