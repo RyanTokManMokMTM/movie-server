@@ -8,7 +8,7 @@ import (
 
 type Comment struct {
 	CommentID   uint          `gorm:"primaryKey;not null;autoIncrement"`
-	PostID      uint          `gorm:"type:bigint;unsigned;"`
+	PostID      uint          `gorm:"not null;type:bigint;unsigned;"`
 	UserID      uint          `gorm:"not null;type:bigint;unsigned"`
 	Comment     string        `gorm:"not null;type:longtext"`
 	ReplyTo     sql.NullInt64 `gorm:"null;type:bigint;unsigned"` //if this field is null ,it means not a reply message

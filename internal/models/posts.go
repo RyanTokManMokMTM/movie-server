@@ -51,7 +51,14 @@ func (m *Post) DeletePost(ctx context.Context, db *gorm.DB) error {
 		}
 
 		//TODO: Delete all comments belongs to this post
-		if err := tx.Debug().WithContext(ctx).Model(&m).Association("Comments").Clear(); err != nil {
+		//TODO: Get all comments
+		var allComments []Comment
+		if err := tx.Debug().WithContext(ctx).Model(&Comment{PostID: m.PostId}).Find(&allComments).Error; err != nil {
+			return err
+		}
+
+		//TODO:Remove all comments
+		if err := tx.Debug().WithContext(ctx).Delete(&Comment{}, allComments).Error; err != nil {
 			return err
 		}
 
