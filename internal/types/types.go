@@ -443,7 +443,7 @@ type PostUserInfo struct {
 }
 
 type CheckPostReq struct {
-	PostID uint `json:"post_id"`
+	PostID uint `path:"post_id"`
 }
 
 type CheckPostResp struct {
