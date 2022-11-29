@@ -159,12 +159,7 @@ service MovieService {
     @handler GetFollowingPost
     get /posts/follow(FollowPostsInfoReq) returns (FollowPostsInfoResp);
 
-    //need to identify who we are -> filter
-    @doc (
-        summary : "Get all following Post(within self)"
-    )
-    @handler CheckPost
-    get /post/check/:post_id(CheckPostReq) returns (CheckPostResp);
+
 
 }
 
@@ -198,4 +193,10 @@ service MovieService {
     )
     @handler CountAllUserPost
     get /posts/count/:user_id(CountUserPostsReq) returns (CountUserPostsResp);
+
+    @doc (
+        summary : "Get all following Post(within self)"
+    )
+    @handler CheckPost
+    get /post/check/:post_id(CheckPostReq) returns (CheckPostResp);
 }
