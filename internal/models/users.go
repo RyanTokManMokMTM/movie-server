@@ -379,13 +379,11 @@ func (m *User) GetUserRoomsWithMembers(ctx context.Context, db *gorm.DB) error {
 	}
 
 	logx.Infof("active room ids %v", roomsIDs)
-	
+
 	//TODO: Get Active Room Info...
-	if err := db.WithContext(ctx).Debug().Model(&m).Preload("Rooms", func(tx *gorm.DB) *gorm.DB {
+	return db.WithContext(ctx).Debug().Model(&m).Preload("Rooms", func(tx *gorm.DB) *gorm.DB {
 		return tx.Where("ID IN (?)", roomsIDs)
-	}).Preload("Rooms.Users").First(&m).Error; err != nil {
-		return err
-	}
+	}).Preload("Rooms.Users").First(&m).Error
 }
 
 func (m *User) InsertOneCommentLikes(ctx context.Context, db *gorm.DB, commentID, count uint) error {
