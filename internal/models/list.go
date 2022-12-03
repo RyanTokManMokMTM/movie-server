@@ -3,6 +3,7 @@ package models
 import (
 	"context"
 	"gorm.io/gorm"
+	"time"
 )
 
 type List struct {
@@ -85,7 +86,7 @@ func (m *List) RemoveMovieFromList(ctx context.Context, db *gorm.DB, info *Movie
 }
 
 func (m *List) RemoveMoviesFromList(ctx context.Context, db *gorm.DB, movieIds []uint) error {
-	
+
 	var infos []*MovieInfo
 	for _, v := range movieIds {
 		infos = append(infos, &MovieInfo{
@@ -100,4 +101,28 @@ func (m *List) RemoveMoviesFromList(ctx context.Context, db *gorm.DB, movieIds [
 //TODO - Check Movie is already collected by user - return a list info
 func (m *List) FindOneMovieFromList(ctx context.Context, db *gorm.DB, info *MovieInfo) error {
 	return db.Debug().WithContext(ctx).Model(&m).Where("user_id = ?", m.ListId).Association("MovieInfos").Find(&info)
+}
+
+//TODO: Custom Data For Getting List Movie
+type ListMovieInfoWithCreateTime struct {
+	Id          uint      `json:"id"`
+	PosterPath  string    `json:"poster_path"`
+	Title       string    `json:"title"`
+	VoteAverage float64   `json:"vote_average"`
+	CreatedAt   time.Time `json:"created_at"`
+}
+
+func (m *List) FindListMovieByCreateTime(ctx context.Context, db *gorm.DB, createTime uint, limit int) ([]ListMovieInfoWithCreateTime, error) {
+	movies := make([]ListMovieInfoWithCreateTime, 0)
+	if err := db.Debug().WithContext(ctx).
+		Table((&MovieInfo{}).TableName()).
+		Select("movie_infos.id,movie_infos.poster_path,movie_infos.title,movie_infos.vote_average,lists_movies.created_at").
+		Joins("INNER JOIN lists_movies ON lists_movies.movie_info_id = movie_infos.id WHERE lists_movies.list_list_id = ? AND lists_movies.created_at > ?", m.ListId, time.Unix(int64(createTime), 0)).
+		Limit(limit).Find(&movies).Error; err != nil {
+		return nil, err
+	}
+
+	//count := db.Debug().WithContext(ctx).Model(&m).Association("MovieInfos").Count()
+	//logx.Info(count)
+	return movies, nil
 }

@@ -199,6 +199,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/list/movies/count/:user_id",
 				Handler: custom_list.CountCollectedMovieHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/list/movies/:list_id",
+				Handler: custom_list.GetListMoviesHandler(serverCtx),
+			},
 		},
 		rest.WithPrefix("/api/v1"),
 	)

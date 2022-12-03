@@ -73,6 +73,7 @@ func (l *GetUserRoomsLogic) GetUserRooms(req *types.GetUserRoomsReq) (resp *type
 
 		//The latest 10th messages in asc order
 		messages := make([]types.MessageInfo, 0)
+		logx.Info(len(messages))
 		for i := len(v.Messages) - 1; i >= 0; i-- {
 			messages = append(messages, types.MessageInfo{
 				ID:              v.Messages[i].MessageID,

@@ -329,11 +329,26 @@ type CountCollectedMovieResp struct {
 	Total uint `json:"total"`
 }
 
+type GetListMoviesReq struct {
+	ListID          uint `path:"list_id"`
+	LastCreatedTime uint `form:"last_created_time,default=0"`
+	Limit           uint `form:"limit,default=10"`
+}
+
+type GetListMovieResp struct {
+	ListMovies []ListMovieInfo `json:"list_movies"`
+}
+
 type ListInfo struct {
 	ID     uint        `json:"id"`
 	Title  string      `json:"title"`
 	Intro  string      `json:"intro"`
 	Movies []MovieInfo `json:"movie_list"`
+}
+
+type ListMovieInfo struct {
+	Movies      MovieInfo `json:"movie_info"`
+	CreatedTime uint      `json:"created_time"`
 }
 
 type CreatePostReq struct {

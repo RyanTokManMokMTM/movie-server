@@ -119,3 +119,11 @@ func (d *DAO) RemoveMoviesFromList(ctx context.Context, movieIds []uint, listID,
 
 	return list.RemoveMoviesFromList(ctx, d.engine, movieIds)
 }
+
+func (d *DAO) FindListMovies(ctx context.Context, listID uint, lastCreateTime uint, limit int) ([]models.ListMovieInfoWithCreateTime, error) {
+	lm := &models.List{
+		ListId: listID,
+	}
+
+	return lm.FindListMovieByCreateTime(ctx, d.engine, lastCreateTime, limit)
+}

@@ -3,12 +3,13 @@ package models
 import (
 	"context"
 	"gorm.io/gorm"
+	"time"
 )
 
 type ListMovie struct {
-	ListListId  uint `gorm:"primaryKey"`
-	MovieInfoId uint `gorm:"primaryKey"`
-	//DefaultModel
+	ListListId  uint      `gorm:"primaryKey"`
+	MovieInfoId uint      `gorm:"primaryKey"`
+	CreatedAt   time.Time `json:"-" gorm:"type:timestamp"`
 }
 
 func (m *ListMovie) TableName() string {
