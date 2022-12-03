@@ -56,6 +56,18 @@ func (m *Message) GetRoomMessages(db *gorm.DB, ctx context.Context, lastID uint,
 	return record, count, nil
 }
 
+func (m *Message) GetRoomLatestMessages(db *gorm.DB, ctx context.Context) ([]Message, error) {
+	var record []Message
+	if err := db.WithContext(ctx).Debug().
+		Model(&m).
+		Preload("SendUser").
+		Order("sent_time desc").Limit(10).
+		Find(&record).Error; err != nil {
+		return nil, err
+	}
+	return record, nil
+}
+
 func (m *Message) CountMessage(db *gorm.DB, ctx context.Context) (int64, error) {
 	var count int64 = 0
 	if err := db.WithContext(ctx).Debug().Model(&m).Where("room_id = ?", m.RoomID).Count(&count).Error; err != nil {

@@ -72,15 +72,18 @@ func (l *GetUserRoomsLogic) GetUserRooms(req *types.GetUserRoomsReq) (resp *type
 		}
 
 		//The latest 10th messages in asc order
+		//get message info
+
+		roomMsg, _ := l.svcCtx.DAO.GetRoomLatestMessage(l.ctx, v.ID)
+		//logx.Infof("%+v", roomMsg)
 		messages := make([]types.MessageInfo, 0)
-		logx.Info(len(messages))
-		for i := len(v.Messages) - 1; i >= 0; i-- {
+		for i := len(roomMsg) - 1; i >= 0; i-- {
 			messages = append(messages, types.MessageInfo{
-				ID:              v.Messages[i].MessageID,
-				MessageIdentity: v.Messages[i].ID,
-				Message:         v.Messages[i].Content,
-				Sender:          v.Messages[i].SendUser.ID,
-				SentTime:        v.Messages[i].SentTime.Unix(),
+				ID:              roomMsg[i].MessageID,
+				MessageIdentity: roomMsg[i].ID,
+				Message:         roomMsg[i].Content,
+				Sender:          roomMsg[i].SendUser.ID,
+				SentTime:        roomMsg[i].SentTime.Unix(),
 			})
 		}
 		roomInfos = append(roomInfos, types.ChatRoomData{

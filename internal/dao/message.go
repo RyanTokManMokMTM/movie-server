@@ -26,3 +26,11 @@ func (d *DAO) GetRoomMessage(ctx context.Context, roomID, lastID uint, limit, pa
 
 	return msg.GetRoomMessages(d.engine, ctx, lastID, limit, pageOffset)
 }
+
+func (d *DAO) GetRoomLatestMessage(ctx context.Context, roomID uint) ([]models.Message, error) {
+	msg := &models.Message{
+		RoomID: roomID,
+	}
+
+	return msg.GetRoomLatestMessages(d.engine, ctx)
+}
