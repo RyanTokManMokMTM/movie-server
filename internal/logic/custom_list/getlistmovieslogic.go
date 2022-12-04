@@ -37,7 +37,7 @@ func (l *GetListMoviesLogic) GetListMovies(req *types.GetListMoviesReq) (resp *t
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 	limit := pagination.GetLimit(req.Limit)
-	movies, err := l.svcCtx.DAO.FindListMovies(l.ctx, req.ListID, req.LastCreatedTime, int(limit))
+	movies, _, err := l.svcCtx.DAO.FindListMovies(l.ctx, req.ListID, req.LastCreatedTime, int(limit))
 	if err != nil {
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}

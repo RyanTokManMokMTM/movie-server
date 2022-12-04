@@ -43,9 +43,6 @@ func (m *List) FindAllList(ctx context.Context, db *gorm.DB, limit, pageOffset i
 	var count int64 = 0
 	if err := db.Debug().WithContext(ctx).Model(&m).
 		Where("user_id = ?", m.UserId).
-		Preload("MovieInfos", func(db *gorm.DB) *gorm.DB {
-			return db.Debug().WithContext(ctx).Limit(4)
-		}).
 		Count(&count).
 		Offset(pageOffset).
 		Limit(limit).
@@ -118,17 +115,18 @@ type ListMovieInfoWithCreateTime struct {
 	CreatedAt   time.Time `json:"created_at"`
 }
 
-func (m *List) FindListMovieByCreateTime(ctx context.Context, db *gorm.DB, createTime uint, limit int) ([]ListMovieInfoWithCreateTime, error) {
+func (m *List) FindListMovieByCreateTime(ctx context.Context, db *gorm.DB, createTime uint, limit int) ([]ListMovieInfoWithCreateTime, int64, error) {
 	movies := make([]ListMovieInfoWithCreateTime, 0)
+
 	if err := db.Debug().WithContext(ctx).
 		Table((&MovieInfo{}).TableName()).
 		Select("movie_infos.id,movie_infos.poster_path,movie_infos.title,movie_infos.vote_average,lists_movies.created_at").
 		Joins("INNER JOIN lists_movies ON lists_movies.movie_info_id = movie_infos.id WHERE lists_movies.list_list_id = ? AND lists_movies.created_at > ?", m.ListId, time.Unix(int64(createTime), 0)).
 		Limit(limit).Find(&movies).Error; err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 
-	//count := db.Debug().WithContext(ctx).Model(&m).Association("MovieInfos").Count()
+	count := db.Debug().WithContext(ctx).Model(&m).Association("MovieInfos").Count()
 	//logx.Info(count)
-	return movies, nil
+	return movies, count, nil
 }

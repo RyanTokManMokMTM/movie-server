@@ -38,10 +38,12 @@ func (l *GetAllUserListLogic) GetAllUserList(req *types.AllCustomListReq) (resp 
 	totalPage := pagination.GetTotalPageByPageSize(uint(count), limit)
 	var userLists []types.ListInfo
 	for _, v := range lists {
-		totalMovies, _ := l.svcCtx.DAO.CountListMovies(l.ctx, v.ListId)
+		//totalMovies, _ := l.svcCtx.DAO.CountListMovies(l.ctx, v.ListId)
+		listMovies, total, _ := l.svcCtx.DAO.FindListMovies(l.ctx, v.ListId, 0, 4)
+
 		var movieList []types.MovieInfo
 
-		for _, movieInfo := range v.MovieInfos {
+		for _, movieInfo := range listMovies {
 			movieList = append(movieList, types.MovieInfo{
 				MovieID:     movieInfo.Id,
 				Title:       movieInfo.Title,
@@ -54,7 +56,7 @@ func (l *GetAllUserListLogic) GetAllUserList(req *types.AllCustomListReq) (resp 
 			ID:          v.ListId,
 			Title:       v.ListTitle,
 			Intro:       v.ListIntro,
-			TotalMovies: uint(totalMovies),
+			TotalMovies: uint(total),
 			Movies:      movieList,
 		})
 	}
