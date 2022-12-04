@@ -43,7 +43,9 @@ func (m *List) FindAllList(ctx context.Context, db *gorm.DB, limit, pageOffset i
 	var count int64 = 0
 	if err := db.Debug().WithContext(ctx).Model(&m).
 		Where("user_id = ?", m.UserId).
-		Preload("MovieInfos").
+		Preload("MovieInfos", func(db *gorm.DB) *gorm.DB {
+			return db.Debug().WithContext(ctx).Limit(4)
+		}).
 		Count(&count).
 		Offset(pageOffset).
 		Limit(limit).
@@ -51,6 +53,10 @@ func (m *List) FindAllList(ctx context.Context, db *gorm.DB, limit, pageOffset i
 		return nil, 0, err
 	}
 	return lists, count, nil
+}
+
+func (m *List) CountListMovies(ctx context.Context, db *gorm.DB) (int64, error) {
+	return db.Debug().WithContext(ctx).Model(&m).Association("MovieInfos").Count(), nil
 }
 
 func (m *List) GetUserListsID(ctx context.Context, db *gorm.DB) ([]int, error) {

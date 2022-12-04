@@ -340,10 +340,11 @@ type GetListMovieResp struct {
 }
 
 type ListInfo struct {
-	ID     uint        `json:"id"`
-	Title  string      `json:"title"`
-	Intro  string      `json:"intro"`
-	Movies []MovieInfo `json:"movie_list"`
+	ID          uint        `json:"id"`
+	Title       string      `json:"title"`
+	Intro       string      `json:"intro"`
+	TotalMovies uint        `json:"total_movies"`
+	Movies      []MovieInfo `json:"movie_list"`
 }
 
 type ListMovieInfo struct {
