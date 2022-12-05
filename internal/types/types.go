@@ -498,7 +498,7 @@ type UpdateCommentResp struct {
 }
 
 type DeleteCommentReq struct {
-	CommentID uint `path:"comment_id"`
+	CommentID uint `json:"comment_id"`
 }
 
 type DeleteCommentResp struct {

@@ -40,7 +40,7 @@ type (
     }
 
     DeleteCommentReq {
-        CommentID uint `path:"comment_id"`
+        CommentID uint `json:"comment_id"`
     }
     DeleteCommentResp {}
 
@@ -144,7 +144,7 @@ service MovieService {
         summary : "Delete Comment"
     )
     @handler DeleteComment
-    delete /comments/:comment_id(DeleteCommentReq) returns (DeleteCommentResp);
+    delete /comments(DeleteCommentReq) returns (DeleteCommentResp);
 
     //with liked field
     @doc (

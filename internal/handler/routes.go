@@ -334,7 +334,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 			{
 				Method:  http.MethodDelete,
-				Path:    "/comments/:comment_id",
+				Path:    "/comments",
 				Handler: comment.DeleteCommentHandler(serverCtx),
 			},
 			{

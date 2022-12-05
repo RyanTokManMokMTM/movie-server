@@ -37,7 +37,17 @@ func (m *Comment) UpdatePostComment(ctx context.Context, db *gorm.DB) error {
 }
 
 func (m *Comment) DeletePostComment(ctx context.Context, db *gorm.DB) error {
-	return db.Debug().WithContext(ctx).Where("comment_id = ?", m.CommentID).Delete(m).Error
+	//if it's a root comment , we need to remove all child comments first before removing the root comment
+	return db.Transaction(func(tx *gorm.DB) error {
+
+		//TODO : Remove all children comment if any
+		if err := tx.Debug().WithContext(ctx).Where("parent_id = ?", m.CommentID).Delete(&Comment{}).Error; err != nil {
+			return err
+		}
+
+		//TODO : Remove it self
+		return tx.Debug().WithContext(ctx).Delete(&m).Error
+	})
 }
 
 func (m *Comment) FindOnePostComments(ctx context.Context, db *gorm.DB, likedBy uint, limit, pageOffset int) ([]*Comment, int64, error) {
