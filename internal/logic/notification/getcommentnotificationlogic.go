@@ -58,6 +58,7 @@ func (l *GetcommentnotificationLogic) Getcommentnotification(req *types.GetComme
 				Name:   v.CommentUser.Name,
 				Avatar: v.CommentUser.Avatar,
 			},
+			CommentParentID: uint(v.CommentInfo.ParentID.Int64), //if parent id = 0 ,itself is parent...
 			PostInfo: types.SimplePostInfo{
 				PostID: v.PostInfo.PostId,
 				PostMovie: types.PostMovieInfo{

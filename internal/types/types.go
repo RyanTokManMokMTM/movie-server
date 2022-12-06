@@ -816,6 +816,7 @@ type GetCommentNotificationResp struct {
 type CommentNotification struct {
 	ID               uint              `json:"id"`
 	CommentBy        UserInfo          `json:"comment_by"`
+	CommentParentID  uint              `json:"parent_id"`
 	PostInfo         SimplePostInfo    `json:"post_info"`
 	CommentInfo      SimpleCommentInfo `json:"comment_info"`
 	ReplyCommentInfo SimpleCommentInfo `json:"reply_comment_info"` //only reply type will have this info
