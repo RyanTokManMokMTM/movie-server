@@ -75,7 +75,7 @@ func (l *GetUserRoomsLogic) GetUserRooms(req *types.GetUserRoomsReq) (resp *type
 		//get message info
 
 		roomMsg, _ := l.svcCtx.DAO.GetRoomLatestMessage(l.ctx, v.ID)
-		//logx.Infof("%+v", roomMsg)
+
 		messages := make([]types.MessageInfo, 0)
 		for i := len(roomMsg) - 1; i >= 0; i-- {
 			messages = append(messages, types.MessageInfo{

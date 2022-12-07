@@ -61,6 +61,7 @@ func (m *Message) GetRoomLatestMessages(db *gorm.DB, ctx context.Context) ([]Mes
 	if err := db.WithContext(ctx).Debug().
 		Model(&m).
 		Preload("SendUser").
+		Where("room_id = ?", m.RoomID).
 		Order("sent_time desc").Limit(10).
 		Find(&record).Error; err != nil {
 		return nil, err
