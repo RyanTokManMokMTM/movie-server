@@ -1,0 +1,14 @@
+version:
+os: linux
+file:
+  - source: /
+    destination: /home/ec2-user/movie-server
+hooks:
+  AfterInstall:
+    - location: scripts/after_install.sh.sh
+      timeout: 300
+      runas: root
+  ApplicationStart:
+    - location: scripts/application_start.sh
+      timeout: 300
+      runas: root
