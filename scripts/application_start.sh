@@ -1,3 +1,5 @@
 #!/bin/bash
-echo "start docker-compose and service"
+
+# shellcheck disable=SC2164
+cd /home/ec2-user/movie-server-pipeline
 docker-compose -f docker-compose_env.yaml up

@@ -1,4 +1,4 @@
 #!/bin/bash
-
-echo "stop and restart docker-compose" >> /home/ec2-user/movie-server/logs/deploy.log
+# shellcheck disable=SC2164
+cd /home/ec2-user/movie-server-pipeline
 docker-compose -f docker-compose_env.yaml down
