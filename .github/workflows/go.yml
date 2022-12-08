@@ -19,9 +19,7 @@ jobs:
       - name: Server Test
         run : go test
 
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
+
       - name: set up aws credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
