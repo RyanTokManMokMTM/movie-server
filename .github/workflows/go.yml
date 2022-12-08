@@ -31,9 +31,9 @@ jobs:
 
       - name: Create CodeDeploy Deployment
         id: deploy
-        run : |
+        run: |
           aws deploy create-deployment \
-          --application-name golang-movie-app
-          --deployment-group-name golang-movie-app
-          --deployment-config-name CodeDeployDefault.OneAtATime
+          --application-name golang-movie-app \
+          --deployment-group-name golang-movie-app-group \
+          --deployment-config-name CodeDeployDefault.OneAtATime \
           --github-location repository=${{ github.repository }},commitId=${{ github.sha }}
