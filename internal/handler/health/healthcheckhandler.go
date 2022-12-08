@@ -6,6 +6,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	en_translations "github.com/go-playground/validator/v10/translations/en"
 	"github.com/ryantokmanmokmtm/movie-server/common/errx" //common error package
+	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/rest/httpx"
 	"net/http"
 
@@ -30,12 +31,14 @@ func HealthCheckHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 
 		if err := validate.StructCtx(r.Context(), req); err != nil {
 			errs := err.(validator.ValidationErrors)
+			logx.Error(errs)
 			httpx.Error(w, errx.NewCommonMessage(errx.REQ_PARAM_ERROR, errs[0].Translate(trans)))
 			return
 		}
 
 		l := health.NewHealthCheckLogic(r.Context(), svcCtx)
 		resp, err := l.HealthCheck(&req)
+		logx.Error(err)
 		if err != nil {
 			httpx.Error(w, err)
 		} else {
