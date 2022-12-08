@@ -19,7 +19,7 @@ jobs:
       - name: Server Test
         run : go test
 
-deploy:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: set up aws credentials
