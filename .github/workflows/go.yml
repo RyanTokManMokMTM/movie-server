@@ -36,4 +36,4 @@ jobs:
           -- application-name golang-movie-app
           -- deployment-group-name golang-movie-app
           -- deployment-config-name CodeDeployDefault.OneAtATime
-          --github-location repository=${{ github.repository }},commitId=${{ github.sha }}
+          -- github-location repository=${{ github.repository }},commitId=${{ github.sha }}
