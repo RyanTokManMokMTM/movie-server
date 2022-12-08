@@ -4,10 +4,10 @@ files:
   - source: /
     destination: /home/ec2-user/movie-server-pipeline
 hooks:
-  AfterInstall:
-    - location: scripts/after_install.sh
-      timeout: 300
-      runas: root
+#  AfterInstall:
+#    - location: scripts/after_install.sh
+#      timeout: 300
+#      runas: root
   ApplicationStart:
     - location: scripts/application_start.sh
       timeout: 300
