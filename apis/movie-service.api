@@ -43,6 +43,7 @@ type (
 
 @server (
 	group : health
+	prefix : /api/v1
 )
 service MovieService {
 	@doc (
