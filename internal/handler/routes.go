@@ -32,6 +32,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: health.HealthCheckHandler(serverCtx),
 			},
 		},
+		rest.WithPrefix("/api/v1"),
 	)
 
 	server.AddRoutes(
