@@ -38,11 +38,12 @@ func HealthCheckHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 
 		l := health.NewHealthCheckLogic(r.Context(), svcCtx)
 		resp, err := l.HealthCheck(&req)
-		logx.Error(err)
+		//logx.Error(err)
 		if err != nil {
 			httpx.Error(w, err)
 		} else {
 			httpx.OkJson(w, resp)
 		}
 	}
+
 }

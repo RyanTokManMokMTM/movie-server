@@ -35,84 +35,53 @@ func (m *User) TableName() string {
 	return "users"
 }
 
-func (m *User) Insert(ctx context.Context, db *gorm.DB) error {
-	logx.Infof("UserDB - Create User:%+v \n", m)
-	return db.WithContext(ctx).Debug().Transaction(func(tx *gorm.DB) error {
-		if err := tx.WithContext(ctx).Debug().Create(&m).Error; err != nil {
-			logx.Error(err)
-			return err
-		}
-
-		logx.Infof("User created %d", m.ID)
-		//
-		//if err := tx.WithContext(ctx).Debug().Create(&Friend{
-		//	UserID: m.ID,
-		//}).Error; err != nil {
-		//	logx.Error(err)
-		//	return err
-		//}
-		return nil
-	})
+func (m *User) GetFieldNames() []string {
+	return []string{"id", "name", "email", "password", "avatar", "cover", "friend_notification_count", "like_notification_count", "comment_notification_count"}
 }
 
+// CreateOne - Create one new User  - Tested
+func (m *User) CreateOne(ctx context.Context, db *gorm.DB) error {
+	return db.WithContext(ctx).Model(&m).Create(&m).Error
+}
+
+// FindOneByID - Find one user by UserID - Tested
 func (m *User) FindOneByID(ctx context.Context, db *gorm.DB) error {
-	logx.Infof("UserDB - Find One By ID:%+v \n", m)
-	if err := db.WithContext(ctx).Model(&m).Where("id = ?", m.ID).First(&m).Error; err != nil {
-		return err
-	}
-	return nil
+	return db.WithContext(ctx).Omit("created_at", "updated_at", "deleted_at").First(&m).Error
 }
 
+// FindOneByEmail - Find one user by email - Tested
 func (m *User) FindOneByEmail(ctx context.Context, db *gorm.DB) error {
-	logx.Infof("UserDB - Find One By Email:%+v\n", m)
-	if err := db.WithContext(ctx).Model(&m).Where("email = ?", m.Email).First(&m).Error; err != nil {
-		return err
-	}
-	return nil
+	return db.WithContext(ctx).Debug().Omit("created_at", "updated_at", "deleted_at").Where("email = ?", m.Email).First(&m).Error
 }
 
-func (m *User) UpdateInfo(ctx context.Context, db *gorm.DB) error {
-	logx.Infof("UserDB - Update Info:%+v \n", m)
-	if err := db.WithContext(ctx).Model(&m).Where("id = ?", m.ID).Updates(m).Error; err != nil {
-		return err
-	}
-	return nil
+//UpdateInfo update user info - Tested
+func (m *User) UpdateInfo(ctx context.Context, userID uint, db *gorm.DB) error {
+	return db.WithContext(ctx).Model(&User{ID: userID}).Updates(&m).Error
 }
 
-func (m *User) CreateLikedMovie(ctx context.Context, db *gorm.DB, movie *MovieInfo) error {
-	logx.Infof("UserDB - Create User Liked Movie:%+v \n", m)
-	return db.WithContext(ctx).Model(&m).Association("MovieInfos").Append(movie)
-
+//CreateLikedMovie - insert a liked movie for user - Tested
+func (m *User) CreateLikedMovie(ctx context.Context, db *gorm.DB, movieID uint) error {
+	return db.WithContext(ctx).Model(&m).Omit("MovieInfos.*").Update("MovieInfos", []MovieInfo{{Id: movieID}}).Error
 }
 
+//CountLikedMovie - count how many movie did user like - Tested
 func (m *User) CountLikedMovie(ctx context.Context, db *gorm.DB) int64 {
-	return db.WithContext(ctx).Debug().Model(&m).Association("MovieInfos").Count()
+	return db.WithContext(ctx).Model(&m).Association("MovieInfos").Count()
 }
 
-func (m *User) UpdateLikedMovie(ctx context.Context, db *gorm.DB, movie *MovieInfo) error {
-	logx.Infof("UserDB - Remove User Liked Movie:%+v \n", m)
-	return db.WithContext(ctx).Model(&m).Association("MovieInfos").Delete(movie)
-}
-
+//GetUserLikedMovies - get user's liked movie info - Tested
 func (m *User) GetUserLikedMovies(ctx context.Context, db *gorm.DB, limit, pageOffset int) error {
-	logx.Infof("UserDB - User Liked Movies:%+v \n", m)
-
-	if err := db.Debug().WithContext(ctx).Preload("MovieInfos", func(db *gorm.DB) *gorm.DB {
-		return db.WithContext(ctx).Debug().Offset(pageOffset).Limit(limit)
-	}).
-		Preload("MovieInfos.GenreInfo").
-		Where("id = ?", m.ID).
-		Find(&m).Error; err != nil {
-		return err
-	}
-	return nil
+	return db.Debug().WithContext(ctx).
+		Preload("MovieInfos", func(db *gorm.DB) *gorm.DB {
+			return db.WithContext(ctx).Debug().Offset(pageOffset).Limit(limit)
+		}).
+		Preload("MovieInfos.GenreInfo").Find(&m).Error
 }
 
-//Friend data
-
+//FindOneFriend - Check a user and the other user has friend relationship - Tested
 func (m *User) FindOneFriend(db *gorm.DB, ctx context.Context, friendID uint) (*User, error) {
 	var friend User
-	if err := db.WithContext(ctx).Debug().Model(&m).Where(User{
+	if err := db.WithContext(ctx).Model(&m).Select("`id`,`name`").Where(User{
 		ID: friendID,
 	}).Association("Friends").Find(&friend); err != nil {
 		return nil, err
@@ -121,18 +90,15 @@ func (m *User) FindOneFriend(db *gorm.DB, ctx context.Context, friendID uint) (*
 	return &friend, nil
 }
 
-//
-//func (fd *Friend) GetUserFriend(db *gorm.DB, ctx context.Context) error {
-//	return db.WithContext(ctx).Debug().Where("user_id = ?", fd.UserID).Find(&fd).Error
-//}
-
+//CountFriend - counting how many friends is it of a user - Tested
 func (m *User) CountFriend(db *gorm.DB, ctx context.Context) int64 {
-	return db.WithContext(ctx).Debug().Model(&m).Association("Friends").Count()
+	return db.WithContext(ctx).Model(&m).Association("Friends").Count()
 }
 
+//GetFriendsList - get user friend list - Tested
 func (m *User) GetFriendsList(db *gorm.DB, ctx context.Context) ([]*User, error) {
 	var friends []*User
-	if err := db.WithContext(ctx).Debug().Model(&m).Association("Friends").Find(&friends); err != nil {
+	if err := db.WithContext(ctx).Model(&m).Select("id").Association("Friends").Find(&friends); err != nil {
 		return nil, err
 	}
 	return friends, nil
@@ -188,70 +154,13 @@ func (m *User) UpdateCommentNotification(db *gorm.DB, ctx context.Context) error
 	return db.WithContext(ctx).Debug().Model(&m).Update("CommentNotificationCount", m.CommentNotificationCount).Error
 }
 
-//
-////RETURN A LIST OF USERINFO
-//func (m *User) GetFollowingList(ctx context.Context, db *gorm.DB) ([]*User, error) {
-//
-//	//get friend list id
-//	var userId []uint
-//	if err := db.Debug().WithContext(ctx).Model(&FriendTemp{}).Select("friend_id").Where("user_id = ?", m.ID).Find(&userId).Error; err != nil {
-//		return nil, err
-//	}
-//
-//	var users []*User
-//	if err := db.Debug().WithContext(ctx).Model(&m).Where("id IN (?)", userId).Find(&users).Error; err != nil {
-//		return nil, err
-//	}
-//
-//	return users, nil
-//}
-//
-////RETURN A LIST OF USERINFO
-//func (m *User) GetFollowedList(ctx context.Context, db *gorm.DB) ([]*User, error) {
-//
-//	//get friend list id
-//	var userId []uint
-//	if err := db.Debug().WithContext(ctx).Model(&FriendTemp{}).Select("user_id").Where("friend_id = ?", m.ID).Find(&userId).Error; err != nil {
-//		return nil, err
-//	}
-//
-//	var users []*User
-//	if err := db.Debug().WithContext(ctx).Model(&m).Where("id IN (?)", userId).Find(&users).Error; err != nil {
-//		return nil, err
-//	}
-//	return users, nil
-//}
-
 //PostLiked
 func (m *User) CreateUserPostLiked(ctx context.Context, db *gorm.DB, post *Post) error {
 	return db.Debug().WithContext(ctx).Model(&m).Omit("PostsLiked.*").Association("PostsLiked").Append(post)
 }
 
-//CommentLiked
-//func (m *User) CreateUserCommentLiked(ctx context.Context, db *gorm.DB, comment *Comment) error {
-//	return db.WithContext(ctx).Debug().Transaction(func(tx *gorm.DB) error {
-//		if err := tx.Debug().WithContext(ctx).Model(&m).Omit("CommentLiked.*").Association("CommentLiked").Append(comment); err != nil {
-//			return err
-//		}
-//
-//		//TODO: Add 1 count to db
-//		comment.LikesCount = comment.LikesCount + 1
-//		if err := tx.WithContext(ctx).Debug().Model(&comment).Update("LikesCount", comment.LikesCount).Error; err != nil {
-//			return err
-//		}
-//
-//		return nil
-//	})
-//}
-
-//CreateUserGenre
+//UpdateUserGenreTrans - update user genres preference with transaction
 func (m *User) UpdateUserGenreTrans(ctx context.Context, db *gorm.DB, ids []uint) error {
-	/*
-		Getting All user genre first
-
-		remove all existed,but will not exist after update~
-	*/
-
 	return db.Debug().WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 		user := &User{}
 		logx.Infof("transaction begin...")

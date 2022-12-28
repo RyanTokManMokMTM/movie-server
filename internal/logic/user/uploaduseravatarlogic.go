@@ -6,6 +6,7 @@ import (
 	"github.com/ryantokmanmokmtm/movie-server/common/ctxtool"
 	"github.com/ryantokmanmokmtm/movie-server/common/errx"
 	"github.com/ryantokmanmokmtm/movie-server/common/uploadx"
+	"github.com/ryantokmanmokmtm/movie-server/internal/models"
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
 	"github.com/ryantokmanmokmtm/movie-server/internal/types"
 	"github.com/zeromicro/go-zero/core/logx"
@@ -33,7 +34,7 @@ func (l *UploadUserAvatarLogic) UploadUserAvatar(req *types.UploadImageReq) (res
 	// todo: add your logic here and delete this line
 	userID := ctxtool.GetUserIDFromCTX(l.ctx)
 
-	user, err := l.svcCtx.DAO.FindUserByID(l.ctx, userID)
+	_, err = l.svcCtx.DAO.FindUserByID(l.ctx, userID)
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, errx.NewErrCode(errx.USER_NOT_EXIST)
@@ -51,12 +52,12 @@ func (l *UploadUserAvatarLogic) UploadUserAvatar(req *types.UploadImageReq) (res
 	//_ = os.Remove(user.Cover)
 
 	//update user avatar path
-	user.Avatar = fmt.Sprintf("/%s", fileName)
+	avatar := fmt.Sprintf("/%s", fileName)
 
-	if err := l.svcCtx.DAO.UpdateUser(l.ctx, user); err != nil {
+	if err := l.svcCtx.DAO.UpdateUser(l.ctx, userID, &models.User{Avatar: avatar}); err != nil {
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 	return &types.UploadImageResp{
-		Path: user.Avatar,
+		Path: avatar,
 	}, nil
 }

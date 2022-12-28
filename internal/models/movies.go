@@ -31,6 +31,13 @@ func (m *MovieInfo) TableName() string {
 	return "movie_infos"
 }
 
+func (m *MovieInfo) GetFieldNames() []string {
+	return []string{
+		"adult", "backdrop_path", "id", "original_language", "original_title", "overview", "popularity", "poster_path", "release_date",
+		"title", "runtime", "video", "vote_average", "vote_count", "created_at", "updated_at", "deleted_at",
+	}
+}
+
 func (m *MovieInfo) GetMoviesInfoByID(ctx context.Context, db *gorm.DB) ([]*MovieInfo, error) {
 	return nil, nil
 }

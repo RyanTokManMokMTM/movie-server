@@ -40,6 +40,15 @@ func (l *LikedMovieLogic) LikedMovie(req *types.LikedMovieReq) (resp *types.Like
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
+	//movie is existed?
+	_, err = l.svcCtx.DAO.FindOneMovie(l.ctx, req.MovieID)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errx.NewErrCode(errx.MOVIE_NOT_EXIST)
+		}
+
+		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
+	}
 	//find liked movie record
 	info, err := l.svcCtx.DAO.FindOneUserLikedMovie(l.ctx, req.MovieID, userID)
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {

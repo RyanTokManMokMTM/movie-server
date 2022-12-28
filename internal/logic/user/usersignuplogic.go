@@ -97,15 +97,15 @@ func (l *UserSignUpLogic) UserSignUp(req *types.UserSignUpReq) (resp *types.User
 //		Cover:  "https://upload.cc/i1/2022/07/04/yQN7tU.jpeg", //TODO: Upload User Cover
 //	}
 //
-//	res, err := l.svcCtx.User.Insert(l.ctx, &newUser)
+//	res, err := l.svcCtx.User.CreateOne(l.ctx, &newUser)
 //	if err != nil {
-//		//return nil, errors.Wrap(errx.NewErrCode(errx.DB_ERROR), fmt.Sprintf("UserSignUp - user db Insert err:%v, req:%+v", err, req))
+//		//return nil, errors.Wrap(errx.NewErrCode(errx.DB_ERROR), fmt.Sprintf("UserSignUp - user db CreateOne err:%v, req:%+v", err, req))
 //		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 //	}
 //
 //	newUser.ID, err = res.LastInsertId()
 //	if err != nil {
-//		//return nil, errors.Wrap(errx.NewErrCode(errx.DB_AFFECTED_ZERO_ERROR), fmt.Sprintf("UserSignUp - user db Insert.LastInsertID err:%v, req:%+v", err, req))
+//		//return nil, errors.Wrap(errx.NewErrCode(errx.DB_AFFECTED_ZERO_ERROR), fmt.Sprintf("UserSignUp - user db CreateOne.LastInsertID err:%v, req:%+v", err, req))
 //		return nil, errx.NewErrCode(errx.DB_AFFECTED_ZERO_ERROR)
 //	}
 //

@@ -73,7 +73,7 @@ func (f *FriendNotification) Accept(db *gorm.DB, ctx context.Context) error {
 		}
 
 		//TODO: Creating the room
-		//TODO: Insert both user with new roomID!
+		//TODO: CreateOne both user with new roomID!
 		r := &Room{OwnerRef: f.Sender}
 		if err := r.InsertOne(tx, ctx); err != nil {
 			logx.Error("create room error : ", err)
@@ -81,12 +81,12 @@ func (f *FriendNotification) Accept(db *gorm.DB, ctx context.Context) error {
 		}
 
 		if err := r.InsertOneUser(tx, ctx, &User{ID: f.Sender}); err != nil {
-			logx.Error("Insert user(sender) into room err :", err)
+			logx.Error("CreateOne user(sender) into room err :", err)
 			return err
 		}
 
 		if err := r.InsertOneUser(tx, ctx, &User{ID: f.Receiver}); err != nil {
-			logx.Error("Insert user(receiver) into room err :", err)
+			logx.Error("CreateOne user(receiver) into room err :", err)
 			return err
 		}
 

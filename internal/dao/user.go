@@ -6,7 +6,7 @@ import (
 )
 
 func (d *DAO) CreateUser(ctx context.Context, user *models.User) (*models.User, error) {
-	if err := user.Insert(ctx, d.engine); err != nil {
+	if err := user.CreateOne(ctx, d.engine); err != nil {
 		return nil, err
 	}
 	return user, nil
@@ -33,8 +33,8 @@ func (d *DAO) FindUserByEmail(ctx context.Context, email string) (*models.User, 
 	return user, nil
 }
 
-func (d *DAO) UpdateUser(ctx context.Context, user *models.User) error {
-	if err := user.UpdateInfo(ctx, d.engine); err != nil {
+func (d *DAO) UpdateUser(ctx context.Context, userID uint, user *models.User) error {
+	if err := user.UpdateInfo(ctx, userID, d.engine); err != nil {
 		return err
 	}
 	return nil
@@ -52,9 +52,9 @@ func (d *DAO) GetUserLikedMovies(ctx context.Context, userID uint, limit, pageOf
 
 func (d *DAO) CreateLikedMovie(ctx context.Context, movieID, userID uint) error {
 	user := &models.User{ID: userID}
-	movie := &models.MovieInfo{Id: movieID}
+	//movie := &models.MovieInfo{Id: movieID}
 
-	return user.CreateLikedMovie(ctx, d.engine, movie)
+	return user.CreateLikedMovie(ctx, d.engine, movieID)
 }
 
 func (d *DAO) CountLikedMovie(ctx context.Context, userID uint) int64 {

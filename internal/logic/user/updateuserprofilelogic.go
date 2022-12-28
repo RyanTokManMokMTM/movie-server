@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/ryantokmanmokmtm/movie-server/common/ctxtool"
 	"github.com/ryantokmanmokmtm/movie-server/common/errx"
+	"github.com/ryantokmanmokmtm/movie-server/internal/models"
 	"gorm.io/gorm"
 
 	"github.com/ryantokmanmokmtm/movie-server/internal/svc"
@@ -30,7 +31,7 @@ func (l *UpdateUserProfileLogic) UpdateUserProfile(req *types.UpdateProfileReq) 
 	// todo: add your logic here and delete this line
 	userID := ctxtool.GetUserIDFromCTX(l.ctx)
 
-	user, err := l.svcCtx.DAO.FindUserByID(l.ctx, userID)
+	_, err = l.svcCtx.DAO.FindUserByID(l.ctx, userID)
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, errx.NewErrCode(errx.USER_NOT_EXIST)
@@ -39,11 +40,9 @@ func (l *UpdateUserProfileLogic) UpdateUserProfile(req *types.UpdateProfileReq) 
 	}
 
 	if len(req.Name) != 0 {
-		user.Name = req.Name
-	}
-
-	if err := l.svcCtx.DAO.UpdateUser(l.ctx, user); err != nil {
-		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
+		if err := l.svcCtx.DAO.UpdateUser(l.ctx, userID, &models.User{Name: req.Name}); err != nil {
+			return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
+		}
 	}
 	return
 }

@@ -37,6 +37,7 @@ func UserLoginHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 		l := user.NewUserLoginLogic(r.Context(), svcCtx)
 		resp, err := l.UserLogin(&req)
 		if err != nil {
+			//w.WriteHeader()
 			httpx.Error(w, err)
 		} else {
 			httpx.OkJson(w, resp)

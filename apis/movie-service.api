@@ -37,6 +37,7 @@ type (
 		TotalResults uint `json:"total_results"`
 		Page         uint `json:"page"`
 	}
+
 )
 
 //Health service

@@ -83,7 +83,7 @@ func (l *CreatePostLogic) CreatePost(req *types.CreatePostReq) (resp *types.Crea
 //	//	CreateTime: postCreateTime,
 //	//}
 //	//
-//	//sqlRes, err := l.svcCtx.PostModel.Insert(l.ctx, &newPost)
+//	//sqlRes, err := l.svcCtx.PostModel.CreateOne(l.ctx, &newPost)
 //	//if err != nil {
 //	//	return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 //	//}
