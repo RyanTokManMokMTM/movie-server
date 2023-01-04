@@ -6,6 +6,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	en_translations "github.com/go-playground/validator/v10/translations/en"
 	"github.com/ryantokmanmokmtm/movie-server/common/errx" //common error package
+	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/rest/httpx"
 	"net/http"
 
@@ -18,6 +19,7 @@ func UploadUserCoverHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req types.UploadImageReq
 		if err := httpx.Parse(r, &req); err != nil {
+			logx.Error(err)
 			httpx.Error(w, err)
 			return
 		}
@@ -30,16 +32,23 @@ func UploadUserCoverHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 
 		if err := validate.StructCtx(r.Context(), req); err != nil {
 			errs := err.(validator.ValidationErrors)
-			httpx.Error(w, errx.NewCommonMessage(errx.REQ_PARAM_ERROR, errs[0].Translate(trans)))
+			commonErr := errx.NewCommonMessage(errx.REQ_PARAM_ERROR, errs[0].Translate(trans))
+			httpx.WriteJson(w, commonErr.StatusCode(), commonErr.ToJSONResp())
 			return
 		}
 
 		l := user.NewUploadUserCoverLogic(r.Context(), svcCtx, r)
 		resp, err := l.UploadUserCover(&req)
+
 		if err != nil {
-			httpx.Error(w, err)
+			if r, ok := err.(*errx.CommonError); ok {
+				httpx.WriteJson(w, r.StatusCode(), r.ToJSONResp())
+			} else {
+				httpx.Error(w, err)
+			}
 		} else {
 			httpx.OkJson(w, resp)
 		}
+
 	}
 }

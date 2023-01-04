@@ -6,6 +6,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	en_translations "github.com/go-playground/validator/v10/translations/en"
 	"github.com/ryantokmanmokmtm/movie-server/common/errx" //common error package
+	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/rest/httpx"
 	"net/http"
 
@@ -30,17 +31,24 @@ func UserLoginHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 
 		if err := validate.StructCtx(r.Context(), req); err != nil {
 			errs := err.(validator.ValidationErrors)
-			httpx.Error(w, errx.NewCommonMessage(errx.REQ_PARAM_ERROR, errs[0].Translate(trans)))
+			commonErr := errx.NewCommonMessage(errx.REQ_PARAM_ERROR, errs[0].Translate(trans))
+			logx.Info(commonErr.StatusCode())
+			httpx.WriteJson(w, commonErr.StatusCode(), commonErr.ToJSONResp())
 			return
 		}
 
 		l := user.NewUserLoginLogic(r.Context(), svcCtx)
 		resp, err := l.UserLogin(&req)
+
 		if err != nil {
-			//w.WriteHeader()
-			httpx.Error(w, err)
+			if r, ok := err.(*errx.CommonError); ok {
+				httpx.WriteJson(w, r.StatusCode(), r.ToJSONResp())
+			} else {
+				httpx.Error(w, err)
+			}
 		} else {
 			httpx.OkJson(w, resp)
 		}
+
 	}
 }

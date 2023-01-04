@@ -30,6 +30,7 @@ func NewUserLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UserLog
 func (l *UserLoginLogic) UserLogin(req *types.UserLoginReq) (resp *types.UserLoginResp, err error) {
 	// todo: add your logic here and delete this line
 
+	//logx.Info(req)
 	user, err := l.svcCtx.DAO.FindUserByEmail(l.ctx, req.Email)
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {

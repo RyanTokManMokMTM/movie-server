@@ -26,7 +26,7 @@ func NewUserProfileLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UserP
 
 func (l *UserProfileLogic) UserProfile(req *types.UserProfileReq) (resp *types.UserProfileResp, err error) {
 	// todo: add your logic here and delete this line
-	//logx.Infof("userId: %v", l.ctx.Value("userID"))
+
 	userID := ctxtool.GetUserIDFromCTX(l.ctx)
 
 	user, err := l.svcCtx.DAO.FindUserByID(l.ctx, userID)

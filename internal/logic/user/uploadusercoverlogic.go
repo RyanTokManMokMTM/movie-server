@@ -36,6 +36,7 @@ func (l *UploadUserCoverLogic) UploadUserCover(req *types.UploadImageReq) (resp 
 
 	_, err = l.svcCtx.DAO.FindUserByID(l.ctx, userID)
 	if err != nil {
+		logx.Error(err)
 		if err == gorm.ErrRecordNotFound {
 			return nil, errx.NewErrCode(errx.USER_NOT_EXIST)
 		}
@@ -43,6 +44,7 @@ func (l *UploadUserCoverLogic) UploadUserCover(req *types.UploadImageReq) (resp 
 	}
 	fileName, err := uploadx.UploadFile(l.r, l.svcCtx.Config.MaxBytes, "uploadCover", l.svcCtx.Config.Path)
 	if err != nil {
+		logx.Error(err.Error())
 		return nil, errx.NewErrCode(errx.USER_UPLOAD_USER_AVATAR_FAILED)
 	}
 
@@ -53,6 +55,7 @@ func (l *UploadUserCoverLogic) UploadUserCover(req *types.UploadImageReq) (resp 
 	cover := fmt.Sprintf("/%s", fileName)
 	updatedCover := &models.User{Cover: cover}
 	if err := l.svcCtx.DAO.UpdateUser(l.ctx, userID, updatedCover); err != nil {
+		logx.Error(err)
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 	return &types.UploadImageResp{

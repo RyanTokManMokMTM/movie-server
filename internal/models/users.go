@@ -71,11 +71,13 @@ func (m *User) CountLikedMovie(ctx context.Context, db *gorm.DB) int64 {
 
 //GetUserLikedMovies - get user's liked movie info - Tested
 func (m *User) GetUserLikedMovies(ctx context.Context, db *gorm.DB, limit, pageOffset int) error {
-	return db.Debug().WithContext(ctx).
+	return db.WithContext(ctx).Select("`id`, `name`").
 		Preload("MovieInfos", func(db *gorm.DB) *gorm.DB {
-			return db.WithContext(ctx).Debug().Offset(pageOffset).Limit(limit)
+			return db.WithContext(ctx).Select("`id`, `title`, `poster_path`, `vote_count`").Offset(pageOffset).Limit(limit)
 		}).
-		Preload("MovieInfos.GenreInfo").Find(&m).Error
+		Preload("MovieInfos.GenreInfo", func(db *gorm.DB) *gorm.DB {
+			return db.Omit("created_at", "updated_at", "deleted_at")
+		}).Find(&m).Error
 }
 
 //FindOneFriend - Check a user and the other user has friend relationship - Tested

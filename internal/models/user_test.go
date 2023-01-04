@@ -56,6 +56,10 @@ func TestCreateOne(t *testing.T) {
 
 	err := u.CreateOne(context.Background(), gormDB)
 	assert.Nil(t, err)
+
+	if err := mock.ExpectationsWereMet(); err != nil {
+		t.Errorf("there were unfulfilled expectations: %s", err)
+	}
 }
 
 func TestFindOneByID(t *testing.T) {
@@ -78,6 +82,10 @@ func TestFindOneByID(t *testing.T) {
 
 	err := u.FindOneByID(context.Background(), gormDB)
 	assert.Nil(t, err)
+
+	if err := mock.ExpectationsWereMet(); err != nil {
+		t.Errorf("there were unfulfilled expectations: %s", err)
+	}
 }
 
 func TestFindOneByEmail(t *testing.T) {
@@ -99,6 +107,10 @@ func TestFindOneByEmail(t *testing.T) {
 			AddRow(u.ID, u.Name, u.Email, u.Password, u.Avatar, u.Cover, u.FriendNotificationCount, u.LikeNotificationCount, u.CommentNotificationCount))
 	err := u.FindOneByEmail(context.Background(), gormDB)
 	assert.Nil(t, err)
+
+	if err := mock.ExpectationsWereMet(); err != nil {
+		t.Errorf("there were unfulfilled expectations: %s", err)
+	}
 }
 
 func TestUpdateInfo(t *testing.T) {
@@ -147,8 +159,13 @@ func TestUpdateInfo(t *testing.T) {
 			mock.ExpectCommit()
 			err := test.model.UpdateInfo(context.Background(), test.userID, gormDB)
 			assert.Nil(t, err)
+
+			if err := mock.ExpectationsWereMet(); err != nil {
+				t.Errorf("there were unfulfilled expectations: %s", err)
+			}
 		})
 	}
+
 }
 
 func TestCreateLikedMovie(t *testing.T) {
@@ -175,6 +192,10 @@ func TestCreateLikedMovie(t *testing.T) {
 
 	err = mock.ExpectationsWereMet() //exactly met all expected sql
 	assert.Nil(t, err)
+
+	if err := mock.ExpectationsWereMet(); err != nil {
+		t.Errorf("there were unfulfilled expectations: %s", err)
+	}
 }
 
 func TestCountLikedMovie(t *testing.T) {
@@ -225,45 +246,49 @@ func TestGetFriendsList(t *testing.T) {
 
 	_, err = u.GetFriendsList(gormDB, context.Background())
 	assert.Nil(t, err)
+
+	if err := mock.ExpectationsWereMet(); err != nil {
+		t.Errorf("there were unfulfilled expectations: %s", err)
+	}
 }
 
-///why ?????
+//TODO : empty case, single data case need to be tested, cuz the sql quires of all those case are different
 func TestGetUserLikedMovies(t *testing.T) {
-	u := User{ID: 1}
+	u := User{
+		ID: 1,
+	}
 	limit := 10
-	FirQueryRow := []string{"user_id", "movie_info_id"}
-	SecQueryRow := []string{"movie_info_id", "genre_info_genre_id"}
-	ThirdQueryRow := []string{"genre_id", "name", "created_at", "updated_at", "deleted_at"}
-	TourQueryRow := (&MovieInfo{}).GetFieldNames()
-	FiveQueryRow := (&User{}).GetFieldNames()
-
-	//Check the user
-
-	mock.ExpectQuery("SELECT * FROM `users` WHERE `users`.`deleted_at` IS NULL AND `users`.`id` = ?").
+	mock.ExpectQuery("SELECT `id`, `name` FROM `users` WHERE `users`.`deleted_at` IS NULL AND `users`.`id` = ?").
 		WithArgs(u.ID).
-		WillReturnRows(sqlmock.NewRows(FiveQueryRow))
-
-	//Get liked Movie ID
+		WillReturnRows(sqlmock.
+			NewRows([]string{"id", "name"}).AddRow(1, "jacksontmm"))
+	//
+	////Get liked Movie ID
 	mock.ExpectQuery("SELECT * FROM `users_movies` WHERE `users_movies`.`user_id` = ?").
 		WithArgs(u.ID).
-		WillReturnRows(sqlmock.NewRows(FirQueryRow))
+		WillReturnRows(sqlmock.NewRows([]string{"user_id", "movie_info_id"}).
+			AddRow(1, 1).
+			AddRow(1, 2))
 
-	//Get Movie Genre ID for those Movies
-	mock.ExpectQuery("SELECT * FROM `genres_movies` WHERE `genres_movies`.`movie_info_id` IN (?)").
-		WithArgs(sqlmock.AnyArg()).
-		WillReturnRows(sqlmock.NewRows(SecQueryRow))
+	////Get Movie Info for movie IDs
+	mock.ExpectQuery("SELECT `id`, `title`, `poster_path`, `vote_count` FROM `movie_infos` WHERE `movie_infos`.`id` IN (?,?) AND `movie_infos`.`deleted_at` IS NULL LIMIT 10 OFFSET 1").
+		WithArgs(1, 2).
+		WillReturnRows(sqlmock.NewRows([]string{"id", "title", "poster_path", "vote_count"}).
+			AddRow(1, "test", "/test.png", 10).AddRow(2, "test2", "/test.png", 10))
+	//AddRow(false, "/test.png", 1, "en", "test_title", "test_view", 1.2, "/test.png", "2022-01-01", "test_ori_title", "160", false, 10, 10, time.Now(), time.Now(), nil).
+	//AddRow(false, "/test.png", 2, "en", "test_title", "test_view", 1.2, "/test.png", "2022-01-01", "test_ori_title", "160", false, 10, 10, time.Now(), time.Now(), nil))
 
-	//Get Genres Info for those genre_ids
-	mock.ExpectQuery("SELECT * FROM `genre_infos` WHERE `genre_infos`.`genre_id` IN (?) AND `genre_infos`.`deleted_at` IS NULL").
-		WithArgs(sqlmock.AnyArg()).
-		WillReturnRows(sqlmock.NewRows(ThirdQueryRow))
-
-	//Get Movie Info for movie IDs
-	mock.ExpectQuery("SELECT * FROM `movie_infos` WHERE `movie_infos`.`id` IN (?) AND `movie_infos`.`deleted_at` IS NULL LIMIT ?").
-		WithArgs(sqlmock.AnyArg(), limit).
-		WillReturnRows(sqlmock.NewRows(TourQueryRow))
+	mock.ExpectQuery("SELECT * FROM `genres_movies` WHERE `genres_movies`.`movie_info_id` IN (?,?)").
+		WithArgs(1, 2).
+		WillReturnRows(sqlmock.NewRows([]string{"genre_id", "name"}).
+			AddRow(3, "action").
+			AddRow(4, "horror").
+			AddRow(5, "romantic"))
 
 	err = u.GetUserLikedMovies(context.Background(), gormDB, limit, 1)
 	assert.Nil(t, err)
 
+	if err := mock.ExpectationsWereMet(); err != nil {
+		t.Errorf("there were unfulfilled expectations: %s", err)
+	}
 }

@@ -30,16 +30,23 @@ func GetRoomMessageHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 
 		if err := validate.StructCtx(r.Context(), req); err != nil {
 			errs := err.(validator.ValidationErrors)
-			httpx.Error(w, errx.NewCommonMessage(errx.REQ_PARAM_ERROR, errs[0].Translate(trans)))
+			commonErr := errx.NewCommonMessage(errx.REQ_PARAM_ERROR, errs[0].Translate(trans))
+			httpx.WriteJson(w, commonErr.StatusCode(), commonErr.ToJSONResp())
 			return
 		}
 
 		l := message.NewGetRoomMessageLogic(r.Context(), svcCtx)
 		resp, err := l.GetRoomMessage(&req)
+
 		if err != nil {
-			httpx.Error(w, err)
+			if r, ok := err.(*errx.CommonError); ok {
+				httpx.WriteJson(w, r.StatusCode(), r.ToJSONResp())
+			} else {
+				httpx.Error(w, err)
+			}
 		} else {
 			httpx.OkJson(w, resp)
 		}
+
 	}
 }

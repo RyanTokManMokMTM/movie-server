@@ -11,8 +11,8 @@ info(
 
 type (
 	UserLoginReq {
-		Email    string `json:"email" validate:"required,max=32,email"`
-		Password string `json:"password" validate:"required,min=8,max=32"`
+		Email    string `json:"email" validate:"max=32,email"`
+		Password string `json:"password" validate:"min=8,max=32"`
 	}
 	UserLoginResp {
 		Token   string `json:"token"`
@@ -51,9 +51,7 @@ type (
 		Avatar string `json:"avatar"`
 		Cover string `json:"cover"`
 		NotificationInfo NotificationCountInfo `json:"notification_info"` //only logged in user will have this information
-//
-//		//Need  liked moive list
-//		LikedMovies []*LikedMovieInfo `json:"liked_movies"`
+
 	}
 
 	UpdateProfileReq {
@@ -95,34 +93,6 @@ type (
 
 	LikesNotificationReq{}
 	LikesNotificationResp{}
-//
-//	CountFollowingReq {
-//		UserId uint `path:"user_id"`
-//	}
-//	CountFollowingResp {
-//		Total uint `json:"total"`
-//	}
-//
-//	CountFollowedReq {
-//		UserId uint `path:"user_id"`
-//	}
-//	CountFollowedResp {
-//		Total uint `json:"total"`
-//	}
-//
-//	GetFollowingListReq {
-//		UserId uint `path:"user_id"`
-//	}
-//	GetFollowingListResp {
-//		Users []UserInfo `json:"following"`
-//	}
-//
-//	GetFollowedListReq {
-//		UserId uint `path:"user_id"`
-//	}
-//	GetFollowedListResp {
-//		Users []UserInfo `json:"followed"`
-//	}
 )
 
 type FriendRoomInfo {
@@ -188,32 +158,6 @@ service MovieService{
 	)
 	@handler  GetFriendList
 	get /user/friends/list/:user_id(GetFriendListReq) returns (GetFriendListResp);
-
-
-
-	//	@doc (
-//		summary : "Count how many users have been followed by user"
-//	)
-//	@handler CountFollowingUser
-//	get /user/following/:user_id(CountFollowingReq) returns (CountFollowingResp);
-//
-//	@doc (
-//		summary : "Count how many users is following the user(owner)"
-//	)
-//	@handler CountFollowedUser
-//	get /user/followed/:user_id(CountFollowedReq) returns (CountFollowedResp);
-//
-//	@doc (
-//		summary : "Get Following List"
-//	)
-//	@handler  GetUserFollowingList
-//	get /user/following/list/:user_id(GetFollowingListReq) returns (GetFollowingListResp);
-//
-//	@doc (
-//		summary : "Get Followed List"
-//	)
-//	@handler  GetUserFollowedList
-//	get /user/followed/list/:user_id(GetFollowedListReq) returns (GetFollowedListResp);
 }
 
 @server (

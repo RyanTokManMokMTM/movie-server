@@ -1,11 +1,9 @@
 package errx
 
-import "github.com/zeromicro/go-zero/core/logx"
-
-var errMessage map[uint32]string
+var errMessage map[InternalCode]string
 
 func init() {
-	errMessage = make(map[uint32]string)
+	errMessage = make(map[InternalCode]string)
 
 	errMessage[SUCCESS] = "SUCCESS"
 	errMessage[SERVER_COMMON_ERROR] = "SERVER INTERNAL ERROR"
@@ -15,6 +13,7 @@ func init() {
 	errMessage[TOKEN_GENERATE_ERROR] = "TOKEN GENERATE FAILED"
 	errMessage[DB_ERROR] = "DATABASE ERROR"
 	errMessage[DB_AFFECTED_ZERO_ERROR] = "DATABASE AFFECTED 0 rows"
+
 	errMessage[EMAIL_HAS_BEEN_REGISTERED] = "USER HAS BEEN REGISTERED"
 	errMessage[USER_NOT_EXIST] = "USER NOT EXIST"
 	errMessage[USER_PASSWORD_INCORRECT] = "USER PASSWORD INCORRECT"
@@ -44,15 +43,15 @@ func init() {
 
 }
 
-func MapErrMsg(errCode uint32) string {
-	logx.Info(errCode)
+func MapErrMsg(errCode InternalCode) string {
+	//logx.Info(errCode)
 	if msg, ok := errMessage[errCode]; ok {
 		return msg
 	}
 	return "SERVER INTERNAL ERROR"
 }
 
-func IsCodeError(errCode uint32) bool {
+func IsCodeError(errCode InternalCode) bool {
 	if _, ok := errMessage[errCode]; ok {
 		return true
 	}

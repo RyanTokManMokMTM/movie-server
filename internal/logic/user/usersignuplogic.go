@@ -32,10 +32,9 @@ func (l *UserSignUpLogic) UserSignUp(req *types.UserSignUpReq) (resp *types.User
 	// todo: add your logic here and delete this line
 
 	//Check User
-
+	logx.Info(req)
 	user, err := l.svcCtx.DAO.FindUserByEmail(l.ctx, req.Email)
-	if user != nil && user.ID != 0 {
-		logx.Info(user)
+	if user != nil {
 		return nil, errx.NewErrCode(errx.EMAIL_HAS_BEEN_REGISTERED)
 	}
 

@@ -17,7 +17,7 @@ func UploadFile(r *http.Request, maxFileSize int64, headerKeyName, filePath stri
 
 	defer file.Close()
 
-	logx.Info("Upload file: %+v, file size: %v, header: %+v",
+	logx.Infof("Upload file: %+v, file size: %v, header: %+v",
 		handler.Filename, handler.Size, handler.Header,
 	)
 

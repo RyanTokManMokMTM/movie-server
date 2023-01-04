@@ -15,8 +15,8 @@ type MetaData struct {
 }
 
 type UserLoginReq struct {
-	Email    string `json:"email" validate:"required,max=32,email"`
-	Password string `json:"password" validate:"required,min=8,max=32"`
+	Email    string `json:"email" validate:"max=32,email"`
+	Password string `json:"password" validate:"min=8,max=32"`
 }
 
 type UserLoginResp struct {
