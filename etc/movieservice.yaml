@@ -9,10 +9,10 @@ MySQL:
 
 
 Auth:
-  AccessSecret: ${ACCESS_SECRET}
+  AccessSecret: 2BNVfmf0WtyX1HQmzYG5rOKLzlHBEPRX729pZ0gpxujnaikoRRCF78T8fKDNTLWy
   AccessExpire: 10
 
-Salt: ${SALT}
+Salt: W4tiDEeWlwxlRPYYRRMhJ63piS1ochvMymwfVdumittPoSxhkHNnZLe6m12C4v15
 
 Log:
   Encoding: plain
