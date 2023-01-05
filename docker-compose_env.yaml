@@ -26,16 +26,32 @@ services:
 #    networks:
 #      - movie-server
 
-  movie_service:
-    build:
-      context: ./
-    container_name: movie-server
+  Movie-App:
+    image: jacksontmm/movie-app:latest
+    container_name: movie-app
     ports:
       - ${SERVER_PORT}:${SERVER_PORT}
+    environment:
+        - MYSQL_USERNAME=${MYSQL_USERNAME}
+        - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+        - MYSQL_DB_HOST=${MYSQL_DB_HOST}
+        - DATABASE=${DATABASE}
+        - ACCESS_SECRET=${ACCESS_SECRET}
+        - SALT=${SALT}
     restart: always
     privileged: true
     networks:
       - movie-server
+#  movie_service:
+#    build:
+#      context: ./
+#    container_name: movie-server
+#    ports:
+#      - ${SERVER_PORT}:${SERVER_PORT}
+#    restart: always
+#    privileged: true
+#    networks:
+#      - movie-server
 
 networks:
   movie-server:
