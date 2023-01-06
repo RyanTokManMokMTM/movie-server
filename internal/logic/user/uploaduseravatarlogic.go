@@ -41,15 +41,28 @@ func (l *UploadUserAvatarLogic) UploadUserAvatar(req *types.UploadImageReq) (res
 		}
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
-	logx.Info("Path: ", l.svcCtx.Config.Path)
-	fileName, err := uploadx.UploadFile(l.r, l.svcCtx.Config.MaxBytes, "uploadAvatar", l.svcCtx.Config.Path)
-	if err != nil {
+	//logx.Info("Path: ", l.svcCtx.Config.Path)
+	//fileName, err := uploadx.UploadFile(l.r, l.svcCtx.Config.MaxBytes, "uploadAvatar", l.svcCtx.Config.Path)
+	//if err != nil {
+	//
+	//	return nil, errx.NewCommonMessage(errx.USER_UPLOAD_USER_AVATAR_FAILED, err.Error())
+	//}
 
+	err = l.r.ParseMultipartForm(l.svcCtx.Config.MaxBytes)
+	if err != nil {
 		return nil, errx.NewCommonMessage(errx.USER_UPLOAD_USER_AVATAR_FAILED, err.Error())
 	}
 
-	//remove the original one?
-	//_ = os.Remove(user.Cover)
+	file, handler, err := l.r.FormFile("uploadAvatar")
+	if err != nil {
+		return nil, errx.NewCommonMessage(errx.USER_UPLOAD_USER_AVATAR_FAILED, err.Error())
+	}
+	defer file.Close()
+
+	fileName, err := uploadx.UploadFile(file, handler, l.svcCtx.Config.Path)
+	if err != nil {
+		return nil, errx.NewCommonMessage(errx.USER_UPLOAD_USER_AVATAR_FAILED, err.Error())
+	}
 
 	//update user avatar path
 	avatar := fmt.Sprintf("/%s", fileName)

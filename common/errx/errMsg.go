@@ -44,7 +44,6 @@ func init() {
 }
 
 func MapErrMsg(errCode InternalCode) string {
-	//logx.Info(errCode)
 	if msg, ok := errMessage[errCode]; ok {
 		return msg
 	}

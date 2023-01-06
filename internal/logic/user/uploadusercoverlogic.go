@@ -42,14 +42,23 @@ func (l *UploadUserCoverLogic) UploadUserCover(req *types.UploadImageReq) (resp 
 		}
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
-	fileName, err := uploadx.UploadFile(l.r, l.svcCtx.Config.MaxBytes, "uploadCover", l.svcCtx.Config.Path)
+
+	err = l.r.ParseMultipartForm(l.svcCtx.Config.MaxBytes)
+	if err != nil {
+		return nil, errx.NewCommonMessage(errx.USER_UPLOAD_USER_AVATAR_FAILED, err.Error())
+	}
+
+	file, handler, err := l.r.FormFile("uploadCover")
+	if err != nil {
+		return nil, errx.NewCommonMessage(errx.USER_UPLOAD_USER_AVATAR_FAILED, err.Error())
+	}
+	defer file.Close()
+
+	fileName, err := uploadx.UploadFile(file, handler, l.svcCtx.Config.Path)
 	if err != nil {
 		logx.Error(err.Error())
 		return nil, errx.NewErrCode(errx.USER_UPLOAD_USER_AVATAR_FAILED)
 	}
-
-	//remove the original one?
-	//_ = os.Remove(user.Cover)
 
 	//update user avatar path
 	cover := fmt.Sprintf("/%s", fileName)

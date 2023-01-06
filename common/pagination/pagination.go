@@ -11,27 +11,22 @@ const (
 func GetOffset(offset uint) uint {
 	if offset > MAX_OFFSET {
 		return MAX_OFFSET
-	} else if offset < 0 {
-		return 0
 	}
-
 	return offset
 }
 
 func GetLimit(limit uint) uint {
 	if limit > MAX_LIMIT {
 		return MAX_LIMIT
-	} else if limit < 0 {
-		return 0
 	}
 
 	return limit
 }
 
 func GetPage(page uint) uint {
-	if page < 0 {
-		return 0
-	}
+	//if page < 0 {
+	//	return 0
+	//}
 	return page
 }
 
