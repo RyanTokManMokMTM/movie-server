@@ -1,4 +1,5 @@
 /resources/*
+!/resources/test
 /data/sqlData/*
 !/resources/defaultCover.jpeg
 !/resources/defaultAvatar.jpeg
