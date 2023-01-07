@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: movie-conf
+  labels:
+    app: movie-conf
+data:
+  MYSQL_USERNAME: admin
+  MYSQL_DB_HOST: movie-db.cqptd9rn9las.ap-southeast-1.rds.amazonaws.com
+  DATABASE: movie
+  ACCESS_SECRET: 2BNVfmf0WtyX1HQmzYx5rOKLzlHBEPRX729pZ0gpxujnaikoRRCF78T8fKDNTLWy
+  SALT: W4tiDEeWlwxlRPYYRRMhJ65piS1ochvMymwfVdumittPoSxhkHNnVLe6m12C4v15

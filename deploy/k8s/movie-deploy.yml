@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: movie-app-deploy
+  labels:
+    app: movie-deploy
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: movie-server
+  template:
+    metadata:
+      name: app-pod
+      labels:
+        app: movie-server
+    spec:
+      containers:
+        - name: movie-server
+          image: jacksontmm/movie-app:latest
+          ports:
+            - name: movie-port
+              containerPort: 8000
+          env:
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: movie-secret
+                  key: MYSQL_PASSWORD
+
+            - name: MYSQL_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: movie-conf
+                  key: MYSQL_USERNAME
+
+            - name: MYSQL_DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: movie-conf
+                  key: MYSQL_DB_HOST
+
+            - name: DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: movie-conf
+                  key: DATABASE
+
+            - name: ACCESS_SECRET
+              valueFrom:
+                configMapKeyRef:
+                  name: movie-conf
+                  key: ACCESS_SECRET
+
+            - name: SALT
+              valueFrom:
+                configMapKeyRef:
+                  name: movie-conf
+                  key: SALT
+
+
+              #          volumemounts:
+              # - name: movieservice-conf
+              #mountpath: /app/etc
+              # volumes:
+              # - name: movieservice-conf
+              #configmap:
+              #name: movieservice-conf
+              #items:
+              #- key: movieservice.yaml
+              #path: movieservice.yaml
+              #
+
