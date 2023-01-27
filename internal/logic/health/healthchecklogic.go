@@ -24,7 +24,6 @@ func NewHealthCheckLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Healt
 
 func (l *HealthCheckLogic) HealthCheck(req *types.HealthCheckReq) (resp *types.HealthCheckResp, err error) {
 	// todo: add your logic here and delete this line
-	logx.Info("Ping service...")
 	return &types.HealthCheckResp{
 		Result: "Pong",
 	}, nil

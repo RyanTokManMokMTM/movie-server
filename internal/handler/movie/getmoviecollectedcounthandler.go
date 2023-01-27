@@ -6,6 +6,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	en_translations "github.com/go-playground/validator/v10/translations/en"
 	"github.com/ryantokmanmokmtm/movie-server/common/errx" //common error package
+	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/rest/httpx"
 	"net/http"
 
@@ -18,6 +19,7 @@ func GetMovieCollectedCountHandler(svcCtx *svc.ServiceContext) http.HandlerFunc 
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req types.CountMovieCollectedReq
 		if err := httpx.Parse(r, &req); err != nil {
+			logx.Error(err)
 			httpx.Error(w, err)
 			return
 		}

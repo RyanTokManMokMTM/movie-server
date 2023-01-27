@@ -26,7 +26,7 @@ func NewGetMovieCollectedCountLogic(ctx context.Context, svcCtx *svc.ServiceCont
 
 func (l *GetMovieCollectedCountLogic) GetMovieCollectedCount(req *types.CountMovieCollectedReq) (resp *types.CountMovieCollectedResp, err error) {
 	// todo: add your logic here and delete this line
-
+	logx.Info("testing")
 	count, err := l.svcCtx.DAO.CountMovieCollected(l.ctx, req.MovieID)
 	if err != nil {
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())

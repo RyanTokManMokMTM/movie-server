@@ -9,7 +9,7 @@ services:
       - ${DATA_PATH_HOST}:/var/lib/mysql
       - ${INIT_SQL_HOST}:/data/application/init.sql
     environment:
-      - MYSQL_ROOT_PASSWORD=${admin}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD}
       - TZ=${TZ}
       - MYSQL_USER=${MYSQL_USERNAME}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
@@ -26,17 +26,17 @@ services:
     networks:
       - movie-server
 
-
-  movie_service:
-    build:
-      context: ./
-    container_name: movie-server
-    ports:
-      - ${SERVER_PORT}:${SERVER_PORT}
-    restart: always
-    privileged: true
-    networks:
-      - movie-server
+#
+#  movie_service:
+#    build:
+#      context: ./
+#    container_name: movie-server
+#    ports:
+#      - ${SERVER_PORT}:${SERVER_PORT}
+#    restart: always
+#    privileged: true
+#    networks:
+#      - movie-server
 
 networks:
   movie-server:
