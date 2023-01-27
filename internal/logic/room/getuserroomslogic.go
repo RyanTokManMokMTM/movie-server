@@ -53,7 +53,7 @@ func (l *GetUserRoomsLogic) GetUserRooms(req *types.GetUserRoomsReq) (resp *type
 	for _, v := range userRooms.Rooms {
 		total, err := l.svcCtx.DAO.CountMessage(l.ctx, v.ID)
 		if err != nil {
-			logx.Error("count room message error %v ", err)
+			logx.Errorf("count room message error %v ", err)
 			continue
 		}
 
