@@ -131,7 +131,7 @@ service MovieService {
         summary :"Create Post"
     )
     @handler CreatePost
-    post /posts(CreatePostReq) returns (CreatePostResp);
+    post /post(CreatePostReq) returns (CreatePostResp);
 
     @doc (
         summary : "Update Post"

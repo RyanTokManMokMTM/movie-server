@@ -255,7 +255,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodPost,
-				Path:    "/posts",
+				Path:    "/post",
 				Handler: posts.CreatePostHandler(serverCtx),
 			},
 			{
