@@ -194,7 +194,7 @@ service MovieService {
     delete /friend(RemoveFriendReq) returns (RemoveFriendResp);
 
     @handler AcceptFriendRequest
-    post /friend/request/accept(AcceptFriendNotificationReq) returns (AcceptFriendNotificationResp);
+    post /friend/request/POST(AcceptFriendNotificationReq) returns (AcceptFriendNotificationResp);
 
     @handler CancelFriendRequest
     patch /friend/request/cancel(CancelFriendNotificationReq) returns (CancelFriendNotificationResp);

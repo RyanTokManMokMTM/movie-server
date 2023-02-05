@@ -213,7 +213,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodPost,
-				Path:    "/lists",
+				Path:    "/list",
 				Handler: custom_list.CreateCustomListHandler(serverCtx),
 			},
 			{
@@ -223,7 +223,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 			{
 				Method:  http.MethodDelete,
-				Path:    "/lists",
+				Path:    "/list",
 				Handler: custom_list.DeleteCustomListHandler(serverCtx),
 			},
 			{

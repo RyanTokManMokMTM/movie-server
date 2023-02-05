@@ -150,7 +150,7 @@ service MovieService {
         summary :"Get a custom list by list id"
     )
     @handler CreateCustomList
-    post /lists(CreateCustomListReq) returns (CreateCustomListResp);
+    post /list(CreateCustomListReq) returns (CreateCustomListResp);
 
     @doc (
         summary : "Update a custom list"
@@ -162,7 +162,7 @@ service MovieService {
         summary : "Delete a custom list"
     )
     @handler DeleteCustomList
-    delete /lists(DeleteCustomListReq) returns (DeleteCustomListResp);
+    delete /list(DeleteCustomListReq) returns (DeleteCustomListResp);
 
     @doc (
         summary : "Add Movie To List"

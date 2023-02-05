@@ -40,13 +40,6 @@ func (l *CreateReplyCommentLogic) CreateReplyComment(req *types.CreateReplyComme
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
-	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, errx.NewErrCode(errx.USER_NOT_EXIST)
-		}
-		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
-	}
-
 	//check post is exist
 	post, err := l.svcCtx.DAO.FindOnePostInfo(l.ctx, req.PostID)
 	if err != nil {
@@ -65,6 +58,7 @@ func (l *CreateReplyCommentLogic) CreateReplyComment(req *types.CreateReplyComme
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
 	}
 
+	//currentUser -> comment which post and reply which comment and who is the commentUser that replied comment belongs to, and is the replied comment belongs to any parent comment?
 	comment, err := l.svcCtx.DAO.CreatePostReplyComment(l.ctx, userID, post.PostId, req.ReplyCommentId, req.ParentCommentID, replyComment.UserID, req.Comment)
 	if err != nil {
 		return nil, errx.NewCommonMessage(errx.DB_ERROR, err.Error())
