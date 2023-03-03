@@ -11,7 +11,7 @@ MySQL:
 
 Auth:
   AccessSecret: 2BNVfmf0WtyX1HQmzYx5rOKLzlHBEPRX729pZ0gpxujnaikoRRCF78T8fKDNTLWy
-  AccessExpire: 10
+  AccessExpire: 86400
 
 Salt: W4tiDEeWlwxlRPYYRRMhJ65piS1ochvMymwfVdumittPoSxhkHNnVLe6m12C4v15
 

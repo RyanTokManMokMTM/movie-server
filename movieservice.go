@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"github.com/zeromicro/go-zero/core/conf"
+	"github.com/zeromicro/go-zero/core/logx"
 
 	//_ "github.com/joho/godotenv"
 	"github.com/ryantokmanmokmtm/movie-server/internal/config"
@@ -15,7 +16,7 @@ var configFile = flag.String("f", "etc/movieservice.yaml", "the config file")
 
 func main() {
 	//_ = godotenv.Load(".env")
-
+	logx.Info("testing...")
 	flag.Parse()
 	var c config.Config
 	conf.MustLoad(*configFile, &c)
