@@ -16,7 +16,7 @@ var configFile = flag.String("f", "etc/movieservice.yaml", "the config file")
 
 func main() {
 	//_ = godotenv.Load(".env")
-	logx.Info("testing...")
+
 	flag.Parse()
 	var c config.Config
 	conf.MustLoad(*configFile, &c)

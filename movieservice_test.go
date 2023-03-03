@@ -1,14 +1,8 @@
 package main
 
 import (
-	"encoding/json"
 	"github.com/golang/mock/gomock"
-	"github.com/ryantokmanmokmtm/movie-server/internal/config"
 	mockdb "github.com/ryantokmanmokmtm/movie-server/internal/dao/mock"
-	"github.com/ryantokmanmokmtm/movie-server/server"
-	"github.com/stretchr/testify/assert"
-	"net/http"
-	"net/http/httptest"
 	"testing"
 )
 
@@ -28,16 +22,18 @@ func Test_microservice(t *testing.T) {
 	"MaxBytes": 1073741824
 	}`)
 
-	var c config.Config
-	err := json.Unmarshal(configInfo, &c)
-	assert.Nil(t, err)
-
-	uri := "/api/v1/ping"
-	r := httptest.NewRequest("GET", uri, nil)
-	w := httptest.NewRecorder()
-
-	server := server.SetUpEngine(c, daoMock)
-	server.ServeHTTP(w, r)
-	assert.Equal(t, http.StatusOK, w.Code)
+	t.Error("testing...")
+	return
+	//var c config.Config
+	//err := json.Unmarshal(configInfo, &c)
+	//assert.Nil(t, err)
+	//
+	//uri := "/api/v1/ping"
+	//r := httptest.NewRequest("GET", uri, nil)
+	//w := httptest.NewRecorder()
+	//
+	//server := server.SetUpEngine(c, daoMock)
+	//server.ServeHTTP(w, r)
+	//assert.Equal(t, http.StatusOK, w.Code)
 
 }
