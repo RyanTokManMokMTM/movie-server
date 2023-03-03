@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"github.com/zeromicro/go-zero/core/conf"
-	"github.com/zeromicro/go-zero/core/logx"
+	//"github.com/zeromicro/go-zero/core/logx"
 
 	//_ "github.com/joho/godotenv"
 	"github.com/ryantokmanmokmtm/movie-server/internal/config"
