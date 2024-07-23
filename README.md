@@ -1,5 +1,7 @@
 # FYP Project - Rebuilt by Go-ZERO
 
+![app](./AppImg.png)
+
 ### Introduction
 This is my backend project using Go-zero framework, and this also is my **Final Year Project**. I'm trying to rebuild this project using Golang instead **Vapor Swift 3**.
 
